@@ -1,0 +1,4 @@
+{"id": "q001", "symbol": "EXAMPLE", "type": "factual", "question": "What was consolidated revenue from operations in Q2 FY26?", "gold_answer": "₹1,234 crore", "gold_doc_type": "results", "gold_page": 2, "answerable": true}
+{"id": "q002", "symbol": "EXAMPLE", "type": "reasoning", "question": "Why did EBITDA margin decline in Q2 FY26 vs Q1 FY26?", "gold_answer": "Higher raw material costs and one-time provision", "gold_doc_type": "concall", "gold_page": 5, "answerable": true}
+{"id": "q003", "symbol": "EXAMPLE", "type": "redflag", "question": "Has the statutory auditor changed since FY23?", "gold_answer": "No", "gold_doc_type": "announcement", "gold_page": null, "answerable": true}
+{"id": "q004", "symbol": "EXAMPLE", "type": "unanswerable", "question": "What is the CFO's salary for FY27?", "gold_answer": "Not found in the filings available.", "gold_doc_type": null, "gold_page": null, "answerable": false}
