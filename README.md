@@ -34,7 +34,7 @@ python -m eval.run_eval          # prints the eval table
 ```
 PDF → parse (pymupdf, OCR fallback) → section-aware chunks → embeddings + BM25
 storage: SQLite (docs, chunks, facts) + flat float32 vector file (cosine by one matmul)
-query → quarter filter ("Q2 FY27") → hybrid retrieve (top-40) → top-8 → LLM JSON answer → citation verifier
+query → quarter filter ("Q2 FY27") → hybrid retrieve (top-40) → cross-encoder rerank (top-8) → LLM JSON answer → citation verifier
 NSE shareholding XBRL + BSE announcements/audit reports + prices → facts → flags.py (pure rules) → red-flag score
 ```
 
@@ -67,7 +67,7 @@ Results on the 44-symbol universe: 17 symbols flagged; none of the 13 large-cap 
 
 - LLM: `gemini-3.5-flash-lite` (fallbacks `gemini-3.5-flash`, `gemini-2.5-flash-lite`; set in `.env`)
 - Embeddings: `BAAI/bge-small-en-v1.5` (sentence-transformers, 384-dim, CPU)
-- Reranker: `BAAI/bge-reranker-base`, off by default (`RERANK=1` to enable); see the ablation
+- Reranker: `cross-encoder/ms-marco-MiniLM-L-6-v2` (90 MB, ~2.5 s per question on CPU), on by default (`RERANK=0` to disable). In the ablation it lifted a buried answer chunk from rank 16 into the top 8; `bge-reranker-base` (1.1 GB) was too heavy for a CPU-only demo
 - pymupdf, rank_bm25, numpy, SQLite, FastAPI, Streamlit, yfinance
 
 ## Related work

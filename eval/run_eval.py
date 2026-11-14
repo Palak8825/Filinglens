@@ -1,55 +1,357 @@
 """
-Eval runner. Metrics:
-  - answer_accuracy: LLM-judge (correct/incorrect vs gold) on answerable Qs; spot-check 20% by hand.
-  - citation_precision: fraction of surviving citations whose (doc_type, page) matches gold page ±1.
-  - abstention_rate: fraction of unanswerable Qs where the system abstained.
-  - false_abstention: fraction of answerable Qs where the system abstained.
-Writes eval/results.jsonl and prints a markdown table for the README.
+FilingLens eval. Two parts:
+
+1. Retrieval ablation (no LLM, deterministic):
+     for each mode — bm25 | vector | hybrid | hybrid+rerank — does a gold (document, page) reach the
+     top-8 excerpts the LLM actually sees?  hit@8, MRR, and for cross_doc questions "all gold docs
+     present".  Broken down by question type.
+2. End-to-end, per config (answer + verify + judge):
+     answer accuracy        LLM judge vs gold_answer (+ deterministic must_include check where given)
+     citation precision     verified citations landing on a gold (document, page)
+     abstention             unanswerable questions correctly refused
+     false abstention       answerable questions wrongly refused
+     verifier rejection     share of the model's raw citations the verifier dropped ("hallucination rate")
+     precision w/o verifier citation precision if raw citations had been shown unchecked
+
+Questions: eval/questions.jsonl, one JSON object per line:
+  {"id", "symbol", "type": factual|reasoning|cross_doc|flag|unanswerable, "question",
+   "gold_answer", "must_include": [optional strings], "answerable": bool,
+   "gold": [{"path": "<document path as in data/raw>", "page": <1-based PDF page>}, ...]}
+  "gold" lists every acceptable (document, page); cross_doc questions list one per required document
+  and add "gold_all": true.
+
+Usage
+  python -m eval.run_eval                         # retrieval ablation + end-to-end on hybrid
+  python -m eval.run_eval --configs hybrid,bm25,vector,hybrid+rerank
+  python -m eval.run_eval --retrieval-only
+Answers are cached in eval/cache/<config>.jsonl (delete to re-run). Report → eval/report.md.
 """
 from __future__ import annotations
 
+import argparse
 import json
+import re
+import time
+from collections import defaultdict
 from pathlib import Path
 
-from core.answer import ask
+from sqlalchemy import select
+
+from core.answer import answer_with_trace
+from core.config import settings
+from core.db import Document, get_session
 from core.llm import complete_json
+from core.rerank import rerank
+from core.retrieve import retrieve
 
 HERE = Path(__file__).parent
-JUDGE = """You grade a research assistant's answer against a gold answer. Return JSON {"correct": true|false, "reason": str}.
-Correct means the same facts/numbers/direction; wording may differ. Numbers must match in value and unit."""
+CACHE = HERE / "cache"
+TYPES = ["factual", "reasoning", "cross_doc", "flag", "unanswerable"]
+CONFIGS = {  # name -> (retrieval mode, rerank, prompt version, model override or None = settings.llm_model)
+    "bm25": ("bm25", False, "v1", None),
+    "vector": ("vector", False, "v1", None),
+    "hybrid": ("hybrid", False, "v1", None),
+    "hybrid+rerank": ("hybrid", True, "v1", None),
+    "hybrid@v2": ("hybrid", False, "v2", None),                 # prompt arm: same model, relaxed prompt
+    "hybrid+rerank@v2": ("hybrid", True, "v2", None),
+    "hybrid@flash": ("hybrid", False, "v1", "gemini-3.5-flash"),  # model arm: same prompt, bigger model
+    "hybrid@v2+flash": ("hybrid", False, "v2", "gemini-3.5-flash"),
+}
+JUDGE = """You grade a research assistant's answer against a gold answer from a company's filings.
+Return JSON {"correct": true|false, "reason": str}.
+Correct = states the same key facts as the gold answer: numbers must match in value, unit and period;
+direction and causes must match. Extra correct detail is fine. A refusal ("Not found...") is incorrect
+when a gold answer exists. Wording may differ."""
 
 
-def judge(question: str, gold: str, pred: str) -> bool:
-    j = complete_json(JUDGE, f"Question: {question}\nGold: {gold}\nPredicted: {pred}")
-    return bool(j.get("correct"))
+def load_questions() -> list[dict]:
+    qs = []
+    for i, line in enumerate((HERE / "questions.jsonl").read_text(encoding="utf-8").splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("//"):
+            continue
+        q = json.loads(line)
+        if q.get("symbol") == "EXAMPLE":
+            continue
+        q.setdefault("gold", [])
+        qs.append(q)
+    return qs
+
+
+_doc_paths: dict[int, str] = {}
+
+
+def doc_path(document_id: int) -> str:
+    if not _doc_paths:
+        with get_session() as s:
+            _doc_paths.update({i: p for i, p in s.execute(select(Document.id, Document.path)).all()})
+    return _norm_path(_doc_paths.get(document_id, ""))
+
+
+def _norm_path(p: str) -> str:
+    return str(p).replace("/", "\\").lower().lstrip(".\\")
+
+
+def gold_set(q: dict) -> set[tuple[str, int]]:
+    return {(_norm_path(g["path"]), int(g["page"])) for g in q.get("gold", []) if g.get("path") and g.get("page")}
+
+
+def _evidence_ok(q: dict, text: str) -> bool:
+    """A retrieved chunk counts only if it contains one of the question's evidence strings (when given).
+    Page-level matching alone over-credits: a page holds several chunks, and the neighbour of the
+    answer chunk is not the answer."""
+    ev = q.get("evidence") or []
+    if not ev:
+        return True
+    t = re.sub(r"\s+", " ", text).lower()
+    return any(re.sub(r"\s+", " ", e).lower() in t for e in ev)
+
+
+def _rank_of_gold(q: dict, hits) -> tuple[int | None, bool]:
+    """(1-based rank of first gold hit, whether every gold document is present)."""
+    gold = gold_set(q)
+    if not gold:
+        return None, False
+    first = None
+    docs_needed = {p for p, _ in gold}
+    docs_seen: set[str] = set()
+    for rank, h in enumerate(hits, 1):
+        key = (doc_path(h.document_id), h.page)
+        if key in gold and _evidence_ok(q, h.text):
+            first = first or rank
+            docs_seen.add(key[0])
+    return first, docs_needed <= docs_seen
+
+
+# ---------------------------------------------------------------- retrieval ablation
+def retrieval_ablation(qs: list[dict], configs: list[str]) -> dict:
+    rows: dict[str, dict] = {}
+    answerable = [q for q in qs if q["answerable"] and gold_set(q)]
+    for name in configs:
+        mode, rr = CONFIGS[name][:2]
+        per_type: dict[str, list] = defaultdict(list)
+        for q in answerable:
+            hits = rerank(q["question"], retrieve(q["symbol"], q["question"], mode=mode), enabled=rr)
+            rank, all_docs = _rank_of_gold(q, hits)
+            per_type[q["type"]].append((rank, all_docs))
+            per_type["all"].append((rank, all_docs))
+        rows[name] = {
+            t: {
+                "n": len(v),
+                "hit@8": sum(1 for r, _ in v if r) / len(v),
+                "mrr": sum(1 / r for r, _ in v if r) / len(v),
+                "all_gold@8": sum(1 for _, a in v if a) / len(v),
+            } for t, v in per_type.items() if v
+        }
+    return rows
+
+
+# ---------------------------------------------------------------- end-to-end
+def _llm_retry(fn, *a, tries: int = 6):
+    for i in range(tries):
+        try:
+            return fn(*a)
+        except Exception as e:  # noqa: BLE001 - rate limits / 503s: back off, same model
+            if i == tries - 1:
+                raise
+            wait = 10 * (i + 1)
+            print(f"    [retry in {wait}s] {type(e).__name__}: {str(e)[:100]}")
+            time.sleep(wait)
+
+
+JUDGE_MODEL = settings.llm_model  # fixed across configs, so a model arm never grades its own answers
+
+
+def judge(question: str, gold: str, pred: str) -> tuple[bool, str]:
+    run_model, settings.llm_model = settings.llm_model, JUDGE_MODEL
+    try:
+        j = _llm_retry(complete_json, JUDGE, f"Question: {question}\nGold answer: {gold}\nPredicted answer: {pred}")
+    finally:
+        settings.llm_model = run_model
+    return bool(j.get("correct")), str(j.get("reason", ""))[:300]
+
+
+def _must_include_ok(q: dict, pred: str) -> bool | None:
+    keys = q.get("must_include") or []
+    if not keys:
+        return None
+    norm = lambda s: re.sub(r"[\s,]+", "", s.lower())  # noqa: E731
+    return all(norm(k) in norm(pred) for k in keys)
+
+
+def _chunk_texts(ids: list[int]) -> dict[int, str]:
+    from core.db import Chunk
+
+    if not ids:
+        return {}
+    with get_session() as s:
+        return {i: t for i, t in s.execute(select(Chunk.id, Chunk.text).where(Chunk.id.in_(ids))).all()}
+
+
+def _rescore(r: dict, q: dict) -> dict:
+    """Recompute every gold-dependent field from stored locations, so editing gold re-scores cached runs."""
+    gold = gold_set(q)
+    as_keys = lambda xs: [(_norm_path(p), int(pg)) for p, pg in xs if p is not None]  # noqa: E731
+    raw, ver, hits = as_keys(r.get("raw_keys", [])), as_keys(r.get("ver_keys", [])), as_keys(r.get("hit_keys", []))
+    r["raw_on_gold"] = sum(1 for k in raw if k in gold)
+    r["verified_on_gold"] = sum(1 for k in ver if k in gold)
+    texts = _chunk_texts(r.get("hit_ids", [])) if q.get("evidence") else {}
+    ok = [k in gold and (not q.get("evidence") or _evidence_ok(q, texts.get(cid, "")))
+          for k, cid in zip(hits, r.get("hit_ids") or [None] * len(hits))]
+    r["gold_rank"] = next((i for i, good in enumerate(ok, 1) if good), None)
+    r["gold_all_docs"] = bool(gold) and {p for p, _ in gold} <= {k[0] for k, good in zip(hits, ok) if good}
+    r["type"], r["answerable"] = q["type"], q["answerable"]
+    return r
+
+
+def run_config(qs: list[dict], name: str, pace: float = 0.0) -> list[dict]:
+    mode, rr, prompt, model = CONFIGS[name]
+    base_model = settings.llm_model
+    settings.llm_model = model or base_model  # answers only; judge() pins JUDGE_MODEL
+    try:
+        return _run_config(qs, name, mode, rr, prompt, pace)
+    finally:
+        settings.llm_model = base_model
+
+
+def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pace: float) -> list[dict]:
+    CACHE.mkdir(exist_ok=True)
+    path = CACHE / f"{name}.jsonl"
+    done = {}
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                done[r["id"]] = r
+    out = []
+    for q in qs:
+        cached = done.get(q["id"])
+        if cached and cached.get("question") == q["question"] and cached.get("gold_answer") == q.get("gold_answer") \
+                and "hit_ids" in cached:
+            out.append(_rescore(cached, q))
+            continue
+        t = time.time()
+        ans, hits, raw = _llm_retry(answer_with_trace, q["symbol"], q["question"], None, mode, rr, prompt)
+        latency = time.time() - t
+        ref_page = {f"c{i}": (doc_path(h.document_id), h.page) for i, h in enumerate(hits, 1)}
+        raw_keys = [ref_page.get(str(c.get("ref")), (None, 0)) for c in raw]
+        correct, reason = (None, "")
+        if q["answerable"]:
+            correct, reason = judge(q["question"], q["gold_answer"], ans.answer)
+        r = {
+            "id": q["id"], "symbol": q["symbol"], "question": q["question"], "gold_answer": q.get("gold_answer"),
+            "abstained": ans.abstained, "correct": correct, "judge_reason": reason,
+            "must_include_ok": _must_include_ok(q, ans.answer) if q["answerable"] else None,
+            "n_raw": len(raw), "n_verified": len(ans.citations), "dropped": ans.dropped_citations,
+            "raw_keys": raw_keys, "ver_keys": [(doc_path(c.document_id), c.page) for c in ans.citations],
+            "hit_keys": [(doc_path(h.document_id), h.page) for h in hits], "hit_ids": [h.chunk_id for h in hits],
+            "latency_s": round(latency, 2), "answer": ans.answer,
+            "citations": [{"page": c.page, "path": doc_path(c.document_id), "quote": c.quote[:200]} for c in ans.citations],
+        }
+        r = _rescore(r, q)
+        out.append(r)
+        with path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        if pace:
+            time.sleep(pace)
+        mark = "abst" if r["abstained"] else ("ok " if correct else "BAD" if correct is False else "-  ")
+        print(f"  [{name}] {q['id']} {mark} {latency:4.1f}s cits {r['n_verified']}/{r['n_raw']}  {q['question'][:70]}")
+    return out
+
+
+def summarize(results: list[dict]) -> dict:
+    ans = [r for r in results if r["answerable"]]
+    unans = [r for r in results if not r["answerable"]]
+    raw = sum(r["n_raw"] for r in results)
+    ver = sum(r["n_verified"] for r in ans)
+    raw_ans = sum(r["n_raw"] for r in ans)
+    pct = lambda a, b: a / b if b else float("nan")  # noqa: E731
+    mi = [r for r in ans if r["must_include_ok"] is not None]
+    return {
+        "n_answerable": len(ans), "n_unanswerable": len(unans),
+        "accuracy": pct(sum(1 for r in ans if r["correct"]), len(ans)),
+        "accuracy_by_type": {t: pct(sum(1 for r in ans if r["type"] == t and r["correct"]),
+                                    sum(1 for r in ans if r["type"] == t)) for t in TYPES if t != "unanswerable"
+                             and any(r["type"] == t for r in ans)},
+        "must_include_agree": pct(sum(1 for r in mi if r["must_include_ok"] == bool(r["correct"])), len(mi)),
+        "citation_precision": pct(sum(r["verified_on_gold"] for r in ans), ver),
+        "citation_precision_no_verifier": pct(sum(r["raw_on_gold"] for r in ans), raw_ans),
+        "verifier_rejection": pct(sum(r["dropped"] for r in results), raw),
+        "n_raw_citations": raw,
+        "abstention": pct(sum(1 for r in unans if r["abstained"]), len(unans)),
+        "false_abstention": pct(sum(1 for r in ans if r["abstained"]), len(ans)),
+        "unsupported_answers": pct(sum(1 for r in ans if not r["abstained"] and r["n_verified"] == 0), len(ans)),
+        "median_latency_s": sorted(r["latency_s"] for r in results)[len(results) // 2] if results else float("nan"),
+    }
+
+
+def fmt(x: float) -> str:
+    return "—" if x != x else f"{x:.0%}"
+
+
+def report(qs: list[dict], abl: dict | None, e2e: dict[str, dict]) -> str:
+    counts = defaultdict(int)
+    for q in qs:
+        counts[q["type"]] += 1
+    lines = [f"# FilingLens eval\n\nModel: `{settings.llm_model}` (judge: `{JUDGE_MODEL}`) · embeddings `{settings.embed_model}` · "
+             f"{len(qs)} questions: " + ", ".join(f"{counts[t]} {t}" for t in TYPES if counts[t]) + "\n"]
+    if "hybrid" in e2e or e2e:
+        main = e2e.get("hybrid") or next(iter(e2e.values()))
+        lines += ["## Headline (hybrid retrieval, verifier on)\n", "| Metric | Value |", "|---|---|",
+                  f"| Answer accuracy ({main['n_answerable']} answerable) | {fmt(main['accuracy'])} |",
+                  *[f"| · {t} | {fmt(v)} |" for t, v in main["accuracy_by_type"].items()],
+                  f"| Citation precision (verified citations on a gold page) | {fmt(main['citation_precision'])} |",
+                  f"| Citation precision if unverified citations were shown | {fmt(main['citation_precision_no_verifier'])} |",
+                  f"| Model citations rejected by the verifier | {fmt(main['verifier_rejection'])} of {main['n_raw_citations']} |",
+                  f"| Correct abstention ({main['n_unanswerable']} unanswerable) | {fmt(main['abstention'])} |",
+                  f"| False abstention on answerable | {fmt(main['false_abstention'])} |",
+                  f"| Answers with no verified citation | {fmt(main['unsupported_answers'])} |",
+                  f"| Median latency | {main['median_latency_s']:.1f}s |", ""]
+    if abl:
+        types = [t for t in ["all", "factual", "reasoning", "cross_doc", "flag"] if any(t in v for v in abl.values())]
+        lines += ["## Retrieval ablation — gold page in the 8 excerpts the LLM sees (hit@8 / MRR)\n",
+                  "| Config | " + " | ".join(types) + " | cross_doc: all docs |",
+                  "|---|" + "---|" * (len(types) + 1)]
+        for name, v in abl.items():
+            cells = [f"{v[t]['hit@8']:.0%} / {v[t]['mrr']:.2f}" if t in v else "—" for t in types]
+            xd = f"{v['cross_doc']['all_gold@8']:.0%}" if "cross_doc" in v else "—"
+            lines.append(f"| {name} | " + " | ".join(cells) + f" | {xd} |")
+        lines.append("")
+    if len(e2e) > 1:
+        lines += ["## End-to-end by config\n",
+                  "| Config | Prompt | Model | Accuracy | Reasoning acc. | Citation precision | Verifier rejected | Abstention | False abstention |",
+                  "|---|---|---|---|---|---|---|---|---|"]
+        for name, m in e2e.items():
+            _, _, prompt, model = CONFIGS[name]
+            lines.append(f"| {name} | {prompt} | {model or settings.llm_model} | {fmt(m['accuracy'])} | "
+                         f"{fmt(m['accuracy_by_type'].get('reasoning', float('nan')))} | {fmt(m['citation_precision'])} | "
+                         f"{fmt(m['verifier_rejection'])} | {fmt(m['abstention'])} | {fmt(m['false_abstention'])} |")
+        lines.append("")
+    return "\n".join(lines)
 
 
 def main() -> None:
-    qs = [json.loads(l) for l in (HERE / "questions.jsonl").read_text().splitlines() if l.strip()]
-    results = []
-    for q in qs:
-        a = ask(q["symbol"], q["question"])
-        correct = judge(q["question"], q["gold_answer"], a.answer) if q["answerable"] else None
-        cit_hits = [c for c in a.citations if q.get("gold_page") and c.doc_type == q["gold_doc_type"] and abs(c.page - q["gold_page"]) <= 1]
-        results.append({
-            "id": q["id"], "type": q["type"], "answerable": q["answerable"], "abstained": a.abstained,
-            "correct": correct, "n_cit": len(a.citations), "n_cit_hit": len(cit_hits), "dropped": a.dropped_citations,
-            "pred": a.answer,
-        })
-    (HERE / "results.jsonl").write_text("\n".join(json.dumps(r) for r in results))
+    p = argparse.ArgumentParser()
+    p.add_argument("--configs", default="hybrid", help=f"comma-separated, from {list(CONFIGS)}")
+    p.add_argument("--ablation", default="bm25,vector,hybrid", help="retrieval-ablation configs ('' to skip)")
+    p.add_argument("--no-ablation", action="store_true", help="skip the retrieval ablation")
+    p.add_argument("--retrieval-only", action="store_true")
+    p.add_argument("--pace", type=float, default=2.0, help="seconds between questions (free-tier rate limits)")
+    a = p.parse_args()
+    settings.llm_fallback_models = ""  # one model per run: a silent fallback would contaminate the comparison
 
-    ans = [r for r in results if r["answerable"]]
-    unans = [r for r in results if not r["answerable"]]
-    acc = sum(1 for r in ans if r["correct"]) / max(1, len(ans))
-    cits = sum(r["n_cit"] for r in ans)
-    cprec = sum(r["n_cit_hit"] for r in ans) / max(1, cits)
-    abst = sum(1 for r in unans if r["abstained"]) / max(1, len(unans))
-    fabst = sum(1 for r in ans if r["abstained"]) / max(1, len(ans))
-    print("| Metric | Value |\n|---|---|")
-    print(f"| Answer accuracy ({len(ans)} answerable) | {acc:.0%} |")
-    print(f"| Citation precision ({cits} citations) | {cprec:.0%} |")
-    print(f"| Abstention on unanswerable ({len(unans)}) | {abst:.0%} |")
-    print(f"| False abstention on answerable | {fabst:.0%} |")
+    qs = load_questions()
+    if not qs:
+        raise SystemExit("eval/questions.jsonl has no real questions yet (EXAMPLE rows are skipped).")
+    abl = None if a.no_ablation or not a.ablation else retrieval_ablation(qs, [c for c in a.ablation.split(",") if c])
+    e2e = {}
+    if not a.retrieval_only:
+        for name in [c for c in a.configs.split(",") if c]:
+            e2e[name] = summarize(run_config(qs, name, a.pace))
+    md = report(qs, abl, e2e)
+    (HERE / "report.md").write_text(md, encoding="utf-8")
+    (HERE / "report.json").write_text(json.dumps({"ablation": abl, "e2e": e2e}, indent=2), encoding="utf-8")
+    print("\n" + md)
 
 
 if __name__ == "__main__":

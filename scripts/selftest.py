@@ -114,7 +114,15 @@ def main() -> int:
         ("margins fell because inputs got more expensive this quarter", False, "paraphrase"),
         ("a one-time provision of Rs. 420.0 crore on a disputed receivable", False, "wrong number"),
         ("revenue", False, "too short"),
+        ("14.2%", False, "bare figure"),
     ]
+    table = "Return on Equity (annualized) \n8.2% \n8.3% \nNIM \n2.6% \n2.7% \n2.5% \nCost to Income \n64.3%"
+    for quote, expect, label in [("NIM \n2.6% \n2.7% \n2.5%", True, "short exact table row"),
+                                 ("NIM 2.9% 2.7% 2.5%", False, "short table row, wrong figure")]:
+        got = quote_in_chunk(quote, table)
+        if got != expect:
+            fails.append(f"verifier {label}: expected {expect}, got {got}")
+        print(f"[{'ok' if got == expect else 'FAIL'}] verifier {label}: {got}")
     for quote, expect, label in cases:
         got = quote_in_chunk(quote, chunk)
         mark = "ok" if got == expect else "FAIL"

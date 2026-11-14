@@ -11,8 +11,8 @@ from sqlalchemy import select
 from core import vectors
 from core.config import settings
 from core.db import Chunk, Document, get_session
+from core.periods import context_header
 from ingest.embed import embed_query
-from ingest.run import context_header
 
 
 @dataclass
@@ -37,14 +37,15 @@ def _tok(s: str) -> list[str]:
     return [t for t in "".join(c.lower() if c.isalnum() else " " for c in s).split() if len(t) > 1]
 
 
-def query_period(query: str) -> str | None:
-    """'NIM in Q2 FY27?' → 'Q2FY27' (matches Document.fiscal_period)."""
-    m = _PERIOD_RE.search(query)
-    return f"{m.group(1).upper()}FY{m.group(3)}" if m else None
+def query_periods(query: str) -> tuple[str, ...] | None:
+    """'GNPA in Q3 FY26 vs Q2 FY27?' → ('Q2FY27', 'Q3FY26'). Every quarter named, so cross-quarter
+    questions keep all the filings they need. None when no quarter is named."""
+    ps = sorted({f"{m.group(1).upper()}FY{m.group(3)}" for m in _PERIOD_RE.finditer(query)})
+    return tuple(ps) or None
 
 
 @lru_cache(maxsize=64)
-def _scope(symbol: str, doc_type: str | None, period: str | None = None) -> tuple[list[int], BM25Okapi | None]:
+def _scope(symbol: str, doc_type: str | None, period: tuple[str, ...] | None = None) -> tuple[list[int], BM25Okapi | None]:
     """Chunk ids for this symbol (+doc_type, +fiscal period), plus a BM25 index over header + text."""
     with get_session() as s:
         q = (select(Chunk.id, Chunk.text, Document.symbol, Document.doc_type, Document.fiscal_period, Document.title)
@@ -52,21 +53,21 @@ def _scope(symbol: str, doc_type: str | None, period: str | None = None) -> tupl
         if doc_type:
             q = q.where(Document.doc_type == doc_type)
         if period:
-            q = q.where(Document.fiscal_period == period)
+            q = q.where(Document.fiscal_period.in_(period))
         rows = s.execute(q).all()
     ids = [r[0] for r in rows]
     docs = [_tok(f"{context_header(sym, dt, fp, ti)}\n{t}") for _, t, sym, dt, fp, ti in rows]
     return ids, (BM25Okapi(docs) if ids else None)
 
 
-def _vector_hits(symbol: str, query: str, k: int, doc_type: str | None, period: str | None) -> list[int]:
+def _vector_hits(symbol: str, query: str, k: int, doc_type: str | None, period: tuple[str, ...] | None) -> list[int]:
     ids, _ = _scope(symbol, doc_type, period)
     if not ids:
         return []
     return [cid for cid, _ in vectors.search(embed_query(query), k, allowed_ids=set(ids))]
 
 
-def _bm25_hits(symbol: str, query: str, k: int, doc_type: str | None, period: str | None) -> list[int]:
+def _bm25_hits(symbol: str, query: str, k: int, doc_type: str | None, period: tuple[str, ...] | None) -> list[int]:
     ids, bm = _scope(symbol, doc_type, period)
     if bm is None:
         return []
@@ -81,7 +82,7 @@ def retrieve(symbol: str, query: str, k: int | None = None, doc_type: str | None
     k = k or settings.retrieve_k
     # A named quarter ("Q2 FY27") is a hard filter: quarters discuss the same topics in the same
     # words, so similarity alone mixes them up. Fall back to all filings if that quarter is empty.
-    period = query_period(query)
+    period = query_periods(query)
     if period and not _scope(symbol, doc_type, period)[0]:
         period = None
     v = _vector_hits(symbol, query, k, doc_type, period) if mode in ("hybrid", "vector") else []

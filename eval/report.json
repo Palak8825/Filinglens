@@ -1,0 +1,85 @@
+{
+  "ablation": null,
+  "e2e": {
+    "hybrid": {
+      "n_answerable": 7,
+      "n_unanswerable": 2,
+      "accuracy": 0.8571428571428571,
+      "accuracy_by_type": {
+        "factual": 1.0,
+        "reasoning": 0.0,
+        "cross_doc": 1.0,
+        "flag": 1.0
+      },
+      "must_include_agree": 1.0,
+      "citation_precision": 1.0,
+      "citation_precision_no_verifier": 1.0,
+      "verifier_rejection": 0.0,
+      "n_raw_citations": 7,
+      "abstention": 1.0,
+      "false_abstention": 0.14285714285714285,
+      "unsupported_answers": 0.0,
+      "median_latency_s": 1.77
+    },
+    "hybrid+rerank": {
+      "n_answerable": 7,
+      "n_unanswerable": 2,
+      "accuracy": 0.8571428571428571,
+      "accuracy_by_type": {
+        "factual": 1.0,
+        "reasoning": 1.0,
+        "cross_doc": 0.0,
+        "flag": 1.0
+      },
+      "must_include_agree": 1.0,
+      "citation_precision": 1.0,
+      "citation_precision_no_verifier": 1.0,
+      "verifier_rejection": 0.0,
+      "n_raw_citations": 6,
+      "abstention": 1.0,
+      "false_abstention": 0.14285714285714285,
+      "unsupported_answers": 0.0,
+      "median_latency_s": 4.17
+    },
+    "hybrid@v2": {
+      "n_answerable": 7,
+      "n_unanswerable": 2,
+      "accuracy": 0.8571428571428571,
+      "accuracy_by_type": {
+        "factual": 1.0,
+        "reasoning": 0.0,
+        "cross_doc": 1.0,
+        "flag": 1.0
+      },
+      "must_include_agree": 1.0,
+      "citation_precision": 0.9,
+      "citation_precision_no_verifier": 0.9,
+      "verifier_rejection": 0.0,
+      "n_raw_citations": 10,
+      "abstention": 1.0,
+      "false_abstention": 0.14285714285714285,
+      "unsupported_answers": 0.0,
+      "median_latency_s": 2.03
+    },
+    "hybrid+rerank@v2": {
+      "n_answerable": 7,
+      "n_unanswerable": 2,
+      "accuracy": 0.8571428571428571,
+      "accuracy_by_type": {
+        "factual": 1.0,
+        "reasoning": 1.0,
+        "cross_doc": 0.0,
+        "flag": 1.0
+      },
+      "must_include_agree": 1.0,
+      "citation_precision": 0.875,
+      "citation_precision_no_verifier": 0.875,
+      "verifier_rejection": 0.0,
+      "n_raw_citations": 8,
+      "abstention": 1.0,
+      "false_abstention": 0.14285714285714285,
+      "unsupported_answers": 0.0,
+      "median_latency_s": 4.54
+    }
+  }
+}

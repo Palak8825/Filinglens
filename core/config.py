@@ -17,7 +17,10 @@ class Settings(BaseSettings):
     # Small, fast, English. 384-dim. Swap to BAAI/bge-m3 (embed_dim 1024) only on a GPU.
     embed_model: str = "BAAI/bge-small-en-v1.5"
     embed_dim: int = 384
-    rerank_model: str = "BAAI/bge-reranker-base"
+    # 90 MB cross-encoder, ~2.5 s for 40 candidates on CPU. Lifted a buried answer chunk from rank 16
+    # into the top 8 in the eval; bge-reranker-base (1.1 GB) was too heavy for a CPU-only demo.
+    rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    rerank: bool = True  # RERANK=0 in .env or the environment disables it
 
     data_dir: Path = Path("./data")
 
