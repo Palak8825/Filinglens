@@ -1,0 +1,13 @@
+﻿1096 chunks missing vectors
+.venv\Scripts\python.exe : 
+At line:1 char:447
++ ... lyContinue; .venv\Scripts\python.exe -m ingest.run --reembed *>&1 | T ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+reembed:   0%|          | 0/5 [00:00<?, ?it/s]
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s][A
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2463.12it/s]
+

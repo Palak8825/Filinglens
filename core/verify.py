@@ -41,5 +41,5 @@ def verify_citations(raw_citations: list[dict], ref_map: dict[str, Hit]):
         if not ok:
             dropped += 1
             continue
-        kept.append(Citation(ref, quote, h.document_id, h.title, h.doc_type, h.page, True))
+        kept.append(Citation(ref, quote, h.document_id, h.title, h.doc_type, h.page, True, h.fiscal_period))
     return kept, dropped

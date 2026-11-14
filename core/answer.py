@@ -27,6 +27,7 @@ class Citation:
     doc_type: str
     page: int
     verified: bool
+    fiscal_period: str | None = None
 
 
 @dataclass

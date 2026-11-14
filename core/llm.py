@@ -15,12 +15,27 @@ def _strip_fences(s: str) -> str:
 
 
 def _gemini(system: str, user: str) -> str:
+    """Try LLM_MODEL, then each LLM_FALLBACK_MODELS entry. No silent SDK retries: an overloaded
+    model (503/504/429) fails in seconds and we move on, instead of backing off for minutes."""
     import google.generativeai as genai
 
     genai.configure(api_key=settings.llm_api_key)
-    model = genai.GenerativeModel(settings.llm_model, system_instruction=system,
-                                  generation_config={"response_mime_type": "application/json", "temperature": 0})
-    return model.generate_content(user).text
+    models = [settings.llm_model] + [m.strip() for m in settings.llm_fallback_models.split(",") if m.strip()]
+    last: Exception | None = None
+    for name in models:
+        model = genai.GenerativeModel(name, system_instruction=system,
+                                      generation_config={"response_mime_type": "application/json", "temperature": 0})
+        try:
+            return model.generate_content(user, request_options={"retry": None, "timeout": settings.llm_timeout_s}).text
+        except Exception as e:  # noqa: BLE001
+            code = getattr(e, "code", None)
+            transient = code in (429, 500, 503, 504) or type(e).__name__ in {
+                "ServiceUnavailable", "DeadlineExceeded", "ResourceExhausted", "InternalServerError"}
+            if not transient:
+                raise
+            print(f"[llm] {name} unavailable ({type(e).__name__}); trying next model")
+            last = e
+    raise RuntimeError(f"all Gemini models failed; last error: {last}")
 
 
 def _anthropic(system: str, user: str) -> str:

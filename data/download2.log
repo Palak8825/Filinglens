@@ -1,0 +1,190 @@
+﻿== RELIANCE: {'skip': 87}
+== INFY: {'skip': 59, 'results': 5, 'announcement': 3, 'concall': 1}
+== HDFCBANK: {'skip': 101}
+== TCS: {'skip': 63}
+== ICICIBANK: {'skip': 113, 'annual_report': 1}
+== ITC: {'skip': 71, 'results': 1}
+  ERR HINDUNILVR 2023-10-26 Transcript of Earnings Call for the Quarter ended 30th Septe: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR HINDUNILVR 2023-07-07 HINDUSTAN UNILEVER LTD.has informed BSE that the meeting of : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR HINDUNILVR 2024-10-23 Change in Company Secretary and Compliance Officer of the Co: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR HINDUNILVR 2024-05-22 Integrated Annual Report for the Financial Year 2023-24.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR HINDUNILVR 2024-04-24 Appointment of M/s. R. Nanabhoy & Co. Cost Accountants, as t: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR HINDUNILVR 2026-07-28 Results for the quarter ended 30th June, 2026 is enclosed: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR HINDUNILVR 2026-04-30 Re-appointment of Ms. Ashu Suyash as Independent Director of: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== HINDUNILVR: {'concall': 14, 'results': 32, 'announcement': 16, 'err': 7, 'annual_report': 5}
+  ERR LT 2024-01-16 LARSEN & TOUBRO LTD.has informed BSE that the meeting of the: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR LT 2025-11-04 Transcript of Q2 /H1  FY26 Earnings Call: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR LT 2026-05-14 Integrated Annual Report for the Financial Year 2025-26 and : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== LT: {'concall': 15, 'results': 26, 'err': 3, 'announcement': 3, 'annual_report': 4}
+  ERR SBIN 2024-09-27 Appointment of Statutory Central Auditors: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SBIN 2024-08-07 Appointment of Shri Challa Sreenivasulu Setty as Chairman, S: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SBIN 2025-12-15 Disclosure regarding appointment of Shri Ravi Ranjan as the : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SBIN 2025-11-04 Financial Results for the quarter and half year ended 30.09.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== SBIN: {'concall': 15, 'results': 47, 'announcement': 15, 'annual_report': 4, 'err': 4}
+  ERR BHARTIARTL 2023-10-18 BHARTI AIRTEL LTD.has informed BSE that the meeting of the B: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BHARTIARTL 2023-08-03 Financial results for the first quarter ended on June 30, 20: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BHARTIARTL 2023-05-16 Financial results for the fourth quarter (Q4) and year ended: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BHARTIARTL 2024-10-28 Press Release w.r.t. financial results: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BHARTIARTL 2024-07-29 Notice of 29th Annual General Meeting, Integrated Report and: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BHARTIARTL 2025-08-11 Pursuant to Regulation 30 of SEBI (Listing Obligations and D: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== BHARTIARTL: {'concall': 14, 'results': 53, 'err': 6, 'annual_report': 3, 'announcement': 9}
+  ERR SUNPHARMA 2024-02-06 SPIL Q3FY24 Earnings Call Transcript: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUNPHARMA 2025-01-17 Sun Pharma''s earnings call for the financial results for th: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUNPHARMA 2024-11-04 Q2 FY25 Earnings call Transcript: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUNPHARMA 2024-08-07 SPIL Q1FY25 Earning Call Trascript: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUNPHARMA 2024-08-01 Outcome of Board Meeting: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUNPHARMA 2024-05-13 Press Release relating to Earnings Call for financial result: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUNPHARMA 2026-10-12 Outcome of the Board Meeting held on 12 October 2026: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== SUNPHARMA: {'err': 7, 'results': 29, 'concall': 13, 'annual_report': 6, 'announcement': 7}
+  ERR BAJFINANCE 2024-01-23 Intimation of conference call in respect of financial result: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2023-07-26 Unaudited standalone and consolidated financial results for : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2023-04-26 The meeting commenced at 3.45 p.m. and recommendation of div: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2023-04-22 Intimation of Conference Call in respect of financial result: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2024-07-11 Intimation of Conference Call in respect of financial result: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2024-04-25 Audited standalone and consolidated financial results for th: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2025-11-07 This is with reference to our letter dated 1 November 2025 a: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJFINANCE 2025-04-29 The Board of Directors at meeting held today i.e., 29 April : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== BAJFINANCE: {'announcement': 15, 'concall': 15, 'results': 51, 'err': 8, 'annual_report': 4}
+  ERR WIPRO 2024-04-24 Transcript of the Analyst/Institutional Investor Meeting: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR WIPRO 2026-07-17 Transcript of Analyst / Institutional Investor Meeting held : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR WIPRO 2026-07-16 Outcome of Board Meeting - Financial Results and Interim Div: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== WIPRO: {'concall': 10, 'announcement': 25, 'results': 21, 'annual_report': 8, 'err': 3}
+  ERR TMPV 2025-03-13 Pursuant to Reg 30 of the SEBI (LODR) Regulations, 2015, we : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR TMPV 2024-05-31 Pursuant to Regulations 34(1) of the SEBI (Listing Obligatio: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR TMPV 2025-09-26 We are enclosing herewith an intimation regarding resignatio: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR TMPV 2025-08-08 Pursuant to Regulation 30 of the SEBI (LODR) Regulations, 20: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR TMPV 2025-08-08 The Board of Directors at its meeting held today approved th: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR TMPV 2025-04-18 Tata Motors Ltdhas informed BSE that the meeting of the Boar: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR TMPV 2026-11-13 Pursuant to Regulations 33 and 52 of SEBI (LODR) Regulations: download failed: HTTP 404, not a PDF
+== TMPV: {'concall': 14, 'announcement': 11, 'results': 38, 'annual_report': 7, 'err': 7}
+  ERR ETERNAL 2023-11-03 Zomato Limited has filed with exchange un-audited financial : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ETERNAL 2024-07-25 Zomato Limited has informed the Exchange that Company will h: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ETERNAL 2024-07-25 Zomato Ltdhas informed BSE that the meeting of the Board of : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ETERNAL 2026-05-06 Eternal Limited has filed with exchange transcript of earnin: download failed: HTTP 200, not a PDF
+  ERR ETERNAL 2026-04-28 Eternal Limited has filed with exchange financial results fo: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== ETERNAL: {'concall': 14, 'results': 48, 'err': 5, 'announcement': 14, 'annual_report': 6}
+  ERR NYKAA 2024-02-13 Please find attached the transcript of Analyst/ Investor Con: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR NYKAA 2026-02-05 Unaudited Standalone and Consolidated Financial Results for : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR NYKAA 2025-05-30 Intimation for appointment of Secretarial Auditor: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR NYKAA 2026-08-04 Unaudited Standalone and Consolidated Financial Results for : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== NYKAA: {'err': 4, 'results': 39, 'concall': 14, 'annual_report': 7, 'announcement': 10}
+  ERR ZEEL 2023-08-09 Unaudited Financial Results of the Company (both standalone : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ZEEL 2024-11-23 Disclosure under Reg 30 of SEBI (LODR) Regulations, 2015 - R: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ZEEL 2024-07-31 Unaudited Financial Results of the Company for the quarter e: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ZEEL 2026-08-17 Disclosure under Regulation 30 of SEBI (Listing Obligations : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== ZEEL: {'announcement': 21, 'concall': 15, 'results': 22, 'annual_report': 7, 'err': 4}
+  ERR YESBANK 2024-01-27 Outcome of the Board Meeting-SEBI (Listing Obligations and D: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR YESBANK 2023-09-27 Disclosure under Regulation 30 of SEBI (Listing Obligations : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR YESBANK 2023-07-27 Transcript of Earnings Call for the un-audited Financial Res: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR YESBANK 2024-04-27 Press Release and Investor Presentation on the Audited Finan: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== YESBANK: {'concall': 7, 'results': 17, 'err': 4, 'announcement': 4, 'annual_report': 3, 'skip': 29}
+  ERR PAYTM 2025-01-27 Transcript of the earnings conference call conducted on Janu: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PAYTM 2025-01-20 Appointment of Mr. Bimal Julka as a Non-Executive Independen: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PAYTM 2024-08-21 Annual Report for FY 2023-24: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PAYTM 2024-05-04 Resignation of Mr. Bhavesh Gupta, President and Chief Operat: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== PAYTM: {'announcement': 17, 'concall': 16, 'results': 43, 'annual_report': 7, 'err': 4}
+  ERR SUZLON 2024-10-21 SUZLON ENERGY LTD.has informed BSE that the meeting of the B: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SUZLON 2025-10-28 Suzlon Energy Ltdhas informed BSE that the meeting of the Bo: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== SUZLON: {'announcement': 18, 'concall': 16, 'results': 25, 'annual_report': 8, 'err': 2}
+  ERR IDEA 2024-09-30 Vodafone Idea Limited has informed the Exchange regarding th: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IDEA 2026-01-02 The Exchange has received the Disclosures of reasons for enc: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IDEA 2025-11-10 Board of Directors at their meeting held on 10 November 2025: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IDEA 2025-10-10 Vodafone Idea Limited has enclosed Notice of Postal Ballot f: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IDEA 2025-08-01 Please find enclosed herewith the Notice of 30th Annual Gene: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IDEA 2025-05-30 Board of Directors at their meeting held on 30 May 2025 have: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IDEA 2026-08-10 Board of Directors at their meeting held on 10 August 2026, : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== IDEA: {'concall': 14, 'results': 35, 'annual_report': 4, 'announcement': 8, 'err': 7, 'shareholding': 2}
+  ERR ADANIENT 2023-11-02 Outcome: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2023-08-03 Outcome of Board Meeting held on 3rd August, 2023.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2023-07-27 ADANI ENTERPRISES LTD.has informed BSE that the meeting of t: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2024-05-29 Notice of 32nd Annual General Meeting along with Integrated : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2026-02-03 Unaudited Financial Results for the quarter ended on Decembe: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2025-07-31 Press Release for the Unaudited Financial Results for the qu: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2026-07-29 Unaudited financial results for the quarter ended on 30.06.2: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIENT 2026-04-30 Appointment of Internal Auditor of the Company: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== ADANIENT: {'concall': 15, 'results': 38, 'err': 8, 'annual_report': 8, 'announcement': 6}
+  ERR ADANIPORTS 2024-02-01 Outcome of Board Meeting held on 1st February, 2024.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIPORTS 2023-07-18 Integrated Annual Report for FY 2022-23.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR ADANIPORTS 2026-04-30 Outcome of Board Meeting: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== ADANIPORTS: {'concall': 16, 'results': 31, 'err': 3, 'announcement': 11, 'annual_report': 4}
+  LIST-ERR ADANIGREEN: Expecting value: line 3 column 1 (char 4)
+== ADANIGREEN: {}
+  ERR VEDL 2024-02-07 The Exchange has received the revised Disclosures of reasons: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VEDL 2023-07-21 Please find attached the Unaudited Consolidated and Standalo: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VEDL 2023-05-12 In continuation to our Letter No. VEDL/Sec./SE/23-24/22 date: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VEDL 2025-04-21 The Exchange has received the Disclosures of reasons for enc: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VEDL 2026-08-04 Please refer the enclosed file.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VEDL 2026-07-30 Please refer the enclosed file.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VEDL 2026-07-17 The Exchange has received the Disclosures of reasons for enc: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== VEDL: {'shareholding': 22, 'err': 7, 'concall': 14, 'results': 28, 'announcement': 5, 'annual_report': 4}
+  ERR INDUSINDBK 2024-01-18 Investor Presentation on Unaudited Standalone and Consolidat: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2023-11-17 Further to our letter dated June 28, 2023, we hereby inform : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2025-01-31 Please find attached captioned disclosure.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2024-08-28 Please find attached herewith the captioned intimation.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2024-04-25 Please find attached herewith the disclosure on the captione: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2026-01-30 Transcript of Earnings call: Q3 FY25-26: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2025-10-27 Transcript Of Earnings call : Q2 FY25-26: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2025-10-06 Indusind Bank Ltdhas informed BSE that the meeting of the Bo: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2025-08-29 Please find attached herewith the intimation regarding appoi: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2025-08-29 Please find attached herewith the intimation regarding appoi: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR INDUSINDBK 2026-04-01 The Exchange has received the Disclosures of reasons for enc: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== INDUSINDBK: {'concall': 10, 'err': 11, 'results': 39, 'announcement': 15, 'shareholding': 6, 'annual_report': 6}
+== GENSOL: {'concall': 5, 'results': 9, 'announcement': 13, 'annual_report': 2}
+  ERR JPASSOCIAT 2024-06-06 Appointment of IRP.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== JPASSOCIAT: {'announcement': 5, 'results': 16, 'annual_report': 3, 'err': 1}
+== RCOM: {'results': 39, 'announcement': 8, 'annual_report': 6}
+  ERR RPOWER 2024-01-27 RELIANCE POWER LTD.has informed BSE that the meeting of the : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR RPOWER 2023-10-24 RELIANCE POWER LTD.has informed BSE that the meeting of the : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR RPOWER 2024-07-11 Notice of the 30th Annual General Meeting and Annual Report : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== RPOWER: {'results': 31, 'err': 3, 'annual_report': 6, 'announcement': 1}
+== RELINFRA: {'results': 27, 'annual_report': 7, 'announcement': 5}
+  ERR SAMMAANCAP 2024-11-14 Financial Results for the quarter and half year ended Septem: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SAMMAANCAP 2024-09-05 Notice convening 19th AGM of Shareholders of the Company, al: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SAMMAANCAP 2025-05-16 Outcome of Board Meeting along with Audited Financial Result: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SAMMAANCAP 2025-05-13 Intimation of Conference call in respect of Financial Result: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR SAMMAANCAP 2026-09-08 Please find enclosed Notice convening 21st Annual General Me: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== SAMMAANCAP: {'results': 42, 'concall': 6, 'announcement': 4, 'annual_report': 5, 'err': 5}
+  ERR PCJEWELLER 2024-10-19 Financial results for the quarter and six months ended Septe: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PCJEWELLER 2024-05-30 Financial results for quarter and year ended March 31, 2024: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PCJEWELLER 2026-01-19 PC Jeweller Ltdhas informed BSE that the meeting of the Boar: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PCJEWELLER 2026-05-27 Audited financial results for the quarter and year ended Mar: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== PCJEWELLER: {'results': 19, 'announcement': 7, 'annual_report': 5, 'err': 4}
+  ERR DISHTV 2023-09-25 Appointment of S.N. Dhawan & Co. LLP Chartered Accountants a: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR DISHTV 2024-11-06 DISH TV INDIA LTD.has informed BSE that the meeting of the B: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR DISHTV 2024-09-18 The Board in its meeting held today at 18th September 2024, : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR DISHTV 2024-08-13 The Board at its meeting held today on August 13, 2024, appr: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR DISHTV 2026-08-11 Approval of Notice of AGM and Annual Report for the Financia: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== DISHTV: {'announcement': 28, 'results': 31, 'err': 5, 'annual_report': 6}
+  ERR VAKRANGEE 2024-02-06 Un-audited (Standalone & Consolidated) Financial Results for: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR VAKRANGEE 2024-05-24 Appointment of Mr L K Shamsunder as a Nominee Director of Li: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== VAKRANGEE: {'announcement': 6, 'err': 2, 'results': 10, 'annual_report': 5, 'concall': 2}
+  ERR GTLINFRA 2024-08-21 Annual Report for year ended March 31, 2024 along with Notic: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR GTLINFRA 2024-05-14 Annual Financial Results for the quarter and year ended Marc: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR GTLINFRA 2025-09-03 Intimation under Regulation 30 of the SEBI (LODR) Regulation: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR GTLINFRA 2026-07-30 GTL Infrastructure Ltdhas informed BSE that the meeting of t: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== GTLINFRA: {'results': 26, 'annual_report': 5, 'announcement': 5, 'err': 4}
+  ERR SPICEJET 2023-12-20 Please find attached Annual Report for FY 2022-23.: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== SPICEJET: {'err': 1, 'annual_report': 4, 'results': 9, 'announcement': 5}
+  ERR PNB 2023-10-26 Earnings Call with Analysts/ Investors on Financial Results : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PNB 2025-01-27 Earnings Call with Analysts/ Investors on Financial Results : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR PNB 2024-07-23 Meeting of Board of Directors is scheduled on Saturday, 27th: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== PNB: {'concall': 15, 'results': 57, 'err': 3, 'announcement': 9, 'annual_report': 6}
+  LIST-ERR BANDHANBNK: Expecting value: line 3 column 1 (char 4)
+== BANDHANBNK: {'announcement': 4, 'concall': 2, 'results': 3}
+  ERR RBLBANK 2025-02-13 RBL Bank Limited informs the exchange about RBI approval for: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR RBLBANK 2024-10-19 Financial Results for the quarter and half year ended Septem: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR RBLBANK 2025-12-08 RBL Bank Limited informs the exchange about Outcome of Board: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR RBLBANK 2025-10-24 RBL Bank Limited informs the exchange about Transcript of Ca: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== RBLBANK: {'concall': 14, 'results': 38, 'announcement': 15, 'annual_report': 5, 'err': 4}
+  ERR IIFL 2024-10-31 Company has informed the exchanges about Transcript of Earni: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR IIFL 2025-10-30 IIFL Finance Limited hereby submits Press Release for the un: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== IIFL: {'concall': 15, 'announcement': 27, 'results': 39, 'annual_report': 9, 'err': 2}
+  ERR DELTACORP 2026-04-22 Appointment of Statuory Auditors subject to approval of memb: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== DELTACORP: {'concall': 3, 'results': 26, 'announcement': 4, 'annual_report': 4, 'err': 1}
+  ERR BAJAJHIND 2024-11-08 Re-appointment of Mr. Atul Hasmukhrai Mehta (DIN:00112451) a: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR BAJAJHIND 2024-05-10 Disclosure of Audit Committee views regarding resignation of: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== BAJAJHIND: {'results': 16, 'annual_report': 5, 'err': 2, 'announcement': 9}
+  ERR EASEMYTRIP 2023-09-06 Please find enclosed Annual Report of Easy Trip Planners Lim: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR EASEMYTRIP 2025-01-01 Appointment of Mr. Rikant Pittie as Chief Executive Officer : download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+  ERR EASEMYTRIP 2025-11-11 Easy Trip Planners Ltdhas informed BSE that the meeting of t: download failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+== EASEMYTRIP: {'concall': 8, 'results': 52, 'announcement': 9, 'annual_report': 10, 'err': 3, 'shareholding': 6}

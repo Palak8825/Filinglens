@@ -8,15 +8,25 @@ import fitz  # pymupdf
 MIN_CHARS_FOR_TEXT = 40  # below this we assume scanned page
 
 
+_ocr_warned = False
+
+
 def _ocr(page: fitz.Page) -> str:
+    """OCR one page. Never raises: a missing Tesseract binary or a bad page yields "" so the
+    rest of the document still ingests (otherwise one scanned signature page drops the whole PDF)."""
+    global _ocr_warned
     try:
         import pytesseract
         from PIL import Image
-    except ImportError:
+
+        pix = page.get_pixmap(dpi=200)
+        img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+        return pytesseract.image_to_string(img, lang="eng")
+    except Exception as e:  # noqa: BLE001 - incl. TesseractNotFoundError
+        if not _ocr_warned:
+            print(f"[parse_pdf] OCR unavailable, scanned pages will be empty: {type(e).__name__}: {e}")
+            _ocr_warned = True
         return ""
-    pix = page.get_pixmap(dpi=200)
-    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
-    return pytesseract.image_to_string(img, lang="eng")
 
 
 def parse_pdf(path: str | Path) -> list[tuple[int, str]]:

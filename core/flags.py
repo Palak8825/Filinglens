@@ -1,6 +1,12 @@
 """
-Deterministic red flags. No LLM here. Every flag carries the Fact row (document + page) it came from.
-Thresholds are deliberately simple and stated; tune after looking at the data, and say so in README.
+Deterministic red flags. No LLM here. Every flag carries the Fact rows (filing + page or XBRL URL)
+it came from. Thresholds are deliberately simple and stated; README reports them as-is.
+
+Inputs
+  shareholding   ingest/shareholding.py  (NSE quarterly shareholding pattern, XBRL)
+  auditor_event  ingest/auditor.py       (BSE announcements + audit reports in results filings)
+  float          ingest/market.py       (Yahoo Finance prices + NSE public shareholding)
+  rpt            producer not built (needs annual reports) — this flag stays silent until it is
 """
 from __future__ import annotations
 
@@ -17,14 +23,14 @@ class Flag:
     severity: int  # 1..3
     title: str
     detail: str
-    evidence: list[dict] = field(default_factory=list)  # [{document_id, page, period}]
+    evidence: list[dict] = field(default_factory=list)
 
 
 THRESHOLDS = {
-    "pledge_creep_pp": 10.0,       # pledged % of promoter holding up by ≥ this over 4 quarters
-    "pledge_high_abs": 50.0,       # or absolute level ≥ this
-    "promoter_sell_pp": 3.0,       # promoter stake down ≥ this in one quarter
-    "guidance_miss_count": 2,      # misses in last 4 quarters
+    "encumbrance_creep_pp": 10.0,  # encumbered % of promoter holding up by ≥ this over 4 quarters
+    "encumbrance_high_abs": 50.0,  # or encumbered level ≥ this (pledge + NDU + other, SEBI definition)
+    "promoter_sell_qoq_pp": 3.0,   # promoter stake down ≥ this in one quarter (last 4 quarters)
+    "promoter_sell_cum_pp": 5.0,   # or down ≥ this across the 12-quarter window
     "rpt_growth": 0.5,             # related-party txn / revenue up ≥ 50% YoY
     "float_pump_return": 1.0,      # 3m return ≥ 100%
     "float_pump_free_float": 25.0, # with free float < 25%
@@ -36,41 +42,91 @@ def _facts(symbol: str, kind: str) -> list[Fact]:
         return list(s.execute(select(Fact).where(Fact.symbol == symbol, Fact.kind == kind).order_by(Fact.as_of)).scalars())
 
 
+_VALUE_KEYS = {
+    "shareholding": ["promoter_pct", "encumbered_pct_of_promoter", "pledged_pct_of_promoter",
+                     "ndu_pct_of_promoter", "other_encumbrance_pct_of_promoter", "public_pct"],
+    "float": ["free_float_pct", "max_ret_3m", "ret_3m", "price_start", "price_end"],
+}
+
+
 def _ev(f: Fact) -> dict:
-    return {"document_id": f.document_id, "page": f.page, "period": f.period}
+    p = f.payload or {}
+    # Structured sources (NSE XBRL, prices) have no PDF page to show, so carry the numbers themselves.
+    values = {k: p[k] for k in _VALUE_KEYS.get(f.kind, []) if p.get(k) is not None}
+    return {"document_id": f.document_id, "page": f.page, "period": f.period,
+            "as_of": str(f.as_of) if f.as_of else None, "source_url": p.get("source_url"),
+            "path": p.get("path"), "quote": p.get("quote"), "title": p.get("title") or p.get("source"),
+            "kind": f.kind, "values": values}
 
 
-def pledge_flags(symbol: str) -> list[Flag]:
-    sh = _facts(symbol, "shareholding")
+def _split(p: dict) -> str:
+    if not p.get("encumbrance_split_available"):
+        return ""
+    return (f" (pledge {p.get('pledged_pct_of_promoter', 0):.1f}%, non-disposal undertakings "
+            f"{p.get('ndu_pct_of_promoter', 0):.1f}%, other {p.get('other_encumbrance_pct_of_promoter', 0):.1f}%)")
+
+
+def promoter_flags(symbol: str) -> list[Flag]:
+    sh = [f for f in _facts(symbol, "shareholding") if f.payload.get("promoter_pct") is not None]
     out: list[Flag] = []
-    if len(sh) >= 2:
-        latest, prior = sh[-1], sh[max(0, len(sh) - 5)]
-        lp, pp = latest.payload.get("pledged_pct_of_promoter", 0.0), prior.payload.get("pledged_pct_of_promoter", 0.0)
-        if lp - pp >= THRESHOLDS["pledge_creep_pp"]:
-            out.append(Flag("pledge_creep", 3, "Promoter pledge rising",
-                            f"Pledged share of promoter holding rose from {pp:.1f}% to {lp:.1f}%.", [_ev(prior), _ev(latest)]))
-        elif lp >= THRESHOLDS["pledge_high_abs"]:
-            out.append(Flag("pledge_high", 2, "High promoter pledge", f"{lp:.1f}% of promoter holding is pledged.", [_ev(latest)]))
-        d = prior.payload.get("promoter_pct", 0.0) - latest.payload.get("promoter_pct", 0.0)
-        if len(sh) >= 2 and (sh[-2].payload.get("promoter_pct", 0) - latest.payload.get("promoter_pct", 0)) >= THRESHOLDS["promoter_sell_pp"]:
-            out.append(Flag("promoter_selling", 2, "Promoter stake fell",
-                            f"Promoter holding down {d:.1f}pp in one quarter.", [_ev(sh[-2]), _ev(latest)]))
+    if len(sh) < 2 or sh[-1].payload["promoter_pct"] <= 0:
+        return out  # no promoter (e.g. YESBANK): encumbrance and selling flags don't apply
+    latest = sh[-1]
+    lp = latest.payload
+
+    enc = [f for f in sh if f.payload.get("encumbered_pct_of_promoter") is not None]
+    if enc and enc[-1] is latest:
+        prior = enc[max(0, len(enc) - 5)]
+        le, pe = lp["encumbered_pct_of_promoter"], prior.payload["encumbered_pct_of_promoter"]
+        if le - pe >= THRESHOLDS["encumbrance_creep_pp"]:
+            out.append(Flag("pledge_creep", 3, "Promoter encumbrance rising",
+                            f"Encumbered share of promoter holding rose from {pe:.1f}% ({prior.period}) to "
+                            f"{le:.1f}% ({latest.period}){_split(lp)}.", [_ev(prior), _ev(latest)]))
+        elif le >= THRESHOLDS["encumbrance_high_abs"]:
+            out.append(Flag("pledge_high", 2, "High promoter encumbrance",
+                            f"{le:.1f}% of promoter holding is encumbered as of {latest.period}{_split(lp)}.", [_ev(latest)]))
+
+    recent = sh[-5:]
+    qoq = max(((a, b) for a, b in zip(recent, recent[1:])),
+              key=lambda ab: ab[0].payload["promoter_pct"] - ab[1].payload["promoter_pct"], default=None)
+    first = sh[0]
+    cum = first.payload["promoter_pct"] - lp["promoter_pct"]
+    if qoq and qoq[0].payload["promoter_pct"] - qoq[1].payload["promoter_pct"] >= THRESHOLDS["promoter_sell_qoq_pp"]:
+        a, b = qoq
+        out.append(Flag("promoter_stake_drop", 2, "Promoter stake fell sharply",
+                        f"Promoter holding fell {a.payload['promoter_pct'] - b.payload['promoter_pct']:.2f}pp in one quarter, "
+                        f"from {a.payload['promoter_pct']:.2f}% ({a.period}) to {b.payload['promoter_pct']:.2f}% ({b.period}).",
+                        [_ev(a), _ev(b)]))
+    elif cum >= THRESHOLDS["promoter_sell_cum_pp"]:
+        out.append(Flag("promoter_stake_drop", 2, "Promoter stake declining",
+                        f"Promoter holding fell {cum:.2f}pp, from {first.payload['promoter_pct']:.2f}% ({first.period}) "
+                        f"to {lp['promoter_pct']:.2f}% ({latest.period}).", [_ev(first), _ev(latest)]))
     return out
 
 
+AUDITOR_RULES = {
+    "resignation": (3, "Statutory auditor resigned"),
+    "qualified_opinion": (3, "Modified audit opinion"),
+    "subsidiary_resignation": (2, "Subsidiary auditor resigned"),
+}
+
+
 def auditor_flags(symbol: str) -> list[Flag]:
-    ev = _facts(symbol, "auditor_event")
-    return [Flag("auditor_change", 3, "Auditor change / resignation", f.payload.get("summary", ""), [_ev(f)]) for f in ev
-            if f.payload.get("event") in {"resignation", "non_reappointment", "qualified_opinion"}]
-
-
-def guidance_flags(symbol: str) -> list[Flag]:
-    g = _facts(symbol, "guidance")[-4:]
-    misses = [f for f in g if f.payload.get("outcome") == "miss"]
-    if len(misses) >= THRESHOLDS["guidance_miss_count"]:
-        return [Flag("guidance_miss", 2, "Repeated guidance misses",
-                     f"{len(misses)} of last {len(g)} guided metrics were missed.", [_ev(f) for f in misses])]
-    return []
+    out: list[Flag] = []
+    events = _facts(symbol, "auditor_event")
+    for kind, (sev, title) in AUDITOR_RULES.items():
+        evs = [f for f in events if f.payload.get("event") == kind]
+        if not evs:
+            continue
+        if kind == "qualified_opinion":
+            labels = sorted({f.payload.get("opinion", "qualified") for f in evs})
+            dates = ", ".join(f.payload.get("filed_on", str(f.as_of)) for f in evs)
+            detail = f"{' / '.join(labels).capitalize()} opinion in {len(evs)} audited result filing(s): {dates}."
+        else:
+            detail = " ".join(f.payload.get("summary", "") for f in evs[-3:])
+        out.append(Flag("auditor_change" if kind != "qualified_opinion" else "audit_qualification", sev, title, detail,
+                        [_ev(f) for f in evs]))
+    return out
 
 
 def rpt_flags(symbol: str) -> list[Flag]:
@@ -87,14 +143,22 @@ def float_flags(symbol: str) -> list[Flag]:
     f = _facts(symbol, "float")
     if f:
         p = f[-1].payload
-        if p.get("ret_3m", 0) >= THRESHOLDS["float_pump_return"] and p.get("free_float_pct", 100) < THRESHOLDS["float_pump_free_float"]:
+        ret = p.get("max_ret_3m", p.get("ret_3m", 0))
+        if ret >= THRESHOLDS["float_pump_return"] and p.get("free_float_pct", 100) < THRESHOLDS["float_pump_free_float"]:
+            w = p.get("max_window") or ["?", "?"]
             return [Flag("float_pump", 3, "Low float, extreme move",
-                         f"3-month return {p['ret_3m']:.0%} on {p['free_float_pct']:.0f}% free float.", [_ev(f[-1])])]
+                         f"Price rose {ret:.0%} in 3 months ({w[0]} to {w[1]}, Rs {p.get('price_start')} to "
+                         f"Rs {p.get('price_end')}) with only {p['free_float_pct']:.1f}% public float "
+                         f"({p.get('free_float_period')}).", [_ev(f[-1])])]
     return []
 
 
 def score(symbol: str) -> dict:
-    flags = pledge_flags(symbol) + auditor_flags(symbol) + guidance_flags(symbol) + rpt_flags(symbol) + float_flags(symbol)
+    flags = promoter_flags(symbol) + auditor_flags(symbol) + rpt_flags(symbol) + float_flags(symbol)
     total = sum(f.severity for f in flags)
     level = "high" if total >= 5 else "elevated" if total >= 2 else "low"
     return {"symbol": symbol, "score": total, "level": level, "flags": [asdict(f) for f in flags], "thresholds": THRESHOLDS}
+
+
+# Back-compat for callers of the old name.
+pledge_flags = promoter_flags

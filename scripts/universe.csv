@@ -1,9 +1,45 @@
 symbol,bse_code,note
 RELIANCE,500325,large-cap control
 INFY,500209,large-cap control
-TATAMOTORS,500570,
+HDFCBANK,500180,large-cap control
+TCS,532540,large-cap control
+ICICIBANK,532174,large-cap control
+ITC,500875,large-cap control
+HINDUNILVR,500696,large-cap control
+LT,500510,large-cap control
+SBIN,500112,large-cap control
+BHARTIARTL,532454,large-cap control
+SUNPHARMA,524715,large-cap control
+BAJFINANCE,500034,large-cap control
+WIPRO,507685,large-cap control
+TMPV,500570,ex-TATAMOTORS (code kept by passenger-vehicle co. after Oct-2025 demerger)
+ETERNAL,543320,ex-ZOMATO; new-age listing
+NYKAA,543384,new-age listing
 ZEEL,505537,pledge/governance history
 YESBANK,532648,blow-up case
 PAYTM,543396,governance news flow
 SUZLON,532667,pledge history
-IDEA,532822,
+IDEA,532822,going-concern/debt stress
+ADANIENT,512599,short-seller report (Jan 2023)
+ADANIPORTS,532921,Adani group
+ADANIGREEN,541450,Adani group; US indictment news (Nov 2024)
+VEDL,500295,promoter pledge/leverage
+INDUSINDBK,532187,derivative accounting discrepancy (2025)
+GENSOL,542851,fund diversion/SEBI order (2025)
+JPASSOCIAT,532532,insolvency
+RCOM,532712,insolvency
+RPOWER,532939,ADAG group stress
+RELINFRA,500390,ADAG group; auditor issues
+SAMMAANCAP,535789,ex-Indiabulls Housing; governance allegations
+PCJEWELLER,534809,loan default/restructuring
+DISHTV,532839,board/AGM disputes
+VAKRANGEE,511431,2018 crash; auditor resignation
+GTLINFRA,532775,debt stress
+SPICEJET,500285,delayed results/dues
+PNB,532461,Nirav Modi fraud legacy
+BANDHANBNK,541153,asset-quality stress
+RBLBANK,540065,RBI intervention (2021)
+IIFL,532636,RBI gold-loan ban (2024)
+DELTACORP,532848,GST demand notices
+BAJAJHIND,500032,debt restructuring
+EASEMYTRIP,543272,promoter exits/stake sales
