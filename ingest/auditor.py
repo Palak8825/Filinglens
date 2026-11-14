@@ -25,6 +25,7 @@ from sqlalchemy import select
 
 from core.db import Document, Fact, get_session, init_db
 from ingest.announcements import Announcement, read_manifest
+from ingest.parse_pdf import local_path
 
 UNIVERSE = Path(__file__).resolve().parent.parent / "scripts" / "universe.csv"
 
@@ -43,7 +44,7 @@ MODIFIED = re.compile(r"basis\s+for\s+(qualified|adverse)\s+opinion|basis\s+for\
 
 def _pages(path: str, max_pages: int | None = None) -> list[tuple[int, str]]:
     out = []
-    with fitz.open(path) as doc:
+    with fitz.open(local_path(path)) as doc:
         for i, page in enumerate(doc, start=1):
             if max_pages and i > max_pages:
                 break
@@ -115,7 +116,7 @@ def scan_modified_opinion(ann: Announcement) -> dict | None:
 
 
 def build_facts(symbol: str, anns: list[Announcement]) -> list[Fact]:
-    mine = [a for a in anns if a.symbol == symbol and a.path and Path(a.path).exists()]
+    mine = [a for a in anns if a.symbol == symbol and a.path and local_path(a.path).exists()]
     with get_session() as s:
         # Link to the indexed Document when there is one, so the UI can render the cited page.
         doc_ids = {p: i for p, i in s.execute(select(Document.path, Document.id).where(Document.symbol == symbol)).all()}

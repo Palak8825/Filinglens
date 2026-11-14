@@ -10,7 +10,7 @@ from core.answer import ask
 from core.config import settings
 from core.db import Document, Fact, get_session
 from core.flags import score
-from ingest.parse_pdf import render_page_png
+from ingest.parse_pdf import local_path, render_page_png
 
 app = FastAPI(title="FilingLens", version="0.1")
 
@@ -80,7 +80,7 @@ _RAW = (settings.data_dir / "raw").resolve()
 def evidence_png(path: str, page: int = 1):
     """Render a page of any filing in the frozen corpus (flag evidence may come from filings that
     aren't in the search index). Only paths inside data/raw are served."""
-    p = Path(path)
+    p = local_path(path)
     p = (p if p.is_absolute() else Path.cwd() / p).resolve()
     if _RAW not in p.parents or p.suffix.lower() != ".pdf" or not p.exists():
         raise HTTPException(404)

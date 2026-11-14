@@ -13,7 +13,26 @@ Built solo for Arthaton 2026 (AI for finance).
 
 Not a trading tool. No orders, no broker keys, no real money. Research and investor-protection only.
 
-## Run
+## Quick start (prebuilt index, ~10 minutes)
+
+The [Releases](https://github.com/Palak8825/Filinglens/releases) page has the prebuilt index (14 stocks, 929 filings, 40k chunks)
+and every PDF the app can cite (956 files), so you don't need to re-download from BSE or re-embed (~2 h on CPU).
+
+```bash
+git clone https://github.com/Palak8825/Filinglens.git && cd Filinglens
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate  (Python 3.12)
+pip install -r requirements.txt
+# download filinglens-index.zip, filinglens-pdfs-part1.zip, filinglens-pdfs-part2.zip and SHA256SUMS.txt
+# from the latest release into one folder, then:
+python -m scripts.setup_release path/to/that/folder   # verifies checksums, unpacks into ./data
+cp .env.example .env                                   # set LLM_API_KEY (Gemini; free tier works)
+uvicorn api.main:app                                   # http://localhost:8000
+streamlit run web/app.py                               # http://localhost:8501  (second terminal)
+```
+
+No API key? `python -m scripts.selftest` checks retrieval, chunking, the citation verifier and the flags offline.
+
+## Rebuild from scratch
 
 ```bash
 cp .env.example .env            # add LLM_API_KEY
@@ -27,6 +46,7 @@ python -m ingest.market          # prices (cached) + public float → facts
 uvicorn api.main:app --reload    # http://localhost:8000
 streamlit run web/app.py         # http://localhost:8501
 python -m eval.run_eval          # prints the eval table
+python -m scripts.package_release --out ../filinglens-release   # rebuild the release assets
 ```
 
 ## Architecture

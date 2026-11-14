@@ -29,9 +29,15 @@ def _ocr(page: fitz.Page) -> str:
         return ""
 
 
+def local_path(path: str | Path) -> Path:
+    """Paths are stored as written at ingest time (Windows-style 'data\\raw\\...' here). Normalise the
+    separators so a shipped index opens the same PDFs on macOS/Linux."""
+    return Path(str(path).replace("\\", "/"))
+
+
 def parse_pdf(path: str | Path) -> list[tuple[int, str]]:
     pages: list[tuple[int, str]] = []
-    with fitz.open(path) as doc:
+    with fitz.open(local_path(path)) as doc:
         for i, page in enumerate(doc, start=1):
             text = page.get_text("text")
             if len(text.strip()) < MIN_CHARS_FOR_TEXT:
@@ -41,11 +47,11 @@ def parse_pdf(path: str | Path) -> list[tuple[int, str]]:
 
 
 def page_count(path: str | Path) -> int:
-    with fitz.open(path) as doc:
+    with fitz.open(local_path(path)) as doc:
         return len(doc)
 
 
 def render_page_png(path: str | Path, page_no: int, dpi: int = 110) -> bytes:
     """Used by the UI to show the cited page."""
-    with fitz.open(path) as doc:
+    with fitz.open(local_path(path)) as doc:
         return doc[page_no - 1].get_pixmap(dpi=dpi).tobytes("png")
