@@ -51,7 +51,32 @@ def page_count(path: str | Path) -> int:
         return len(doc)
 
 
-def render_page_png(path: str | Path, page_no: int, dpi: int = 110) -> bytes:
-    """Used by the UI to show the cited page."""
+def _quote_quads(page: fitz.Page, quote: str) -> list:
+    """Where a verified quote sits on the page. Quotes wrap across lines and columns, so search for
+    overlapping 6-word windows rather than the whole sentence; every window found is highlighted."""
+    words = quote.split()
+    if not words:
+        return []
+    hits = page.search_for(" ".join(words), quads=True)
+    if hits:
+        return hits
+    quads, n = [], 6
+    for i in range(0, max(1, len(words) - n + 1), 3):
+        quads += page.search_for(" ".join(words[i:i + n]), quads=True)
+    if len(words) > n:
+        quads += page.search_for(" ".join(words[-n:]), quads=True)
+    return quads
+
+
+def render_page_png(path: str | Path, page_no: int, dpi: int = 110, highlight: str | None = None) -> bytes:
+    """Used by the UI to show the cited page; `highlight` marks the verified quote on it (in memory only,
+    the PDF on disk is never modified)."""
     with fitz.open(local_path(path)) as doc:
-        return doc[page_no - 1].get_pixmap(dpi=dpi).tobytes("png")
+        page = doc[page_no - 1]
+        if highlight:
+            quads = _quote_quads(page, highlight)
+            if quads:
+                annot = page.add_highlight_annot(quads)
+                annot.set_colors(stroke=(1.0, 0.85, 0.2))
+                annot.update()
+        return page.get_pixmap(dpi=dpi).tobytes("png")

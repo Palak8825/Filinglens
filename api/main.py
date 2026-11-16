@@ -63,11 +63,11 @@ def examples(symbol: str | None = None) -> list[dict]:
     return answer_cache.examples(symbol)
 
 
-def _png_or_404(path, page: int) -> Response:
+def _png_or_404(path, page: int, hl: str | None = None) -> Response:
     """A cited page whose PDF isn't on disk (e.g. a partial download) is a 404, not a 500: the UI then says
     the image isn't in this download, while the quote itself was verified against the indexed text."""
     try:
-        png = render_page_png(path, page)
+        png = render_page_png(path, page, highlight=hl)
     except (FileNotFoundError, IndexError, ValueError, RuntimeError):
         raise HTTPException(404) from None
     return Response(png, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
@@ -92,12 +92,13 @@ def docs(symbol: str) -> list[dict]:
 
 
 @app.get("/doc/{doc_id}/page/{page}.png")
-def page_png(doc_id: int, page: int):
+def page_png(doc_id: int, page: int, hl: str | None = None):
+    """hl: a verified quote to highlight on the rendered page."""
     with get_session() as s:
         d = s.get(Document, doc_id)
     if not d:
         raise HTTPException(404)
-    return _png_or_404(d.path, page)
+    return _png_or_404(d.path, page, hl)
 
 
 _RAW = (settings.data_dir / "raw").resolve()
@@ -125,3 +126,60 @@ def screen() -> list[dict]:
         rows.append({"symbol": sym, "level": r["level"], "score": r["score"],
                      "flags": [f["code"] for f in r["flags"]]})
     return sorted(rows, key=lambda r: (-r["score"], r["symbol"]))
+
+
+@app.get("/overview")
+def overview() -> dict:
+    """Headline numbers for the landing page."""
+    from sqlalchemy import func
+
+    from core.db import Chunk
+
+    with get_session() as s:
+        n_docs = s.execute(select(func.count(Document.id))).scalar() or 0
+        n_chunks = s.execute(select(func.count(Chunk.id))).scalar() or 0
+        indexed = sorted({r[0] for r in s.execute(select(Document.symbol)).all()})
+        by_type = dict(s.execute(select(Document.doc_type, func.count(Document.id)).group_by(Document.doc_type)).all())
+        screened = sorted({r[0] for r in s.execute(select(Fact.symbol)).all()})
+    manifest = settings.data_dir / "raw" / "manifest.jsonl"
+    n_pdfs = sum(1 for line in manifest.open(encoding="utf-8") if line.strip()) if manifest.exists() else None
+    return {"filings_indexed": n_docs, "chunks": n_chunks, "symbols_indexed": indexed, "doc_types": by_type,
+            "symbols_screened": len(screened), "pdfs_in_corpus": n_pdfs, "cached_answers": answer_cache.size(),
+            "has_api_key": has_api_key(), "model": settings.llm_model, "embed_model": settings.embed_model,
+            "rerank_model": settings.rerank_model if settings.rerank else None}
+
+
+@app.get("/shareholding/{symbol}")
+def shareholding(symbol: str) -> list[dict]:
+    """Quarterly promoter holding and encumbrance (NSE shareholding XBRL), oldest first, for the dashboard chart."""
+    keys = ["promoter_pct", "encumbered_pct_of_promoter", "pledged_pct_of_promoter", "public_pct"]
+    with get_session() as s:
+        rows = s.execute(select(Fact).where(Fact.symbol == symbol.upper(), Fact.kind == "shareholding")
+                         .order_by(Fact.as_of)).scalars().all()
+    return [{"period": f.period, "as_of": str(f.as_of) if f.as_of else None,
+             **{k: f.payload.get(k) for k in keys}} for f in rows if f.payload.get("promoter_pct") is not None]
+
+
+@app.get("/eval")
+def eval_report() -> dict:
+    """The committed eval report (eval/report.json) plus the question mix, for the Evaluation page."""
+    import json
+    from collections import Counter
+
+    root = Path(__file__).resolve().parent.parent / "eval"
+    rep = json.loads((root / "report.json").read_text(encoding="utf-8")) if (root / "report.json").exists() else {}
+    qs = [json.loads(line) for line in (root / "questions.jsonl").read_text(encoding="utf-8").splitlines()
+          if line.strip() and not line.startswith("//")]
+    qs = [q for q in qs if q.get("symbol") != "EXAMPLE"]
+    def clean(x):  # report.json can hold NaN (a metric over zero questions); JSON responses can't
+        if isinstance(x, float) and x != x:
+            return None
+        if isinstance(x, dict):
+            return {k: clean(v) for k, v in x.items()}
+        if isinstance(x, list):
+            return [clean(v) for v in x]
+        return x
+
+    rep = clean(rep)
+    return {**rep, "n_questions": len(qs), "question_types": dict(Counter(q["type"] for q in qs)),
+            "question_symbols": sorted({q["symbol"] for q in qs})}
