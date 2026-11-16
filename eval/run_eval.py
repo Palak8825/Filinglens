@@ -21,10 +21,12 @@ Questions: eval/questions.jsonl, one JSON object per line:
   and add "gold_all": true.
 
 Usage
-  python -m eval.run_eval                         # retrieval ablation + end-to-end on hybrid
-  python -m eval.run_eval --configs hybrid,bm25,vector,hybrid+rerank
+  python -m eval.run_eval                         # retrieval ablation + end-to-end on hybrid+rerank (production)
+  python -m eval.run_eval --configs hybrid+rerank,hybrid,hybrid+rerank@weak,hybrid+rerank@v2
   python -m eval.run_eval --retrieval-only
 Answers are cached in eval/cache/<config>.jsonl (delete to re-run). Report → eval/report.md.
+The judge is settings.judge_model (JUDGE_MODEL), never the answering model; cached verdicts from a
+different judge are re-graded without re-answering. Cells over fewer than 5 questions print counts.
 """
 from __future__ import annotations
 
@@ -53,10 +55,15 @@ CONFIGS = {  # name -> (retrieval mode, rerank, prompt version, model override o
     "hybrid": ("hybrid", False, "v1", None),
     "hybrid+rerank": ("hybrid", True, "v1", None),
     "hybrid@v2": ("hybrid", False, "v2", None),                 # prompt arm: same model, relaxed prompt
-    "hybrid+rerank@v2": ("hybrid", True, "v2", None),
     "hybrid@flash": ("hybrid", False, "v1", "gemini-3.5-flash"),  # model arm: same prompt, bigger model
     "hybrid@v2+flash": ("hybrid", False, "v2", "gemini-3.5-flash"),
+    # Weak-model arm: an older, smaller model. Its job is to give the verifier something to reject, so
+    # the report can show what an unchecked pipeline would have displayed (precision w/o verifier).
+    "hybrid+rerank@weak": ("hybrid", True, "v1", "gemini-3.1-flash-lite"),
+    "hybrid+rerank@v2": ("hybrid", True, "v2", None),
+    "hybrid+rerank@flash": ("hybrid", True, "v1", "gemini-3.5-flash"),  # model arm on the production pipeline
 }
+HEADLINE = "hybrid+rerank"  # what the app runs by default (RERANK=1)
 JUDGE = """You grade a research assistant's answer against a gold answer from a company's filings.
 Return JSON {"correct": true|false, "reason": str}.
 Correct = states the same key facts as the gold answer: numbers must match in value, unit and period;
@@ -138,6 +145,8 @@ def retrieval_ablation(qs: list[dict], configs: list[str]) -> dict:
         rows[name] = {
             t: {
                 "n": len(v),
+                "hits": sum(1 for r, _ in v if r),
+                "all_gold": sum(1 for _, a in v if a),
                 "hit@8": sum(1 for r, _ in v if r) / len(v),
                 "mrr": sum(1 / r for r, _ in v if r) / len(v),
                 "all_gold@8": sum(1 for _, a in v if a) / len(v),
@@ -159,7 +168,7 @@ def _llm_retry(fn, *a, tries: int = 6):
             time.sleep(wait)
 
 
-JUDGE_MODEL = settings.llm_model  # fixed across configs, so a model arm never grades its own answers
+JUDGE_MODEL = settings.judge_model  # fixed across configs and different from the answering model
 
 
 def judge(question: str, gold: str, pred: str) -> tuple[bool, str]:
@@ -224,10 +233,17 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
                 r = json.loads(line)
                 done[r["id"]] = r
     out = []
+    rejudged = False
     for q in qs:
         cached = done.get(q["id"])
         if cached and cached.get("question") == q["question"] and cached.get("gold_answer") == q.get("gold_answer") \
                 and "hit_ids" in cached:
+            if q["answerable"] and cached.get("judge_model") != JUDGE_MODEL:
+                # Graded by another model (older runs used the answering model as judge): re-grade only.
+                cached["correct"], cached["judge_reason"] = judge(q["question"], q["gold_answer"], cached["answer"])
+                cached["judge_model"] = JUDGE_MODEL
+                print(f"  [{name}] {q['id']} re-judged with {JUDGE_MODEL}: {'ok' if cached['correct'] else 'BAD'}")
+                rejudged = True
             out.append(_rescore(cached, q))
             continue
         t = time.time()
@@ -241,6 +257,7 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
         r = {
             "id": q["id"], "symbol": q["symbol"], "question": q["question"], "gold_answer": q.get("gold_answer"),
             "abstained": ans.abstained, "correct": correct, "judge_reason": reason,
+            "judge_model": JUDGE_MODEL if q["answerable"] else None, "answer_model": ans.model,
             "must_include_ok": _must_include_ok(q, ans.answer) if q["answerable"] else None,
             "n_raw": len(raw), "n_verified": len(ans.citations), "dropped": ans.dropped_citations,
             "raw_keys": raw_keys, "ver_keys": [(doc_path(c.document_id), c.page) for c in ans.citations],
@@ -256,6 +273,10 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
             time.sleep(pace)
         mark = "abst" if r["abstained"] else ("ok " if correct else "BAD" if correct is False else "-  ")
         print(f"  [{name}] {q['id']} {mark} {latency:4.1f}s cits {r['n_verified']}/{r['n_raw']}  {q['question'][:70]}")
+    if rejudged:  # persist the new verdicts: rewrite the cache file with every row, old and fresh
+        keep = {r["id"]: r for r in done.values()}
+        keep.update({r["id"]: r for r in out})
+        path.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in keep.values()), encoding="utf-8")
     return out
 
 
@@ -265,7 +286,7 @@ def summarize(results: list[dict]) -> dict:
     raw = sum(r["n_raw"] for r in results)
     ver = sum(r["n_verified"] for r in ans)
     raw_ans = sum(r["n_raw"] for r in ans)
-    pct = lambda a, b: a / b if b else float("nan")  # noqa: E731
+    pct = lambda a, b: {"k": a, "n": b, "v": a / b if b else float("nan")}  # noqa: E731
     mi = [r for r in ans if r["must_include_ok"] is not None]
     return {
         "n_answerable": len(ans), "n_unanswerable": len(unans),
@@ -285,7 +306,14 @@ def summarize(results: list[dict]) -> dict:
     }
 
 
-def fmt(x: float) -> str:
+def fmt(x) -> str:
+    """A {"k","n","v"} cell prints counts when n < 5 (a percentage over 1-4 questions overstates what it
+    shows), otherwise "pct (k/n)"."""
+    if isinstance(x, dict):
+        k, n = x["k"], x["n"]
+        if not n:
+            return "—"
+        return f"{k}/{n}" if n < 5 else f"{k / n:.0%} ({k}/{n})"
     return "—" if x != x else f"{x:.0%}"
 
 
@@ -293,16 +321,17 @@ def report(qs: list[dict], abl: dict | None, e2e: dict[str, dict]) -> str:
     counts = defaultdict(int)
     for q in qs:
         counts[q["type"]] += 1
-    lines = [f"# FilingLens eval\n\nModel: `{settings.llm_model}` (judge: `{JUDGE_MODEL}`) · embeddings `{settings.embed_model}` · "
+    lines = [f"# FilingLens eval\n\nAnswering model: `{settings.llm_model}` · judge: `{JUDGE_MODEL}` · embeddings `{settings.embed_model}` · "
              f"{len(qs)} questions: " + ", ".join(f"{counts[t]} {t}" for t in TYPES if counts[t]) + "\n"]
-    if "hybrid" in e2e or e2e:
-        main = e2e.get("hybrid") or next(iter(e2e.values()))
-        lines += ["## Headline (hybrid retrieval, verifier on)\n", "| Metric | Value |", "|---|---|",
+    if e2e:
+        head = HEADLINE if HEADLINE in e2e else next(iter(e2e))
+        main = e2e[head]
+        lines += [f"## Headline ({head}, verifier on)\n", "| Metric | Value |", "|---|---|",
                   f"| Answer accuracy ({main['n_answerable']} answerable) | {fmt(main['accuracy'])} |",
                   *[f"| · {t} | {fmt(v)} |" for t, v in main["accuracy_by_type"].items()],
                   f"| Citation precision (verified citations on a gold page) | {fmt(main['citation_precision'])} |",
                   f"| Citation precision if unverified citations were shown | {fmt(main['citation_precision_no_verifier'])} |",
-                  f"| Model citations rejected by the verifier | {fmt(main['verifier_rejection'])} of {main['n_raw_citations']} |",
+                  f"| Model citations rejected by the verifier | {fmt(main['verifier_rejection'])} |",
                   f"| Correct abstention ({main['n_unanswerable']} unanswerable) | {fmt(main['abstention'])} |",
                   f"| False abstention on answerable | {fmt(main['false_abstention'])} |",
                   f"| Answers with no verified citation | {fmt(main['unsupported_answers'])} |",
@@ -313,8 +342,9 @@ def report(qs: list[dict], abl: dict | None, e2e: dict[str, dict]) -> str:
                   "| Config | " + " | ".join(types) + " | cross_doc: all docs |",
                   "|---|" + "---|" * (len(types) + 1)]
         for name, v in abl.items():
-            cells = [f"{v[t]['hit@8']:.0%} / {v[t]['mrr']:.2f}" if t in v else "—" for t in types]
-            xd = f"{v['cross_doc']['all_gold@8']:.0%}" if "cross_doc" in v else "—"
+            cells = [fmt({"k": v[t]["hits"], "n": v[t]["n"]}) + f" / {v[t]['mrr']:.2f}" if t in v else "—"
+                     for t in types]
+            xd = fmt({"k": v["cross_doc"]["all_gold"], "n": v["cross_doc"]["n"]}) if "cross_doc" in v else "—"
             lines.append(f"| {name} | " + " | ".join(cells) + f" | {xd} |")
         lines.append("")
     if len(e2e) > 1:
@@ -324,7 +354,7 @@ def report(qs: list[dict], abl: dict | None, e2e: dict[str, dict]) -> str:
         for name, m in e2e.items():
             _, _, prompt, model = CONFIGS[name]
             lines.append(f"| {name} | {prompt} | {model or settings.llm_model} | {fmt(m['accuracy'])} | "
-                         f"{fmt(m['accuracy_by_type'].get('reasoning', float('nan')))} | {fmt(m['citation_precision'])} | "
+                         f"{fmt(m['accuracy_by_type'].get('reasoning', {'k': 0, 'n': 0}))} | {fmt(m['citation_precision'])} | "
                          f"{fmt(m['verifier_rejection'])} | {fmt(m['abstention'])} | {fmt(m['false_abstention'])} |")
         lines.append("")
     return "\n".join(lines)
@@ -332,13 +362,17 @@ def report(qs: list[dict], abl: dict | None, e2e: dict[str, dict]) -> str:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--configs", default="hybrid", help=f"comma-separated, from {list(CONFIGS)}")
-    p.add_argument("--ablation", default="bm25,vector,hybrid", help="retrieval-ablation configs ('' to skip)")
+    p.add_argument("--configs", default=HEADLINE, help=f"comma-separated, from {list(CONFIGS)}")
+    p.add_argument("--ablation", default="bm25,vector,hybrid,hybrid+rerank",
+                   help="retrieval-ablation configs ('' to skip)")
     p.add_argument("--no-ablation", action="store_true", help="skip the retrieval ablation")
     p.add_argument("--retrieval-only", action="store_true")
     p.add_argument("--pace", type=float, default=2.0, help="seconds between questions (free-tier rate limits)")
     a = p.parse_args()
     settings.llm_fallback_models = ""  # one model per run: a silent fallback would contaminate the comparison
+    for name in [c for c in a.configs.split(",") if c]:
+        if (CONFIGS[name][3] or settings.llm_model) == JUDGE_MODEL:
+            print(f"WARNING: arm {name} answers with the judge model ({JUDGE_MODEL}); set JUDGE_MODEL to another model")
 
     qs = load_questions()
     if not qs:

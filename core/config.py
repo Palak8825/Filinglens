@@ -11,8 +11,11 @@ class Settings(BaseSettings):
     llm_api_key: str = ""
     # flash-lite: 1-2 s per answer when benchmarked 2026-11-14; newer flash models were 503-ing.
     llm_model: str = "gemini-3.5-flash-lite"
-    llm_fallback_models: str = "gemini-3.5-flash,gemini-2.5-flash-lite"
+    llm_fallback_models: str = "gemini-3.5-flash,gemini-3.1-flash-lite"  # gemini-2.5-* retired for new keys (Nov 2026)
     llm_timeout_s: int = 60
+    # Eval grader. Deliberately a different model from the one answering, so no model grades its own
+    # output (self-preference bias), and not one any eval arm answers with. JUDGE_MODEL in .env overrides it.
+    judge_model: str = "gemini-3.6-flash"
 
     # Small, fast, English. 384-dim. Swap to BAAI/bge-m3 (embed_dim 1024) only on a GPU.
     embed_model: str = "BAAI/bge-small-en-v1.5"

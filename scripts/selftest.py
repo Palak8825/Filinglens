@@ -167,6 +167,54 @@ def main() -> int:
     else:
         print("[ok] clean company fires no flags")
 
+    # 5. relative quarters resolve against what was actually filed (no LLM)
+    from core.retrieve import resolve_periods
+
+    for q, want in [("What was the margin in the latest quarter?", ("Q2FY26",)),
+                    ("What was the margin in Q1 FY26?", ("Q1FY26",)),
+                    ("What was the debt as of September 30, 2025?", ("Q2FY26",)),
+                    ("What was the debt on September 15, 2025?", None),
+                    ("What is the dividend policy?", None)]:
+        got = resolve_periods("TESTCO", q)[0]
+        print(f"[{'ok' if got == want else 'FAIL'}] period resolution {q!r} -> {got}")
+        if got != want:
+            fails.append(f"period resolution {q!r}: expected {want}, got {got}")
+
+    # 6. demo answer cache: question-normalised key; model ignored without an API key, honoured with one
+    from core import answer_cache
+
+    real_file = answer_cache.CACHE_FILE
+    with tempfile.TemporaryDirectory() as tmp:
+        answer_cache.CACHE_FILE = Path(tmp) / "answer_cache.json"
+        try:
+            answer_cache.put("TESTCO", "Why did EBITDA margin decline?", "v1",
+                             {"answer": "Raw materials and a provision.", "citations": [], "model": settings.llm_model})
+            q = "Why did EBITDA margin decline?"
+            checks = [("hit on normalised wording", answer_cache.get("testco", "  why did EBITDA margin decline ", "v1", False), True),
+                      ("other prompt version misses", answer_cache.get("TESTCO", q, "v2", False), False)]
+            real_model, settings.llm_model = settings.llm_model, "some-other-model"
+            checks += [("no key: model ignored", answer_cache.get("TESTCO", q, "v1", False), True),
+                       ("with key: other model answers live", answer_cache.get("TESTCO", q, "v1", True), False)]
+            settings.llm_model = real_model
+            hit = answer_cache.get("TESTCO", q, "v1", False)
+            checks.append(("cached badge metadata, index unchanged", hit and hit["cached"] and not hit["cached"]["index_changed"], True))
+        finally:
+            answer_cache.CACHE_FILE = real_file
+    for label, got, want in checks:
+        ok = bool(got) == want
+        print(f"[{'ok' if ok else 'FAIL'}] cache: {label}")
+        if not ok:
+            fails.append(f"cache: {label}")
+
+    # 7. eval report prints counts, not percentages, for cells under 5 questions
+    from eval.run_eval import fmt
+
+    for cell, want in [({"k": 1, "n": 1}, "1/1"), ({"k": 2, "n": 3}, "2/3"), ({"k": 6, "n": 8}, "75% (6/8)")]:
+        got = fmt(cell)
+        print(f"[{'ok' if got == want else 'FAIL'}] eval cell {cell} -> {got}")
+        if got != want:
+            fails.append(f"eval fmt {cell}: expected {want}, got {got}")
+
     print()
     if fails:
         print(f"{len(fails)} FAILURE(S):")

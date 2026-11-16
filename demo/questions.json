@@ -1,0 +1,13 @@
+[
+  {"symbol": "YESBANK", "question": "What was the net interest margin in the latest quarter and why did it move?"},
+  {"symbol": "YESBANK", "question": "How did the gross NPA ratio change between Q3 FY26 and Q2 FY27?"},
+  {"symbol": "YESBANK", "question": "What is management's ROA guidance for FY27 and where is H1 tracking?"},
+  {"symbol": "YESBANK", "question": "What dividend per share did YES Bank declare for FY28?"},
+  {"symbol": "IDEA", "question": "What were revenue and EBITDA in the latest quarter, and how did they grow?"},
+  {"symbol": "IDEA", "question": "What was the bank debt and the cash and bank balance as of September 30, 2026?"},
+  {"symbol": "IDEA", "question": "Why were equity shares issued to the Government of India, and what did it do to the debt?"},
+  {"symbol": "VEDL", "question": "Have the promoters pledged or otherwise encumbered their shares, and why?"},
+  {"symbol": "RELIANCE", "question": "How much did Digital Services EBITDA grow year-on-year in Q2 FY27?"},
+  {"symbol": "RELIANCE", "question": "What drove the oil-to-chemicals segment's performance in the latest quarter?"},
+  {"symbol": "PAYTM", "question": "Why did the statutory auditor resign?"}
+]

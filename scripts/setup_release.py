@@ -1,7 +1,8 @@
 """
 Unpack the FilingLens release assets into ./data (run from the repo root).
 
-    python -m scripts.setup_release path/to/downloaded/assets
+    python -m scripts.setup_release path/to/downloaded/assets          # full release (index + all PDFs)
+    python -m scripts.setup_release path/to/downloaded/assets --demo   # small demo asset only
 
 Verifies every zip against SHA256SUMS.txt before extracting. Stdlib only, works on Windows/macOS/Linux.
 """
@@ -21,8 +22,8 @@ def sha256(p: Path) -> str:
     return h.hexdigest()
 
 
-def main(folder: Path) -> int:
-    sums_file = folder / "SHA256SUMS.txt"
+def main(folder: Path, demo: bool = False) -> int:
+    sums_file = folder / ("SHA256SUMS-demo.txt" if demo else "SHA256SUMS.txt")
     if not sums_file.exists():
         print(f"missing {sums_file}")
         return 1
@@ -50,7 +51,8 @@ def main(folder: Path) -> int:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    args = [a for a in sys.argv[1:] if a != "--demo"]
+    if len(args) != 1:
         print(__doc__)
         sys.exit(2)
-    sys.exit(main(Path(sys.argv[1])))
+    sys.exit(main(Path(args[0]), demo="--demo" in sys.argv[1:]))

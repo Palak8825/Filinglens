@@ -6,7 +6,9 @@ from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from core.answer import ask
+from core import answer_cache
+from core.answer import NoAPIKey, ask_dict
+from core.llm import has_api_key
 from core.config import settings
 from core.db import Document, Fact, get_session
 from core.flags import score
@@ -38,11 +40,37 @@ class AskIn(BaseModel):
     symbol: str
     question: str
     doc_type: str | None = None
+    use_cache: bool = True  # False forces a live answer even for a cached demo question
 
 
 @app.post("/ask")
 def ask_ep(body: AskIn) -> dict:
-    return ask(body.symbol.upper(), body.question, body.doc_type).to_dict()
+    try:
+        return ask_dict(body.symbol.upper(), body.question, body.doc_type, body.use_cache)
+    except NoAPIKey as e:
+        raise HTTPException(status_code=503, detail=str(e)) from None
+
+
+@app.get("/status")
+def status() -> dict:
+    """Lets the UI explain what works without an API key instead of failing on the first question."""
+    return {"has_api_key": has_api_key(), "cached_answers": answer_cache.size(), "model": settings.llm_model}
+
+
+@app.get("/examples")
+def examples(symbol: str | None = None) -> list[dict]:
+    """Demo questions with cached answers (clickable in the UI; they work with no API key)."""
+    return answer_cache.examples(symbol)
+
+
+def _png_or_404(path, page: int) -> Response:
+    """A cited page whose PDF isn't on disk (e.g. a partial download) is a 404, not a 500: the UI then says
+    the image isn't in this download, while the quote itself was verified against the indexed text."""
+    try:
+        png = render_page_png(path, page)
+    except (FileNotFoundError, IndexError, ValueError, RuntimeError):
+        raise HTTPException(404) from None
+    return Response(png, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
 
 
 @app.get("/flags/{symbol}")
@@ -69,8 +97,7 @@ def page_png(doc_id: int, page: int):
         d = s.get(Document, doc_id)
     if not d:
         raise HTTPException(404)
-    return Response(render_page_png(d.path, page), media_type="image/png",
-                    headers={"Cache-Control": "public, max-age=86400"})
+    return _png_or_404(d.path, page)
 
 
 _RAW = (settings.data_dir / "raw").resolve()
@@ -84,11 +111,7 @@ def evidence_png(path: str, page: int = 1):
     p = (p if p.is_absolute() else Path.cwd() / p).resolve()
     if _RAW not in p.parents or p.suffix.lower() != ".pdf" or not p.exists():
         raise HTTPException(404)
-    try:
-        png = render_page_png(p, page)
-    except (IndexError, ValueError):
-        raise HTTPException(404) from None
-    return Response(png, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
+    return _png_or_404(p, page)
 
 
 @app.get("/screen")

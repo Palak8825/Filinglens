@@ -4,10 +4,14 @@ from __future__ import annotations
 import os
 from dataclasses import asdict, dataclass, field
 
-from core.llm import complete_json
+from core.llm import complete_json_with_model, has_api_key
 from core.rerank import rerank
-from core.retrieve import Hit, retrieve
+from core.retrieve import Hit, resolve_periods, retrieve
 from core.verify import verify_citations
+
+
+class NoAPIKey(RuntimeError):
+    """No LLM key configured and the question isn't in the demo cache."""
 
 SYSTEM = """You are an equity research assistant answering ONLY from the provided excerpts of a listed Indian company's regulatory filings.
 Rules:
@@ -58,6 +62,9 @@ class Answer:
     citations: list[Citation] = field(default_factory=list)
     dropped_citations: int = 0
     abstained: bool = False
+    model: str | None = None        # the model that actually answered (after any fallback)
+    period_note: str | None = None  # set when "latest quarter" etc. was resolved to a filed quarter
+    prompt: str = "v1"
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -76,16 +83,21 @@ def answer_with_trace(symbol: str, question: str, doc_type: str | None = None, m
     """ask() plus what the eval needs: the excerpts the LLM saw and its raw (pre-verifier) citations.
     mode: hybrid | bm25 | vector. use_rerank: None = follow the RERANK env setting.
     prompt: v1 | v2; None = PROMPT_VERSION env var (default v1)."""
-    system = PROMPTS[prompt or os.environ.get("PROMPT_VERSION", "v1")]
+    prompt = prompt or os.environ.get("PROMPT_VERSION", "v1")
+    system = PROMPTS[prompt]
+    _, period_note = resolve_periods(symbol, question)
     hits = retrieve(symbol, question, doc_type=doc_type, mode=mode)
     hits = rerank(question, hits, enabled=use_rerank)
     if not hits:
-        return Answer(question, symbol, "Not found in the filings available.", "low", abstained=True), [], []
-    raw = complete_json(system, f"Company: {symbol}\nQuestion: {question}\n\nExcerpts:\n{_format_excerpts(hits)}")
+        return Answer(question, symbol, "Not found in the filings available.", "low", abstained=True,
+                      period_note=period_note, prompt=prompt), [], []
+    raw, model = complete_json_with_model(
+        system, f"Company: {symbol}\nQuestion: {question}\n\nExcerpts:\n{_format_excerpts(hits)}")
     raw_cits = [c for c in raw.get("citations", []) if isinstance(c, dict)]
     ref_map = {f"c{i}": h for i, h in enumerate(hits, start=1)}
     cits, dropped = verify_citations(raw_cits, ref_map)
-    ans = Answer(question, symbol, str(raw.get("answer", "")).strip(), raw.get("confidence", "low"), cits, dropped)
+    ans = Answer(question, symbol, str(raw.get("answer", "")).strip(), raw.get("confidence", "low"), cits, dropped,
+                 model=model, period_note=period_note, prompt=prompt)
     ans.abstained = ans.answer.lower().startswith("not found") or (not cits and bool(raw_cits))
     if raw_cits and not cits:
         # LLM claimed support but nothing verified → downgrade loudly
@@ -96,3 +108,20 @@ def answer_with_trace(symbol: str, question: str, doc_type: str | None = None, m
 
 def ask(symbol: str, question: str, doc_type: str | None = None) -> Answer:
     return answer_with_trace(symbol, question, doc_type)[0]
+
+
+def ask_dict(symbol: str, question: str, doc_type: str | None = None, use_cache: bool = True) -> dict:
+    """What the API serves. The demo cache is consulted first (only for unrestricted questions, which
+    is how the cache is built); a miss falls straight through to the live path, so with an API key the
+    worst case is the same as no cache. Without a key, a miss raises NoAPIKey."""
+    from core import answer_cache
+
+    key = has_api_key()
+    prompt = os.environ.get("PROMPT_VERSION", "v1")
+    if use_cache and doc_type is None:
+        hit = answer_cache.get(symbol, question, prompt, key)
+        if hit:
+            return hit
+    if not key:
+        raise NoAPIKey("No LLM_API_KEY set. Cached example questions still work; add a key in .env to ask your own.")
+    return {**ask(symbol, question, doc_type).to_dict(), "cached": None}
