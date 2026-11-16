@@ -1,85 +1,310 @@
 {
-  "ablation": null,
-  "e2e": {
-    "hybrid": {
-      "n_answerable": 7,
-      "n_unanswerable": 2,
-      "accuracy": 0.8571428571428571,
-      "accuracy_by_type": {
-        "factual": 1.0,
-        "reasoning": 0.0,
-        "cross_doc": 1.0,
-        "flag": 1.0
+  "ablation": {
+    "bm25": {
+      "factual": {
+        "n": 4,
+        "hits": 4,
+        "all_gold": 4,
+        "hit@8": 1.0,
+        "mrr": 0.875,
+        "all_gold@8": 1.0
       },
-      "must_include_agree": 1.0,
-      "citation_precision": 1.0,
-      "citation_precision_no_verifier": 1.0,
-      "verifier_rejection": 0.0,
-      "n_raw_citations": 7,
-      "abstention": 1.0,
-      "false_abstention": 0.14285714285714285,
-      "unsupported_answers": 0.0,
-      "median_latency_s": 1.77
+      "all": {
+        "n": 7,
+        "hits": 7,
+        "all_gold": 7,
+        "hit@8": 1.0,
+        "mrr": 0.9285714285714286,
+        "all_gold@8": 1.0
+      },
+      "reasoning": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      },
+      "cross_doc": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      },
+      "flag": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      }
     },
+    "vector": {
+      "factual": {
+        "n": 4,
+        "hits": 4,
+        "all_gold": 3,
+        "hit@8": 1.0,
+        "mrr": 0.4732142857142857,
+        "all_gold@8": 0.75
+      },
+      "all": {
+        "n": 7,
+        "hits": 6,
+        "all_gold": 4,
+        "hit@8": 0.8571428571428571,
+        "mrr": 0.43112244897959184,
+        "all_gold@8": 0.5714285714285714
+      },
+      "reasoning": {
+        "n": 1,
+        "hits": 0,
+        "all_gold": 0,
+        "hit@8": 0.0,
+        "mrr": 0.0,
+        "all_gold@8": 0.0
+      },
+      "cross_doc": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 0,
+        "hit@8": 1.0,
+        "mrr": 0.125,
+        "all_gold@8": 0.0
+      },
+      "flag": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      }
+    },
+    "hybrid": {
+      "factual": {
+        "n": 4,
+        "hits": 4,
+        "all_gold": 3,
+        "hit@8": 1.0,
+        "mrr": 0.7083333333333334,
+        "all_gold@8": 0.75
+      },
+      "all": {
+        "n": 7,
+        "hits": 6,
+        "all_gold": 5,
+        "hit@8": 0.8571428571428571,
+        "mrr": 0.5952380952380952,
+        "all_gold@8": 0.7142857142857143
+      },
+      "reasoning": {
+        "n": 1,
+        "hits": 0,
+        "all_gold": 0,
+        "hit@8": 0.0,
+        "mrr": 0.0,
+        "all_gold@8": 0.0
+      },
+      "cross_doc": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 0.3333333333333333,
+        "all_gold@8": 1.0
+      },
+      "flag": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      }
+    },
+    "hybrid+rerank": {
+      "factual": {
+        "n": 4,
+        "hits": 4,
+        "all_gold": 3,
+        "hit@8": 1.0,
+        "mrr": 0.875,
+        "all_gold@8": 0.75
+      },
+      "all": {
+        "n": 7,
+        "hits": 7,
+        "all_gold": 6,
+        "hit@8": 1.0,
+        "mrr": 0.8095238095238095,
+        "all_gold@8": 0.8571428571428571
+      },
+      "reasoning": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 0.16666666666666666,
+        "all_gold@8": 1.0
+      },
+      "cross_doc": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      },
+      "flag": {
+        "n": 1,
+        "hits": 1,
+        "all_gold": 1,
+        "hit@8": 1.0,
+        "mrr": 1.0,
+        "all_gold@8": 1.0
+      }
+    }
+  },
+  "e2e": {
     "hybrid+rerank": {
       "n_answerable": 7,
       "n_unanswerable": 2,
-      "accuracy": 0.8571428571428571,
-      "accuracy_by_type": {
-        "factual": 1.0,
-        "reasoning": 1.0,
-        "cross_doc": 0.0,
-        "flag": 1.0
+      "accuracy": {
+        "k": 6,
+        "n": 7,
+        "v": 0.8571428571428571
       },
-      "must_include_agree": 1.0,
-      "citation_precision": 1.0,
-      "citation_precision_no_verifier": 1.0,
-      "verifier_rejection": 0.0,
+      "accuracy_by_type": {
+        "factual": {
+          "k": 4,
+          "n": 4,
+          "v": 1.0
+        },
+        "reasoning": {
+          "k": 1,
+          "n": 1,
+          "v": 1.0
+        },
+        "cross_doc": {
+          "k": 0,
+          "n": 1,
+          "v": 0.0
+        },
+        "flag": {
+          "k": 1,
+          "n": 1,
+          "v": 1.0
+        }
+      },
+      "must_include_agree": {
+        "k": 7,
+        "n": 7,
+        "v": 1.0
+      },
+      "citation_precision": {
+        "k": 6,
+        "n": 6,
+        "v": 1.0
+      },
+      "citation_precision_no_verifier": {
+        "k": 6,
+        "n": 6,
+        "v": 1.0
+      },
+      "verifier_rejection": {
+        "k": 0,
+        "n": 6,
+        "v": 0.0
+      },
       "n_raw_citations": 6,
-      "abstention": 1.0,
-      "false_abstention": 0.14285714285714285,
-      "unsupported_answers": 0.0,
+      "abstention": {
+        "k": 2,
+        "n": 2,
+        "v": 1.0
+      },
+      "false_abstention": {
+        "k": 1,
+        "n": 7,
+        "v": 0.14285714285714285
+      },
+      "unsupported_answers": {
+        "k": 0,
+        "n": 7,
+        "v": 0.0
+      },
       "median_latency_s": 4.17
     },
-    "hybrid@v2": {
+    "hybrid": {
       "n_answerable": 7,
       "n_unanswerable": 2,
-      "accuracy": 0.8571428571428571,
-      "accuracy_by_type": {
-        "factual": 1.0,
-        "reasoning": 0.0,
-        "cross_doc": 1.0,
-        "flag": 1.0
+      "accuracy": {
+        "k": 6,
+        "n": 7,
+        "v": 0.8571428571428571
       },
-      "must_include_agree": 1.0,
-      "citation_precision": 0.9,
-      "citation_precision_no_verifier": 0.9,
-      "verifier_rejection": 0.0,
-      "n_raw_citations": 10,
-      "abstention": 1.0,
-      "false_abstention": 0.14285714285714285,
-      "unsupported_answers": 0.0,
-      "median_latency_s": 2.03
-    },
-    "hybrid+rerank@v2": {
-      "n_answerable": 7,
-      "n_unanswerable": 2,
-      "accuracy": 0.8571428571428571,
       "accuracy_by_type": {
-        "factual": 1.0,
-        "reasoning": 1.0,
-        "cross_doc": 0.0,
-        "flag": 1.0
+        "factual": {
+          "k": 4,
+          "n": 4,
+          "v": 1.0
+        },
+        "reasoning": {
+          "k": 0,
+          "n": 1,
+          "v": 0.0
+        },
+        "cross_doc": {
+          "k": 1,
+          "n": 1,
+          "v": 1.0
+        },
+        "flag": {
+          "k": 1,
+          "n": 1,
+          "v": 1.0
+        }
       },
-      "must_include_agree": 1.0,
-      "citation_precision": 0.875,
-      "citation_precision_no_verifier": 0.875,
-      "verifier_rejection": 0.0,
-      "n_raw_citations": 8,
-      "abstention": 1.0,
-      "false_abstention": 0.14285714285714285,
-      "unsupported_answers": 0.0,
-      "median_latency_s": 4.54
+      "must_include_agree": {
+        "k": 7,
+        "n": 7,
+        "v": 1.0
+      },
+      "citation_precision": {
+        "k": 7,
+        "n": 7,
+        "v": 1.0
+      },
+      "citation_precision_no_verifier": {
+        "k": 7,
+        "n": 7,
+        "v": 1.0
+      },
+      "verifier_rejection": {
+        "k": 0,
+        "n": 7,
+        "v": 0.0
+      },
+      "n_raw_citations": 7,
+      "abstention": {
+        "k": 2,
+        "n": 2,
+        "v": 1.0
+      },
+      "false_abstention": {
+        "k": 1,
+        "n": 7,
+        "v": 0.14285714285714285
+      },
+      "unsupported_answers": {
+        "k": 0,
+        "n": 7,
+        "v": 0.0
+      },
+      "median_latency_s": 1.77
     }
   }
 }
