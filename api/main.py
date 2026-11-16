@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Response
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import select
 
@@ -102,6 +103,48 @@ def page_png(doc_id: int, page: int, hl: str | None = None):
 
 
 _RAW = (settings.data_dir / "raw").resolve()
+
+
+def _pdf_response(path) -> FileResponse:
+    """The filing itself, served inline so the browser's PDF viewer opens it; links add #page=N."""
+    p = local_path(path)
+    p = (p if p.is_absolute() else Path.cwd() / p).resolve()
+    if _RAW not in p.parents or p.suffix.lower() != ".pdf" or not p.exists():
+        raise HTTPException(404, "PDF not in this download")
+    return FileResponse(p, media_type="application/pdf", filename=p.name, content_disposition_type="inline")
+
+
+def bse_url(url: str | None) -> str | None:
+    """BSE moves attachments from AttachLive to AttachHis after a while, and the Live link then dies; the
+    His path serves the same file (checked Nov 2026). Rewritten on the way out; stored data is untouched."""
+    return url.replace("/AttachLive/", "/AttachHis/") if url else url
+
+
+@app.get("/doc/{doc_id}/info")
+def doc_info(doc_id: int) -> dict:
+    """What a citation points at: title, period, the public BSE URL, and whether the PDF is on disk."""
+    with get_session() as s:
+        d = s.get(Document, doc_id)
+    if not d:
+        raise HTTPException(404)
+    return {"id": d.id, "symbol": d.symbol, "doc_type": d.doc_type, "title": d.title, "fiscal_period": d.fiscal_period,
+            "filed_on": str(d.filed_on) if d.filed_on else None, "n_pages": d.n_pages, "source_url": bse_url(d.source_url),
+            "has_pdf": local_path(d.path).exists()}
+
+
+@app.get("/doc/{doc_id}/pdf")
+def doc_pdf(doc_id: int):
+    with get_session() as s:
+        d = s.get(Document, doc_id)
+    if not d:
+        raise HTTPException(404)
+    return _pdf_response(d.path)
+
+
+@app.get("/evidence/pdf")
+def evidence_pdf(path: str):
+    """A flag-evidence filing (may not be in the search index). Only paths inside data/raw are served."""
+    return _pdf_response(path)
 
 
 @app.get("/evidence/page.png")

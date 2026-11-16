@@ -19,7 +19,7 @@ import streamlit as st
 
 API = os.environ.get("FILINGLENS_API", "http://localhost:8000")
 
-st.set_page_config(page_title="FilingLens", page_icon="🔎", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="FilingLens", page_icon="🔎", layout="wide", initial_sidebar_state="expanded")
 
 # Status palette (fixed, never themed). Text colour picked for contrast on each fill.
 LEVEL = {
@@ -36,7 +36,17 @@ FLAG_NAMES = {
 st.markdown("""
 <style>
   .block-container { padding-top: 2.2rem; max-width: 1280px; }
-  [data-testid="stSidebar"], [data-testid="collapsedControl"] { display: none; }
+  [data-testid="stSidebar"] { min-width: 17rem; max-width: 17rem; }
+  .fl-brand { display: flex; align-items: center; gap: .6rem; margin: .2rem 0 .3rem; }
+  .fl-brand .mark { width: 2.1rem; height: 2.1rem; border-radius: .55rem; display: grid; place-items: center;
+                    background: linear-gradient(135deg, #0d366b, #2a78d6); color: #fff; font-weight: 700; font-size: 1.05rem; }
+  .fl-brand .name { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .fl-brand-sub { font-size: .78rem; opacity: .65; margin: 0 0 .9rem; line-height: 1.4; }
+  .fl-navcap { font-size: .74rem; opacity: .6; margin: -.45rem 0 .55rem 2.35rem; line-height: 1.3; }
+  .fl-status { font-size: .78rem; line-height: 1.7; border: 1px solid rgba(127,127,127,.22); border-radius: .6rem;
+               padding: .55rem .7rem; background: rgba(127,127,127,.04); }
+  .fl-verify-t { font-size: .74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .65;
+                 margin: .5rem 0 .35rem; }
   .fl-hero { background: linear-gradient(120deg, #0d366b 0%, #1c5cab 55%, #2a78d6 100%); color: #fff;
              border-radius: 1rem; padding: 2.4rem 2.6rem 2.2rem; margin: 1.2rem 0 1.4rem; }
   .fl-hero h1 { color: #fff; font-size: 2.6rem; margin: 0 0 .4rem; letter-spacing: -0.02em; }
@@ -121,6 +131,43 @@ def show_page(url: str | None, caption: str | None = None) -> None:
         st.image(png, caption=caption, width="stretch")
     else:
         st.caption("Page image not in this download (the quote was still verified against the indexed text).")
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def doc_info(document_id: int) -> dict | None:
+    try:
+        return get_json(f"/doc/{document_id}/info")
+    except requests.RequestException:
+        return None
+
+
+def verify_box(document_id: int | None, page: int | None, quote_text: str | None = None, path: str | None = None,
+               source_url: str | None = None) -> None:
+    """Everything a reader needs to check a citation without trusting this app: the PDF opened at the cited
+    page, the original filing on the exchange's website, and the exact quote to search for."""
+    info = doc_info(document_id) if document_id else None
+    src = source_url or (info or {}).get("source_url")
+    src = src.replace("/AttachLive/", "/AttachHis/") if src else src  # BSE retires AttachLive links
+    if document_id and (info or {}).get("has_pdf"):
+        local = f"{API}/doc/{document_id}/pdf#page={page or 1}"
+    elif path:
+        local = f"{API}/evidence/pdf?path={quote(path)}#page={page or 1}"
+    else:
+        local = None
+    if not (local or src or quote_text):
+        return
+    with st.container(border=True):
+        st.markdown('<div class="fl-verify-t">Verify it yourself</div>', unsafe_allow_html=True)
+        cols = st.columns(2)
+        if local:
+            cols[0].link_button(f"📄 Open the PDF at page {page}", local, width="stretch",
+                                help="Opens the filing in your browser's PDF viewer, at the cited page.")
+        if src:
+            cols[1].link_button("🔗 Original filing on BSE", src, width="stretch",
+                                help="The same document on the exchange's website, independent of this app. BSE can be slow; the PDF button opens an identical local copy.")
+        if quote_text:
+            st.caption("Copy the quote, then search for it in the PDF (Ctrl+F):")
+            st.code(" ".join(quote_text.split()), language=None, wrap_lines=True)  # one line: PDF search matches it
 
 
 def chip(level: str) -> str:
@@ -276,6 +323,7 @@ def home() -> None:
             st.markdown(f'<div class="fl-answer">{a["answer"]}</div>', unsafe_allow_html=True)
             st.caption(f"{c['doc_type']} · {c.get('fiscal_period') or ''} · page {c['page']} · ✓ quote verified, highlighted below")
             show_page(page_url(c["document_id"], c["page"], hl=c["quote"]))
+            verify_box(c["document_id"], c["page"])
     with right:
         section("Corpus indexed for Q&A")
         types = pd.DataFrame([{"type": k.replace("_", " "), "filings": v} for k, v in o["doc_types"].items()])
@@ -303,8 +351,18 @@ def home() -> None:
             g[0].markdown(stat(cell(head["abstention"]), "Correct refusals"), unsafe_allow_html=True)
             g[1].markdown(stat(f"{head['median_latency_s']:.1f}s", "Median answer time"), unsafe_allow_html=True)
             st.page_link(EVAL, label="Full evaluation →", icon="📏")
-    st.markdown('<p class="fl-muted" style="margin-top:2rem">Research and investor-protection tool. Not investment advice. '
+    next_step(DASH, "Dashboard →", "see which of the 44 stocks the rule engine flags, and why.")
+    st.markdown('<p class="fl-muted">Research and investor-protection tool. Not investment advice. '
                 'No trading, no broker keys, public filings only.</p>', unsafe_allow_html=True)
+
+
+def next_step(page, label: str, blurb: str) -> None:
+    """A clear way on at the bottom of every page, so the app reads as a guided tour."""
+    st.divider()
+    a, b = st.columns([3, 1], vertical_alignment="center")
+    a.markdown(f"**Next:** {blurb}")
+    if b.button(label, type="primary", width="stretch", key=f"next-{label}"):
+        st.switch_page(page)
 
 
 def render_flags(f: dict, compact: bool = False) -> None:
@@ -322,10 +380,12 @@ def render_flags(f: dict, compact: bool = False) -> None:
                 label = " · ".join(x for x in (e.get("period"), e.get("as_of"), (e.get("title") or "")[:80]) if x)
                 if e.get("quote"):
                     st.markdown(f'<div class="fl-quote">{e["quote"]}</div>', unsafe_allow_html=True)
-                links = f" · [source filing]({e['source_url']})" if e.get("source_url") else ""
-                st.caption(label + links)
-                if not compact:
+                st.caption(label)
+                if not compact and e.get("page") and (e.get("document_id") or e.get("path")):
                     show_page(page_url(e.get("document_id"), e.get("page"), e.get("path")), caption=f"page {e.get('page')}")
+                    verify_box(e.get("document_id"), e.get("page"), path=e.get("path"), source_url=e.get("source_url"))
+                elif e.get("source_url"):
+                    st.markdown(f"[🔗 Source filing]({e['source_url']})")
     if not compact:
         with st.expander("Thresholds"):
             st.json(f["thresholds"])
@@ -396,6 +456,7 @@ def dashboard() -> None:
         if sym in INDEXED and st.button(f"Ask about {sym}'s filings →", type="primary", width="stretch"):
             st.session_state["ask_symbol"] = sym
             st.switch_page(ASK)
+    next_step(ASK, "Ask →", "question a company's filings and check every answer against its page.")
 
 
 def ask_page() -> None:
@@ -442,6 +503,7 @@ def ask_page() -> None:
 
     r = st.session_state.get("last")
     if not (r and r.get("symbol") == symbol):
+        next_step(EVAL, "Evaluation →", "how accurate the answers are, measured on hand-labelled questions.")
         return
     main, side = st.columns([3, 2], gap="large")
     with main:
@@ -483,6 +545,7 @@ def ask_page() -> None:
                 with tab:
                     st.markdown(f'<div class="fl-quote">“{c["quote"]}”</div>', unsafe_allow_html=True)
                     st.caption(f"{c['title'][:140]} · page {c['page']} · ✓ verified")
+                    verify_box(c["document_id"], c["page"], c["quote"])
                     show_page(page_url(c["document_id"], c["page"], hl=c["quote"]))
     with side:
         section(f"{symbol} red flags")
@@ -492,6 +555,7 @@ def ask_page() -> None:
             section("Promoter holding")
             st.altair_chart(ch, width="stretch")
         st.page_link(DASH, label="Full risk detail on the dashboard →", icon="📊")
+    next_step(EVAL, "Evaluation →", "how accurate the answers are, measured on hand-labelled questions.")
 
 
 def evaluation() -> None:
@@ -560,10 +624,31 @@ def evaluation() -> None:
                      hide_index=True, width="stretch")
     st.caption("Reproduce: `python -m eval.run_eval --configs hybrid+rerank,hybrid,hybrid+rerank@flash,"
                "hybrid+rerank@weak,hybrid+rerank@v2`")
+    next_step(HOME, "Home →", "back to the overview.")
 
 
 HOME = st.Page(home, title="Home", icon="🏠", default=True)
 DASH = st.Page(dashboard, title="Dashboard", icon="📊", url_path="dashboard")
 ASK = st.Page(ask_page, title="Ask", icon="💬", url_path="ask")
 EVAL = st.Page(evaluation, title="Evaluation", icon="📏", url_path="evaluation")
-st.navigation([HOME, DASH, ASK, EVAL], position="top").run()
+NAV = [(HOME, "Home", "🏠", "Overview: what it is and how it works"),
+       (DASH, "Dashboard", "📊", "Red flags for all 44 stocks, with charts"),
+       (ASK, "Ask", "💬", "Question the filings, check every citation"),
+       (EVAL, "Evaluation", "📏", "Measured accuracy, ablation, method")]
+current = st.navigation([n[0] for n in NAV], position="hidden")
+with st.sidebar:
+    st.markdown('<div class="fl-brand"><div class="mark">FL</div><div class="name">FilingLens</div></div>'
+                '<p class="fl-brand-sub">Verified answers from Indian company filings, with a deterministic '
+                'red-flag score.</p>', unsafe_allow_html=True)
+    for pg, title, icon, blurb in NAV:
+        st.page_link(pg, label=title, icon=icon, width="stretch")
+        st.markdown(f'<div class="fl-navcap">{blurb}</div>', unsafe_allow_html=True)
+    st.divider()
+    key_line = "✓ API key set: ask anything" if OVERVIEW["has_api_key"] else "✗ No API key: cached examples only"
+    st.markdown(f'<div class="fl-status">{key_line}<br>Model: <code>{OVERVIEW["model"]}</code><br>'
+                f'Index: {OVERVIEW["filings_indexed"]:,} filings · {OVERVIEW["chunks"]:,} chunks<br>'
+                f'Screened: {OVERVIEW["symbols_screened"]} stocks</div>', unsafe_allow_html=True)
+    if st.session_state.get("symbol"):
+        st.caption(f"Current stock: **{st.session_state['symbol']}**")
+    st.caption("Research tool, not investment advice.")
+current.run()
