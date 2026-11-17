@@ -572,9 +572,15 @@ def flag_page() -> None:
             ch = shareholding_chart(symbol, height=340)
             if ch is not None:
                 st.altair_chart(ch, width="stretch")
-        for e in structured:
-            if e.get("source_url"):
-                st.link_button(f"🔗 See the {e.get('period') or ''} shareholding filing on NSE", e["source_url"])
+        raw = [e for e in structured if e.get("source_url")]
+        if raw:
+            # NSE's readable shareholding page first; the raw XBRL files (what the numbers above are read from)
+            # stay available, labelled as machine-readable data so nobody mistakes the XML for a broken page.
+            st.link_button("📊 Shareholding filings on NSE", width="content",
+                           url=f"https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol={quote(symbol)}",
+                           help="NSE's page listing this company's quarterly shareholding patterns, in readable form.")
+            st.caption("Raw filed data, machine-readable XBRL (the numbers above are read from these files): " + " · ".join(
+                f"[{e.get('period') or e.get('as_of') or 'filing'}]({e['source_url']})" for e in raw))
 
     docs = [e for e in fl["evidence"] if e.get("page") and (e.get("document_id") or e.get("path"))]
     if docs:
