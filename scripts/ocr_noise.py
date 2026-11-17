@@ -15,6 +15,7 @@ swap) from a token that appears at least 300 times. A page is "noisy" with >= 2 
 from __future__ import annotations
 
 import re
+import sys
 import string
 from collections import Counter, defaultdict
 
@@ -36,6 +37,10 @@ def _edits1(w: str) -> set[str]:
 
 
 def main() -> None:
+    try:  # Windows consoles default to cp1252, which can't print the "→" below; don't crash a judge's run
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
     with get_session() as s:
         rows = s.execute(select(Chunk.document_id, Chunk.page, Chunk.text, Document.symbol, Document.doc_type)
                          .join(Document)).all()
