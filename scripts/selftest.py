@@ -191,6 +191,18 @@ def main() -> int:
         if got != want:
             fails.append(f"period resolution {q!r}: expected {want}, got {got}")
 
+    # 5b. period guard: a subject quarter no filing covers gets a boundary answer; ranges/comparisons don't
+    from core.retrieve import covered_quarters, uncovered_period
+
+    covered_quarters.cache_clear()
+    for q, fires in [("What was the margin in Q1 FY22?", True), ("How has the margin moved since Q1 FY22?", False),
+                     ("What was the margin in Q2 FY26?", False), ("What is the dividend policy?", False)]:
+        got = uncovered_period("TESTCO", q)
+        ok = bool(got) == fires
+        print(f"[{'ok' if ok else 'FAIL'}] period guard {q!r} -> {'boundary answer' if got else 'retrieve'}")
+        if not ok:
+            fails.append(f"period guard {q!r}: expected {'fire' if fires else 'no fire'}")
+
     # 6. demo answer cache: question-normalised key; model ignored without an API key, honoured with one
     from core import answer_cache
 

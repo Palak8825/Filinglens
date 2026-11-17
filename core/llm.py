@@ -19,14 +19,15 @@ def has_api_key() -> bool:
     return bool(settings.llm_api_key.strip())
 
 
-def _gemini(system: str, user: str) -> tuple[str, str]:
+def _gemini(system: str, user: str, only: str | None = None) -> tuple[str, str]:
     """Try LLM_MODEL, then each LLM_FALLBACK_MODELS entry. No silent SDK retries: an overloaded
     model (503/504/429) fails in seconds and we move on, instead of backing off for minutes.
     Returns (text, the model that actually answered), so a fallback is never misattributed."""
     import google.generativeai as genai
 
     genai.configure(api_key=settings.llm_api_key)
-    models = [settings.llm_model] + [m.strip() for m in settings.llm_fallback_models.split(",") if m.strip()]
+    models = [only] if only else \
+        [settings.llm_model] + [m.strip() for m in settings.llm_fallback_models.split(",") if m.strip()]
     last: Exception | None = None
     for name in models:
         model = genai.GenerativeModel(name, system_instruction=system,
@@ -63,9 +64,10 @@ def _parse(raw: str) -> dict:
         return json.loads(m.group(0))
 
 
-def complete_json_with_model(system: str, user: str) -> tuple[dict, str]:
+def complete_json_with_model(system: str, user: str, only: str | None = None) -> tuple[dict, str]:
+    """only: call exactly this model, no fallback (used for escalation)."""
     """(parsed JSON, model that answered)."""
-    raw, model = _gemini(system, user) if settings.llm_provider == "gemini" else _anthropic(system, user)
+    raw, model = _gemini(system, user, only) if settings.llm_provider == "gemini" else _anthropic(system, user)
     return _parse(raw), model
 
 

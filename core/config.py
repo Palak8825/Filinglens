@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     llm_timeout_s: int = 60
     # Eval grader. Deliberately a different model from the one answering, so no model grades its own
     # output (self-preference bias), and not one any eval arm answers with. JUDGE_MODEL in .env overrides it.
+    # Escalate on refusal: when the answering model refuses although retrieval found passages, ask this model
+    # once and keep its answer only if it carries a verified citation. Empty = off (ESCALATE_MODEL in .env).
+    escalate_model: str = ""
     judge_model: str = "gemini-3-flash-preview"  # 3.6-flash was overloaded (503) for a day; this one graded the report
 
     # Small, fast, English. 384-dim. Swap to BAAI/bge-m3 (embed_dim 1024) only on a GPU.

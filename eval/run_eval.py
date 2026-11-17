@@ -62,6 +62,9 @@ CONFIGS = {  # name -> (retrieval mode, rerank, prompt version, model override o
     "hybrid+rerank@weak": ("hybrid", True, "v1", "gemini-3.1-flash-lite"),
     "hybrid+rerank@v2": ("hybrid", True, "v2", None),
     "hybrid+rerank@flash": ("hybrid", True, "v1", "gemini-3.5-flash"),  # model arm on the production pipeline
+    # Escalate on refusal: production model first; gemini-3.5-flash only when it refuses with passages in hand,
+    # kept only if verified. Judge on accuracy AND correct abstention (escalation must not invent answers).
+    "hybrid+rerank+esc": ("hybrid", True, "v1", None),
 }
 HEADLINE = "hybrid+rerank"  # what the app runs by default (RERANK=1)
 JUDGE = """You grade a research assistant's answer against a gold answer from a company's filings.
@@ -202,6 +205,7 @@ def judge(question: str, gold: str, pred: str) -> tuple[bool, str]:
 
 PENDING = "PENDING"
 DEFER_JUDGE = False  # --defer-judge: save answers now, grade on a later run (e.g. judge model out of quota)
+REDO: set[str] = set()  # --redo id,id: re-answer these questions even if cached (after a pipeline change)
 
 
 def safe_judge(question: str, gold: str, pred: str) -> tuple[bool | None, str, str]:
@@ -252,12 +256,13 @@ def _rescore(r: dict, q: dict) -> dict:
 
 def run_config(qs: list[dict], name: str, pace: float = 0.0) -> list[dict]:
     mode, rr, prompt, model = CONFIGS[name]
-    base_model = settings.llm_model
+    base_model, base_esc = settings.llm_model, settings.escalate_model
     settings.llm_model = model or base_model  # answers only; judge() pins JUDGE_MODEL
+    settings.escalate_model = "gemini-3.5-flash" if name.endswith("+esc") else ""
     try:
         return _run_config(qs, name, mode, rr, prompt, pace)
     finally:
-        settings.llm_model = base_model
+        settings.llm_model, settings.escalate_model = base_model, base_esc
 
 
 def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pace: float) -> list[dict]:
@@ -273,8 +278,8 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
     rejudged = False
     for q in qs:
         cached = done.get(q["id"])
-        if cached and cached.get("question") == q["question"] and cached.get("gold_answer") == q.get("gold_answer") \
-                and "hit_ids" in cached:
+        if cached and q["id"] not in REDO and cached.get("question") == q["question"] \
+                and cached.get("gold_answer") == q.get("gold_answer") and "hit_ids" in cached:
             if q["answerable"] and cached.get("judge_model") != JUDGE_MODEL:
                 # Graded by another model (older runs used the answering model as judge): re-grade only.
                 cached["correct"], cached["judge_reason"], cached["judge_model"] = safe_judge(
@@ -295,7 +300,7 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
         r = {
             "id": q["id"], "symbol": q["symbol"], "question": q["question"], "gold_answer": q.get("gold_answer"),
             "abstained": ans.abstained, "correct": correct, "judge_reason": reason,
-            "judge_model": jmodel, "answer_model": ans.model,
+            "judge_model": jmodel, "answer_model": ans.model, "abstain_source": ans.abstain_source, "escalated": ans.escalated,
             "must_include_ok": _must_include_ok(q, ans.answer) if q["answerable"] else None,
             "n_raw": len(raw), "n_verified": len(ans.citations), "dropped": ans.dropped_citations,
             "raw_keys": raw_keys, "ver_keys": [(doc_path(c.document_id), c.page) for c in ans.citations],
@@ -339,6 +344,10 @@ def summarize(results: list[dict]) -> dict:
         "verifier_rejection": pct(sum(r["dropped"] for r in results), raw),
         "n_raw_citations": raw,
         "abstention": pct(sum(1 for r in unans if r["abstained"]), len(unans)),
+        # Split by who refused: the period guard (a rule, no model involved) or the model itself. Without the split
+        # the report would credit the model for refusals a deterministic rule produced.
+        "abstention_by_rule": pct(sum(1 for r in unans if r["abstained"] and r.get("abstain_source") == "period_guard"),
+                                  len(unans)),
         "false_abstention": pct(sum(1 for r in ans if r["abstained"]), len(ans)),
         "unsupported_answers": pct(sum(1 for r in ans if not r["abstained"] and r["n_verified"] == 0), len(ans)),
         "median_latency_s": sorted(r["latency_s"] for r in results)[len(results) // 2] if results else float("nan"),
@@ -372,6 +381,7 @@ def report(qs: list[dict], abl: dict | None, e2e: dict[str, dict]) -> str:
                   f"| Citation precision if unverified citations were shown | {fmt(main['citation_precision_no_verifier'])} |",
                   f"| Model citations rejected by the verifier | {fmt(main['verifier_rejection'])} |",
                   f"| Correct abstention ({main['n_unanswerable']} unanswerable) | {fmt(main['abstention'])} |",
+                  f"| · of which by the period guard (rule, not the model) | {main.get('abstention_by_rule', {}).get('k', 0)} |",
                   f"| False abstention on answerable | {fmt(main['false_abstention'])} |",
                   f"| Answers with no verified citation | {fmt(main['unsupported_answers'])} |",
                   f"| Median latency | {main['median_latency_s']:.1f}s |", ""]
@@ -406,12 +416,14 @@ def main() -> None:
                    help="retrieval-ablation configs ('' to skip)")
     p.add_argument("--no-ablation", action="store_true", help="skip the retrieval ablation")
     p.add_argument("--retrieval-only", action="store_true")
+    p.add_argument("--redo", default="", help="comma-separated question ids to re-answer even if cached")
     p.add_argument("--defer-judge", action="store_true",
                    help="generate and save answers without grading; a later run grades them (judge model unavailable)")
     p.add_argument("--pace", type=float, default=2.0, help="seconds between questions (free-tier rate limits)")
     a = p.parse_args()
-    global DEFER_JUDGE
+    global DEFER_JUDGE, REDO
     DEFER_JUDGE = a.defer_judge
+    REDO = {x.strip() for x in a.redo.split(",") if x.strip()}
     settings.llm_fallback_models = ""  # one model per run: a silent fallback would contaminate the comparison
     for name in [c for c in a.configs.split(",") if c]:
         if (CONFIGS[name][3] or settings.llm_model) == JUDGE_MODEL:

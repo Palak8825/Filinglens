@@ -4,9 +4,10 @@ from __future__ import annotations
 import os
 from dataclasses import asdict, dataclass, field
 
+from core.config import settings
 from core.llm import complete_json_with_model, has_api_key
 from core.rerank import rerank
-from core.retrieve import Hit, resolve_periods, retrieve
+from core.retrieve import Hit, resolve_periods, retrieve, uncovered_period
 from core.verify import verify_citations
 
 
@@ -65,6 +66,8 @@ class Answer:
     model: str | None = None        # the model that actually answered (after any fallback)
     period_note: str | None = None  # set when "latest quarter" etc. was resolved to a filed quarter
     prompt: str = "v1"
+    abstain_source: str | None = None  # "period_guard" (rule) or "model" when abstained; None otherwise
+    escalated: bool = False            # answered by settings.escalate_model after the first model refused
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -85,12 +88,19 @@ def answer_with_trace(symbol: str, question: str, doc_type: str | None = None, m
     prompt: v1 | v2; None = PROMPT_VERSION env var (default v1)."""
     prompt = prompt or os.environ.get("PROMPT_VERSION", "v1")
     system = PROMPTS[prompt]
+    guard = uncovered_period(symbol, question)
+    if guard:
+        # The question is about a quarter no indexed filing covers. Without this, retrieval fell back to all
+        # filings and the model once attached a real Q1 FY24 quote to "Q1 FY22", which the verifier passed
+        # (it checks a quote is present, not which period it describes). Answer with the boundary instead.
+        return Answer(question, symbol, guard, "high", abstained=True, prompt=prompt,
+                      abstain_source="period_guard"), [], []
     _, period_note = resolve_periods(symbol, question)
     hits = retrieve(symbol, question, doc_type=doc_type, mode=mode)
     hits = rerank(question, hits, enabled=use_rerank)
     if not hits:
         return Answer(question, symbol, "Not found in the filings available.", "low", abstained=True,
-                      period_note=period_note, prompt=prompt), [], []
+                      period_note=period_note, prompt=prompt, abstain_source="model"), [], []
     raw, model = complete_json_with_model(
         system, f"Company: {symbol}\nQuestion: {question}\n\nExcerpts:\n{_format_excerpts(hits)}")
     raw_cits = [c for c in raw.get("citations", []) if isinstance(c, dict)]
@@ -99,11 +109,36 @@ def answer_with_trace(symbol: str, question: str, doc_type: str | None = None, m
     ans = Answer(question, symbol, str(raw.get("answer", "")).strip(), raw.get("confidence", "low"), cits, dropped,
                  model=model, period_note=period_note, prompt=prompt)
     ans.abstained = ans.answer.lower().startswith("not found") or (not cits and bool(raw_cits))
+    ans.abstain_source = "model" if ans.abstained else None
+    if ans.abstained and settings.escalate_model:
+        esc = _escalate(system, symbol, question, hits, ref_map, prompt, period_note)
+        if esc is not None:
+            return esc, hits, raw_cits
     if raw_cits and not cits:
         # LLM claimed support but nothing verified → downgrade loudly
         ans.answer = "Unverified: the model's citations did not match the filings. " + ans.answer
         ans.confidence = "low"
     return ans, hits, raw_cits
+
+
+def _escalate(system: str, symbol: str, question: str, hits: list[Hit], ref_map: dict, prompt: str,
+              period_note: str | None) -> Answer | None:
+    """One call to the stronger model on the same excerpts. Kept only if it is a real answer with at least one
+    verified citation: escalation can turn a refusal into a cited answer, never into an uncited assertion."""
+    try:
+        raw, model = complete_json_with_model(
+            system, f"Company: {symbol}\nQuestion: {question}\n\nExcerpts:\n{_format_excerpts(hits)}",
+            only=settings.escalate_model)
+    except Exception as e:  # noqa: BLE001 - stronger model unavailable: the refusal stands
+        print(f"[escalate] {settings.escalate_model} unavailable: {type(e).__name__}")
+        return None
+    raw_cits = [c for c in raw.get("citations", []) if isinstance(c, dict)]
+    cits, dropped = verify_citations(raw_cits, ref_map)
+    text = str(raw.get("answer", "")).strip()
+    if not cits or text.lower().startswith("not found"):
+        return None
+    return Answer(question, symbol, text, raw.get("confidence", "low"), cits, dropped, model=model,
+                  period_note=period_note, prompt=prompt, escalated=True)
 
 
 def ask(symbol: str, question: str, doc_type: str | None = None) -> Answer:

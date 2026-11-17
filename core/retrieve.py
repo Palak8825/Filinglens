@@ -91,6 +91,35 @@ def filed_quarters(symbol: str) -> tuple[str, ...]:
     return tuple(sorted(ps, key=_period_key, reverse=True))
 
 
+@lru_cache(maxsize=64)
+def covered_quarters(symbol: str) -> frozenset[str]:
+    """Every quarterly period any indexed filing of this symbol is tagged with (all document types)."""
+    with get_session() as s:
+        rows = s.execute(select(Document.fiscal_period).distinct().where(Document.symbol == symbol)).all()
+    return frozenset(r[0] for r in rows if r[0] and _period_key(r[0])[0] >= 0)
+
+
+# A range or comparison ("since FY22", "between Q3 FY22 and Q2 FY27", "compared with Q1 FY22") can be answered
+# from covered filings that mention the earlier period, so the guard never fires on these.
+_RANGE_RE = re.compile(r"\b(since|between|from|compared|comparison|versus|vs\.?|over the|till|until|through|trend)\b", re.I)
+
+
+def uncovered_period(symbol: str, query: str) -> str | None:
+    """If the question's subject period is a quarter no indexed filing covers, the boundary answer to give
+    instead of retrieving; else None. Fires only when EVERY named quarter is uncovered and the question is
+    not a range/comparison."""
+    named = query_periods(query) or date_periods(query)
+    if not named or _RANGE_RE.search(query):
+        return None
+    covered = covered_quarters(symbol)
+    if not covered or any(p in covered for p in named):
+        return None
+    pretty = lambda p: re.sub(r"^(Q[1-4])(FY\d{2})$", r"\1 \2", p)  # noqa: E731
+    span = sorted(covered, key=_period_key)
+    return (f"The filings indexed for {symbol} cover {pretty(span[0])} to {pretty(span[-1])}, so they don't include "
+            f"{' or '.join(pretty(p) for p in named)}. Ask about a quarter in that range.")
+
+
 def resolve_periods(symbol: str, query: str) -> tuple[tuple[str, ...] | None, str | None]:
     """(periods to filter on, a note for the UI when a relative phrase was interpreted).
     Explicit quarters win. "Latest quarter" maps to the newest filed quarter; add "previous quarter"
@@ -182,3 +211,4 @@ def invalidate_scope_cache() -> None:
     """Call after ingesting new documents in the same process."""
     _scope.cache_clear()
     filed_quarters.cache_clear()
+    covered_quarters.cache_clear()
