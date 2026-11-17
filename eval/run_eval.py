@@ -201,11 +201,14 @@ def judge(question: str, gold: str, pred: str) -> tuple[bool, str]:
 
 
 PENDING = "PENDING"
+DEFER_JUDGE = False  # --defer-judge: save answers now, grade on a later run (e.g. judge model out of quota)
 
 
 def safe_judge(question: str, gold: str, pred: str) -> tuple[bool | None, str, str]:
     """judge() that never loses work: if the judge model is down (503/504/429 after retries), the answer is
     kept with correct=None and judge_model=PENDING, and the next run grades it without re-answering."""
+    if DEFER_JUDGE:
+        return None, "", PENDING
     try:
         ok, reason = judge(question, gold, pred)
         return ok, reason, JUDGE_MODEL
@@ -403,8 +406,12 @@ def main() -> None:
                    help="retrieval-ablation configs ('' to skip)")
     p.add_argument("--no-ablation", action="store_true", help="skip the retrieval ablation")
     p.add_argument("--retrieval-only", action="store_true")
+    p.add_argument("--defer-judge", action="store_true",
+                   help="generate and save answers without grading; a later run grades them (judge model unavailable)")
     p.add_argument("--pace", type=float, default=2.0, help="seconds between questions (free-tier rate limits)")
     a = p.parse_args()
+    global DEFER_JUDGE
+    DEFER_JUDGE = a.defer_judge
     settings.llm_fallback_models = ""  # one model per run: a silent fallback would contaminate the comparison
     for name in [c for c in a.configs.split(",") if c]:
         if (CONFIGS[name][3] or settings.llm_model) == JUDGE_MODEL:
