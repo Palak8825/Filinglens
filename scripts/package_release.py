@@ -174,6 +174,9 @@ def build_demo(out: Path) -> None:
             z.write(sub_db, "data/filinglens.db")
             z.write(vec_f, "data/processed/vectors.f32")
             z.write(ids_f, "data/processed/chunk_ids.i64")
+            manifest = settings.data_dir / "raw" / "manifest.jsonl"
+            if manifest.exists():  # the corpus listing: the landing/home "filings collected" count comes from it
+                z.write(manifest, "data/raw/manifest.jsonl")
             for f in files:
                 z.write(f, _arc(f), compress_type=zipfile.ZIP_STORED)
     (out / "SHA256SUMS-demo.txt").write_text(f"{_sha256(zpath)}  {zpath.name}\n", encoding="utf-8")
