@@ -5,12 +5,12 @@
    "question": "What was the net interest margin in the latest quarter and why did it move?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 2287,
+   "generated_on": "2026-11-17",
+   "index_chunks": 2406,
    "answer": {
     "question": "What was the net interest margin in the latest quarter and why did it move?",
     "symbol": "YESBANK",
-    "answer": "In the latest quarter (Q2FY27), the Net Interest Margin (NIM) stood at 2.6%. The sequential moderation of approximately 12 to 14 basis points was largely attributable to the FCNR(B) mobilization and the associated liquidity and deployment profile.",
+    "answer": "In the latest quarter (Q2 FY27), the Net Interest Margin stood at 2.6%. The sequential moderation of approximately 12 to 14 basis points was largely attributable to the FCNR(B) mobilization and the associated liquidity and deployment profile.",
     "confidence": "high",
     "citations": [
      {
@@ -36,12 +36,12 @@
    "question": "What is management's ROA guidance for FY27 and where is H1 tracking?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 2287,
+   "generated_on": "2026-11-17",
+   "index_chunks": 2406,
    "answer": {
     "question": "What is management's ROA guidance for FY27 and where is H1 tracking?",
     "symbol": "YESBANK",
-    "answer": "Management's ROA guidance for fiscal year '27 is 1% for the full year, and H1 is tracking at 90 basis points.",
+    "answer": "Management's guidance is for fiscal '27 ROA to be 1% for the full year (or as an average for FY27). For H1, the bank is clocking at a 90 basis points ROA.",
     "confidence": "high",
     "citations": [
      {
@@ -67,12 +67,12 @@
    "question": "What were revenue and EBITDA in the latest quarter, and how did they grow?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 1435,
+   "generated_on": "2026-11-17",
+   "index_chunks": 1561,
    "answer": {
     "question": "What were revenue and EBITDA in the latest quarter, and how did they grow?",
     "symbol": "IDEA",
-    "answer": "In the latest quarter (Q2FY27), revenue for the quarter was Rs. 11,884 Cr, representing a YoY growth of 6.2% and 1.7% on a QoQ basis. Cash EBITDA for the quarter was Rs. 2,498 Cr, a YoY growth of 11.2%, and reported EBITDA for the quarter was Rs. 4,981 Cr, a YoY growth of 6.3%.",
+    "answer": "In the latest quarter (Q2FY27), revenue for the quarter was Rs. 11,884 Cr, representing a YoY growth of 6.2% and 1.7% on a QoQ basis. Cash EBITDA for the quarter was Rs. 2,498 Cr, a YoY growth of 11.2%. EBITDA for the quarter was Rs. 4,981 Cr, a YoY growth of 6.3%.",
     "confidence": "high",
     "citations": [
      {
@@ -98,12 +98,12 @@
    "question": "What was the bank debt and the cash and bank balance as of September 30, 2026?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 1435,
+   "generated_on": "2026-11-17",
+   "index_chunks": 1561,
    "answer": {
     "question": "What was the bank debt and the cash and bank balance as of September 30, 2026?",
     "symbol": "IDEA",
-    "answer": "As of September 30, 2026, the bank debt stood at Rs. 943 Cr while the cash and bank balance stood at Rs. 5,470 Cr.",
+    "answer": "As on September 30, 2026, the bank debt stood at Rs. 943 Cr while the cash and bank balance stood at Rs. 5,470 Cr.",
     "confidence": "high",
     "citations": [
      {
@@ -129,48 +129,38 @@
    "question": "Have the promoters pledged or otherwise encumbered their shares, and why?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
+   "generated_on": "2026-11-17",
    "index_chunks": 1924,
    "answer": {
     "question": "Have the promoters pledged or otherwise encumbered their shares, and why?",
     "symbol": "VEDL",
-    "answer": "Encumbrances exist on the shareholding of the five promoter and promoter group entities of VEDL under the provisions of facility agreements entered into by Vedanta Resources Limited (VRL) and/or its subsidiaries. These encumbrances arise due to conditions and arrangements in the facility agreements, such as requirements for the VRL Group to retain control over VEDL or own at least 50.1% of its issued equity share capital. It is also clarified in a filing that no pledge was created by VRL or its subsidiaries over VEDL's equity shares under that specific Facility Agreement as of the disclosure date.",
+    "answer": "Yes, encumbrances are subsisting on the shareholding of the five promoter and promoter group entities of VEDL. These have been created due to the nature of the conditions and/or arrangements mentioned in facility agreements entered into by VRL and/or its subsidiaries.",
     "confidence": "high",
     "citations": [
      {
-      "ref": "c4",
-      "quote": "VRL Group”) are required to retain control over VEDL or, directly or indirectly, own at least 50.1% of the issued equity share capital of VEDL; (collectively, the “Encumbrances”).",
-      "document_id": 915,
-      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on April ....",
+      "ref": "c1",
+      "quote": "Such encumbrances have been created due to the nature of the \nconditions and/or arrangements mentioned in such facility agreements.",
+      "document_id": 702,
+      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on June ....",
       "doc_type": "shareholding",
       "page": 5,
       "verified": true,
       "fiscal_period": "Q4FY25"
      },
      {
-      "ref": "c4",
-      "quote": "Such encumbrances have been created due to the nature of the conditions and/or arrangements mentioned in such facility agreements.",
-      "document_id": 915,
-      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on April ....",
+      "ref": "c1",
+      "quote": "This is on account of encumbrances already subsisting on the shareholding of the five promoter and promoter \ngroup entities of VEDL in accordance with the provisions of the previous facility(ies) agreement",
+      "document_id": 702,
+      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on June ....",
       "doc_type": "shareholding",
       "page": 5,
       "verified": true,
       "fiscal_period": "Q4FY25"
-     },
-     {
-      "ref": "c6",
-      "quote": "For completeness, it is clarified that no pledge has been created by VRL or its subsidiaries over the equity shares of VEDL in relation to the Facility Agreement as on the date of this disclosure.",
-      "document_id": 710,
-      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on July ....",
-      "doc_type": "shareholding",
-      "page": 5,
-      "verified": true,
-      "fiscal_period": "Q1FY27"
      }
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash",
+    "model": "gemini-3.5-flash-lite",
     "period_note": null,
     "prompt": "v1"
    }
@@ -180,12 +170,12 @@
    "question": "How much did Digital Services EBITDA grow year-on-year in Q2 FY27?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 3475,
+   "generated_on": "2026-11-17",
+   "index_chunks": 3487,
    "answer": {
     "question": "How much did Digital Services EBITDA grow year-on-year in Q2 FY27?",
     "symbol": "RELIANCE",
-    "answer": "In Q2 FY27, Digital Services EBITDA grew by 17.7% year-on-year to ₹22,223 crore.",
+    "answer": "In Q2 FY27, Digital Services EBITDA grew by 17.7% year-on-year to ₹ 22,223 crore (from ₹ 18,882 crore in Q2 FY26).",
     "confidence": "high",
     "citations": [
      {
@@ -195,6 +185,16 @@
       "title": "In continuation of our letter of today''s date on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026, we attach a copy ....",
       "doc_type": "results",
       "page": 2,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     },
+     {
+      "ref": "c5",
+      "quote": "Digital Services\n18,882\n22,223\n17.7%",
+      "document_id": 94,
+      "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
+      "doc_type": "results",
+      "page": 11,
       "verified": true,
       "fiscal_period": "Q2FY27"
      }
@@ -211,17 +211,27 @@
    "question": "What drove the oil-to-chemicals segment's performance in the latest quarter?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 3475,
+   "generated_on": "2026-11-17",
+   "index_chunks": 3487,
    "answer": {
     "question": "What drove the oil-to-chemicals segment's performance in the latest quarter?",
     "symbol": "RELIANCE",
-    "answer": "The oil-to-chemicals (O2C) segment's performance was driven by unprecedented strength in transportation fuel cracks (which reached historic highs and were up 3-3.7x year-on-year), improved downstream chemical margins, and a sharp recovery in polyester chain margins to a 3-year high (led by PX and PTA deltas), alongside tight fuel markets and advantaged feedstock sourcing. However, earnings growth was constrained by continued SAED-related costs and under-recoveries in the Jio-bp business, as well as high logistics costs.",
+    "answer": "The oil-to-chemicals segment's performance in Q2 FY27 was driven by unprecedented strength in transportation fuel cracks (which reached historic highs and were up 3-3.7x year-on-year) and improved downstream chemical margins, with polyester chain margins recovering sharply to a 3-year high led by PX and PTA deltas. Additionally, tight fuel markets and advantaged feedstock sourcing contributed, though earnings growth was constrained by SAED-related costs and under-recoveries in the Jio-bp business.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c5",
-      "quote": "Tight fuel markets, advantaged feedstock sourcing\n✓High logistics cost, SAED constrained EBITDA",
+      "quote": "Tight fuel markets, advantaged feedstock sourcing",
+      "document_id": 94,
+      "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
+      "doc_type": "results",
+      "page": 11,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     },
+     {
+      "ref": "c5",
+      "quote": "High logistics cost, SAED constrained EBITDA",
       "document_id": 94,
       "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
       "doc_type": "results",
@@ -231,7 +241,7 @@
      },
      {
       "ref": "c7",
-      "quote": "Segment EBITDA for 2Q FY27 increased sharply by 67.9% Y-o-Y to ₹ 25,203 crore ($ 2.6 billion) with \nunprecedented strength in transportation fuel cracks and improved downstream chemical margins. \nFuel cracks were up 3-3.7x Y-o-Y and reached historic highs during the quarter. Polyester chain \nmargins also recovered sharply, reaching a 3-year high, led by PX and PTA deltas. Earnings growth \nwas constrained by continued SAED-related costs and under-recoveries in Jio-bp business.",
+      "quote": "Segment EBITDA for 2Q FY27 increased sharply by 67.9% Y-o-Y to ₹ 25,203 crore ($ 2.6 billion) with unprecedented strength in transportation fuel cracks and improved downstream chemical margins. Fuel cracks were up 3-3.7x Y-o-Y and reached historic highs during the quarter. Polyester chain margins also recovered sharply, reaching a 3-year high, led by PX and PTA deltas. Earnings growth was constrained by continued SAED-related costs and under-recoveries in Jio-bp business.",
       "document_id": 95,
       "title": "In continuation of our letter of today''s date on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026, we attach a copy ....",
       "doc_type": "results",
@@ -252,17 +262,17 @@
    "question": "Why did the statutory auditor resign?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 2501,
+   "generated_on": "2026-11-17",
+   "index_chunks": 2667,
    "answer": {
     "question": "Why did the statutory auditor resign?",
     "symbol": "PAYTM",
-    "answer": "The excerpts do not state a specific reason for the resignation of the statutory auditor, M/s. Price Waterhouse Chartered Accountants LLP, from the material subsidiary Paytm Payments Services Limited (PPSL), though it is noted that they did not raise any concern or issue upon resigning effective August 07, 2023. Meanwhile, for the parent company (One 97 Communications Limited), Price Waterhouse Chartered Accountants LLP completed their term at the conclusion of the 23rd AGM on September 12, 2023.",
+    "answer": "For the company's statutory auditors (M/s. Price Waterhouse Chartered Accountants LLP), they completed their term at the conclusion of the 23rd AGM. For the material subsidiary's (Paytm Payments Services Limited) statutory auditors who resigned, they did not raise any concern or issue.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c2",
-      "quote": "M/s. Price Waterhouse Chartered Accountants LLP (Firm Registration No. 012754N/N500016) Statutory Auditors of material subsidiary i.e. Paytm Payments Services Limited (“PPSL”) have resigned with effect from August 07, 2023. The Statutory Auditors have not raised any concern or issue.",
+      "quote": "The Statutory Auditors have not raised any concern or issue.",
       "document_id": 412,
       "title": "Change in Statutory Auditors in Material Subsidiary of the Company i.e., Paytm Payments Services Limited",
       "doc_type": "announcement",
@@ -271,19 +281,19 @@
       "fiscal_period": null
      },
      {
-      "ref": "c5",
-      "quote": "M/s. Price Waterhouse Chartered Accountants LLP (Firm Registration No. 012754N/N500016) have completed their term at the conclusion of the 23rd AGM of the Company held on September 12, 2023.",
+      "ref": "c4",
+      "quote": "M/s. Price Waterhouse Chartered Accountants LLP (Firm Registration No. 012754N/N500016) \nhave completed their term as the Statutory Auditors of the Company at the conclusion of the 23rd \nAGM.",
       "document_id": 411,
       "title": "Appointment of Statutory Auditors of the Company",
       "doc_type": "announcement",
-      "page": 2,
+      "page": 1,
       "verified": true,
       "fiscal_period": null
      }
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash",
+    "model": "gemini-3.5-flash-lite",
     "period_note": null,
     "prompt": "v1"
    }
@@ -293,17 +303,17 @@
    "question": "Why were equity shares issued to the Government of India, and what did it do to the debt?",
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 1435,
+   "generated_on": "2026-11-17",
+   "index_chunks": 1561,
    "answer": {
     "question": "Why were equity shares issued to the Government of India, and what did it do to the debt?",
     "symbol": "IDEA",
-    "answer": "Equity shares were issued to the Government of India pursuant to the request for conversion of spectrum auction dues and against the loan representing the NPV of interest related to the deferment of spectrum and AGR, in line with the Reforms Package of 2021, which served as a means of supporting the company's balance sheet by converting debt into equity.",
+    "answer": "The company issued equity shares to the Government of India (GoI) as a means of supporting its balance sheet by converting debt into equity, in line with the Reforms Package of 2021. This conversion specifically addressed spectrum auction dues and interest related to the deferment of spectrum and Adjusted Gross Revenue (AGR) payments.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c1",
-      "quote": "During the quarter, we have issued equity shares to the Government of India, against the loan \nrepresenting the NPV of interest related to deferment of spectrum and AGR.",
+      "quote": "During the quarter, we have issued equity shares to the Government of India, against the loan representing the NPV of interest related to deferment of spectrum and AGR.",
       "document_id": 546,
       "title": "The Company has informed the exchange regarding the Audited Financial Results for the fourth quarter and financial year ended 31st March 2023",
       "doc_type": "results",
@@ -313,7 +323,7 @@
      },
      {
       "ref": "c2",
-      "quote": "The Company requested DoT for conversion of spectrum auction dues of Rs. 369.5 billion repayable after expiry \nof the moratorium period, into equity shares, in line with the Reforms Package of 2021.",
+      "quote": "The Company requested DoT for conversion of spectrum auction dues of Rs. 369.5 billion repayable after expiry of the moratorium period, into equity shares, in line with the Reforms Package of 2021.",
       "document_id": 576,
       "title": "Board of Directors at their meeting held on 30 May 2025 inter-alia have approved the audited financial results (Standalone & Consolidated) of the Company for the financial year ended 31 March 2025",
       "doc_type": "results",
@@ -334,7 +344,7 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
     "prompt": "v1"
    }
@@ -345,20 +355,20 @@
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
    "generated_on": "2026-11-17",
-   "index_chunks": 2287,
+   "index_chunks": 2406,
    "answer": {
     "question": "How did YES Bank's gross NPA ratio change from Q1 FY27 to Q2 FY27?",
     "symbol": "YESBANK",
-    "answer": "YES Bank's gross NPA ratio changed from 1.3% in Q1FY27 to 1.2% in Q2FY27.",
+    "answer": "YES Bank's gross NPA ratio decreased from 1.3% in Q1 FY27 to 1.2% in Q2 FY27.",
     "confidence": "high",
     "citations": [
      {
-      "ref": "c4",
-      "quote": "GNPA ratio improved to 1.2% in Q2FY27 v/s 1.6% in Q2FY26 and 1.3% in Q1FY27",
+      "ref": "c3",
+      "quote": "GNPA ratio at 1.2% compared to 1.6% in Q2FY26 and 1.3% in Q1FY27",
       "document_id": 21,
       "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
       "doc_type": "results",
-      "page": 4,
+      "page": 11,
       "verified": true,
       "fiscal_period": "Q2FY27"
      }
@@ -376,16 +386,16 @@
    "prompt": "v1",
    "requested_model": "gemini-3.5-flash-lite",
    "generated_on": "2026-11-17",
-   "index_chunks": 2287,
+   "index_chunks": 2406,
    "answer": {
     "question": "What did the Supreme Court rule on YES Bank's AT1 bonds, and how would it hit the bank's capital?",
     "symbol": "YESBANK",
-    "answer": "The Supreme Court upheld the Bombay High Court's judgment setting aside the write-down of YES Bank's INR 8,415 crores of Additional Tier 1 (AT1) bonds and dismissed the appeals filed by YES Bank, the Administrator, the Reserve Bank of India, and the Union of India. Reinstating the AT-1 principal amount is expected to have a pro forma impact of approximately 240 basis points on the Common Equity Tier 1 (CET-1) ratio (bringing it to 11.4%), while the overall Tier 1 capital ratio is expected to remain around 13.7% on a pro forma basis.",
+    "answer": "On October 15, 2026, the Supreme Court upheld the Bombay High Court's judgment that set aside the write-down of YES Bank's INR 8,415 crore Additional Tier 1 (AT1) bonds, dismissing the appeals filed by the bank, the Administrator, the RBI, and the Union of India. Reinstating the principal amount is expected to have a pro forma impact of approximately 240 basis points on the bank's Common Equity Tier 1 (CET-1) ratio.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c1",
-      "quote": "Court's judgment of 15th October 2026 concerning the INR \n8,415 crores of Additional Tier 1 bonds written down in March 2020.",
+      "quote": "The Honorable Supreme Court has upheld the Bombay High Court's judgment setting aside the AT-1 write-down, and dismissed the appeals filed by YES Bank, the Administrator, the Reserve Bank of India, and the Union of India.",
       "document_id": 20,
       "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
       "doc_type": "concall",
@@ -395,38 +405,18 @@
      },
      {
       "ref": "c1",
-      "quote": "The Honorable Supreme Court has upheld the Bombay High Court's judgment setting \nspreading the AT-1 write-down, and dismissed the appeals filed by YES Bank, the \nAdministrator, the Reserve Bank of India, and the Union of India.",
+      "quote": "the reinstatement of the AT-1 principal amount is expected to have a pro forma impact of approximately 240 basis points on our Common Equity Tier 1 ratio, including Profits.",
       "document_id": 20,
       "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
       "doc_type": "concall",
       "page": 3,
-      "verified": true,
-      "fiscal_period": "Q2FY27"
-     },
-     {
-      "ref": "c1",
-      "quote": "the reinstatement of the AT-1 principal amount is expected to have a pro forma impact \nof approximately 240 basis points on our Common Equity Tier 1 ratio, including Profits. \nOur overall Tier 1 capital ratio is expected to remain around 13.7% on a pro forma basis.",
-      "document_id": 20,
-      "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
-      "doc_type": "concall",
-      "page": 3,
-      "verified": true,
-      "fiscal_period": "Q2FY27"
-     },
-     {
-      "ref": "c2",
-      "quote": "CET-1 %\n13.7%\n11.4%",
-      "document_id": 21,
-      "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
-      "doc_type": "results",
-      "page": 7,
       "verified": true,
       "fiscal_period": "Q2FY27"
      }
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
     "prompt": "v1"
    }
