@@ -106,9 +106,10 @@ On the current data, 17 of 44 stocks are flagged. The other 27 fire nothing, inc
 
 - **Retrieval ablation:** BM25, dense, hybrid, and hybrid + rerank, scored by hit@8 (a gold page is among the 8 excerpts the LLM reads) and MRR. A **cross-doc** question counts as a success only if a gold document from **every** fiscal period it spans is retrieved.
 - **End to end, per arm:** answer accuracy (LLM judge against the gold answer, plus a deterministic `must_include` check where one is given), citation precision with and without the verifier, verifier rejection rate, correct abstention on unanswerable questions, and false abstention.
-- **Arms:** `hybrid+rerank` (production), `hybrid`, `hybrid+rerank@flash` (larger model), `hybrid+rerank@weak` (`gemini-3.1-flash-lite`), and `hybrid+rerank@v2` (a relaxed prompt for "why" questions).
-- **Judge:** `gemini-3.6-flash`, which differs from every answering model. Verdicts from an older judge are re-graded without re-answering. If the judge is unavailable, the answer is kept and marked pending, and the next run grades it, so no answers are lost and accuracy is computed over graded answers only.
+- **Arms:** `hybrid+rerank` (production), `hybrid`, `hybrid+rerank@flash` (larger model), `hybrid+rerank@weak` (`gemini-3.1-flash-lite`), `hybrid+rerank+esc` (escalate on refusal, see below) and `hybrid+rerank@v2` (a relaxed prompt for "why" questions).
+- **Judge:** `gemini-3-flash-preview`, which differs from every answering model (`gemini-3.6-flash` was the original choice but was overloaded for a day). Verdicts from an older judge are re-graded without re-answering. If the judge is unavailable, the answer is kept and marked pending, and the next run grades it, so no answers are lost and accuracy is computed over graded answers only.
 - Any cell over fewer than 5 questions prints counts (`k/n`), not percentages.
+- **Correct abstention is split by source.** Refusals produced by the period guard (a rule, no model involved) are reported separately from refusals the model made, so the model isn't credited for what a rule did.
 
 <eval tables: paste from eval/report.md after the final run>
 
@@ -116,10 +117,15 @@ Reproduce: `python -m eval.run_eval --configs hybrid+rerank,hybrid,hybrid+rerank
 
 ## Limitations
 
-- **Verified isn't correct.** The verifier checks that a quote is present in the cited chunk. It does not check the reasoning built on that quote.
+- **Verified isn't correct: a worked example.** The verifier is a guarantee, not a catch: every quote shown has been checked against its source page, and across 24 citations in the production eval run it rejected none. Its boundary is that it checks a quote is *present*, not what it *means*. Our own eval caught this:
+  - *Question:* "What was HDFC Bank's net interest margin in Q1 FY22?" (an unanswerable question: the corpus starts in 2023)
+  - *Answer given:* "In Q1 FY22 … core net interest margin was at 4.1%", with one **verified** citation
+  - *Where the quote really came from:* the **Q1 FY24** earnings call ("The core net interest margin for the quarter was at 4.1%"). The quote is real; the period label was wrong, and the verifier can't see periods.
+  - *Fix:* a period guard (`core/retrieve.py: uncovered_period`). When every quarter a question names is outside the indexed filings, and it isn't a range or comparison ("since FY22" still retrieves), FilingLens answers with the corpus boundary instead of searching. Refusals from this rule are counted separately in the eval.
+- **Verified isn't correct: reasoning.** The verifier also doesn't check the reasoning built on a quote.
 - **Filer-OCR noise.** Some filings carry a text layer made by the company's own scanner software. A heuristic (`python -m scripts.ocr_noise`) finds likely OCR misreadings (e.g. "crorc" for "crore") on about **3.3% of indexed pages** (611 of 18,707) and **4.2% of results pages**. The verifier cannot catch these, because it checks that the text is present, not that it is true.
 - **Image-only pages.** About 4.7% of PDF pages have no text layer. Tesseract OCR runs only if it is installed. In the shipped index these pages are not indexed, so they can't be retrieved or cited.
-- **Small-model refusals.** `gemini-3.5-flash-lite` sometimes says "not found" on cross-quarter comparisons even when both figures are in its excerpts. The `@flash` arm in the eval measures this.
+- **Small-model refusals on cross-quarter questions.** In the production run, retrieval put both quarters' filings in front of the model on all 5 cross-quarter questions, yet `gemini-3.5-flash-lite` answered only 2: it refused 2 and answered half of 1. Escalation on refusal (`ESCALATE_MODEL`, off by default) asks a larger model once and keeps its answer only if it carries a verified citation; the `hybrid+rerank+esc` arm measures whether it helps without inventing answers to unanswerable questions.
 - **Frozen corpus.** 44 stocks and 2,924 filings since April 2023, frozen offline. It is not live.
 - **Coverage.** Q&A covers 14 stocks and skips annual reports (because of CPU embedding cost). Flags cover all 44. The demo download indexes 5 stocks.
 - **Heuristic flags.** The flags are not advice. `promoter_stake_drop` can't tell selling from dilution: IDEA's drop (50.36% to 25.64%) comes from equity issued to the Government of India, which one of the example answers explains with citations. `float_pump` relies on Yahoo Finance prices. `rpt_spike` exists in code but has no data, because it needs annual reports.
@@ -129,6 +135,7 @@ Reproduce: `python -m eval.run_eval --configs hybrid+rerank,hybrid,hybrid+rerank
 - **Transcript text was being dropped.** The speaker splitter discarded text that came before the first speaker label on a transcript page, which is usually the previous page's speaker still talking. In a 40-transcript sample, that was about 12% of transcript text, and 38% of pages with speaker labels started mid-speech. `ingest/chunk.py` now attributes that text to the last speaker from the previous page, and `scripts/selftest.py` guards the fix. Transcripts were re-chunked in place with `python -m ingest.run --rechunk concall`, which took transcript chunks from 8,294 to 9,498.
 - **Cross-doc success was unreachable.** Counting distinct gold files failed because the corpus holds byte-identical duplicate filings and retrieval de-duplicates identical text. Success is now judged per fiscal period: at least one gold document from each period the question spans.
 - **Eval judge outages lost work.** Grading is now deferred instead of discarding the answer (see Evaluation).
+- **A real quote with the wrong period passed the verifier.** See the worked example under Limitations; fixed with the period guard.
 
 ## Related work
 
