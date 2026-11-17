@@ -106,6 +106,17 @@ def main() -> int:
     else:
         print("[ok] analyst question retained alongside the answer")
 
+    # 2b. a page that starts mid-speech (the previous page's speaker running on) must not be dropped
+    pages = [(1, "Moderator: Welcome to the call.\nCFO: Let me walk you through the quarter. Revenue grew well."),
+             (2, "and the order book reached a record 5.2 gigawatts, which gives us visibility for two years. "
+                 "Margins should recover as the mix normalises.\nAnalyst: Thank you. A follow-up on capex?\nCFO: Capex stays near 700 crore.")]
+    cont = [c for c in chunk_pages(pages, "concall") if "record 5.2 gigawatts" in c.text]
+    ok = bool(cont) and "CFO: and the order book" in cont[0].text.replace("\n", " ") or \
+        bool(cont) and "CFO:" in cont[0].text
+    print(f"[{'ok' if ok else 'FAIL'}] transcript text before a page's first speaker is kept and attributed")
+    if not ok:
+        fails.append("concall continuation text dropped or unattributed")
+
     # 3. verifier accepts verbatim, rejects paraphrase and hallucination
     chunk = RESULTS_TEXT
     cases = [

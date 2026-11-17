@@ -74,6 +74,30 @@ def search(query_vec: list[float] | np.ndarray, k: int, allowed_ids: set[int] | 
     return [(int(ids[i]), float(scores[i])) for i in top if np.isfinite(scores[i])]
 
 
+def compact(keep_ids: set[int]) -> int:
+    """Rewrite the index keeping only rows whose chunk id is in keep_ids (after chunks were replaced).
+    Written to temp files then swapped in, so a crash leaves the old index intact. Returns rows dropped.
+    On Windows, stop any process holding the index memory-mapped (the API) before calling this."""
+    v, ids = load()
+    if len(ids) == 0:
+        return 0
+    mask = np.isin(ids, np.fromiter(keep_ids, dtype=np.int64, count=len(keep_ids)))
+    # keep the LAST vector for an id that appears twice (a re-embed appended a newer one)
+    _, last = np.unique(ids[::-1], return_index=True)
+    newest = np.zeros(len(ids), dtype=bool)
+    newest[len(ids) - 1 - last] = True
+    mask &= newest
+    tmp_v, tmp_i = _VEC.with_suffix(".f32.tmp"), _IDS.with_suffix(".i64.tmp")
+    np.ascontiguousarray(v[mask], dtype=np.float32).tofile(tmp_v)
+    np.ascontiguousarray(ids[mask], dtype=np.int64).tofile(tmp_i)
+    with _lock:
+        _cache.clear()
+    del v
+    tmp_v.replace(_VEC)
+    tmp_i.replace(_IDS)
+    return int((~mask).sum())
+
+
 def stats() -> dict:
     v, ids = load()
     return {"n_vectors": int(len(ids)), "dim": settings.embed_dim, "mb": round(v.nbytes / 1e6, 1)}

@@ -31,26 +31,6 @@
     "prompt": "v1"
    }
   },
-  "YESBANK|v1|how did the gross npa ratio change between q3 fy26 and q2 fy27": {
-   "symbol": "YESBANK",
-   "question": "How did the gross NPA ratio change between Q3 FY26 and Q2 FY27?",
-   "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 2287,
-   "answer": {
-    "question": "How did the gross NPA ratio change between Q3 FY26 and Q2 FY27?",
-    "symbol": "YESBANK",
-    "answer": "Not found in the filings available.",
-    "confidence": "high",
-    "citations": [],
-    "dropped_citations": 0,
-    "abstained": true,
-    "model": "gemini-3.5-flash-lite",
-    "period_note": null,
-    "prompt": "v1"
-   }
-  },
   "YESBANK|v1|what is management's roa guidance for fy27 and where is h1 tracking": {
    "symbol": "YESBANK",
    "question": "What is management's ROA guidance for FY27 and where is H1 tracking?",
@@ -77,26 +57,6 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
-    "period_note": null,
-    "prompt": "v1"
-   }
-  },
-  "YESBANK|v1|what dividend per share did yes bank declare for fy28": {
-   "symbol": "YESBANK",
-   "question": "What dividend per share did YES Bank declare for FY28?",
-   "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-16",
-   "index_chunks": 2287,
-   "answer": {
-    "question": "What dividend per share did YES Bank declare for FY28?",
-    "symbol": "YESBANK",
-    "answer": "Not found in the filings available.",
-    "confidence": "high",
-    "citations": [],
-    "dropped_citations": 0,
-    "abstained": true,
     "model": "gemini-3.5-flash-lite",
     "period_note": null,
     "prompt": "v1"
@@ -370,6 +330,98 @@
       "page": 16,
       "verified": true,
       "fiscal_period": "Q1FY25"
+     }
+    ],
+    "dropped_citations": 0,
+    "abstained": false,
+    "model": "gemini-3.5-flash-lite",
+    "period_note": null,
+    "prompt": "v1"
+   }
+  },
+  "YESBANK|v1|how did yes bank's gross npa ratio change from q1 fy27 to q2 fy27": {
+   "symbol": "YESBANK",
+   "question": "How did YES Bank's gross NPA ratio change from Q1 FY27 to Q2 FY27?",
+   "prompt": "v1",
+   "requested_model": "gemini-3.5-flash-lite",
+   "generated_on": "2026-11-17",
+   "index_chunks": 2287,
+   "answer": {
+    "question": "How did YES Bank's gross NPA ratio change from Q1 FY27 to Q2 FY27?",
+    "symbol": "YESBANK",
+    "answer": "YES Bank's gross NPA ratio changed from 1.3% in Q1FY27 to 1.2% in Q2FY27.",
+    "confidence": "high",
+    "citations": [
+     {
+      "ref": "c4",
+      "quote": "GNPA ratio improved to 1.2% in Q2FY27 v/s 1.6% in Q2FY26 and 1.3% in Q1FY27",
+      "document_id": 21,
+      "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
+      "doc_type": "results",
+      "page": 4,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     }
+    ],
+    "dropped_citations": 0,
+    "abstained": false,
+    "model": "gemini-3.5-flash-lite",
+    "period_note": null,
+    "prompt": "v1"
+   }
+  },
+  "YESBANK|v1|what did the supreme court rule on yes bank's at1 bonds, and how would it hit the bank's capital": {
+   "symbol": "YESBANK",
+   "question": "What did the Supreme Court rule on YES Bank's AT1 bonds, and how would it hit the bank's capital?",
+   "prompt": "v1",
+   "requested_model": "gemini-3.5-flash-lite",
+   "generated_on": "2026-11-17",
+   "index_chunks": 2287,
+   "answer": {
+    "question": "What did the Supreme Court rule on YES Bank's AT1 bonds, and how would it hit the bank's capital?",
+    "symbol": "YESBANK",
+    "answer": "The Supreme Court upheld the Bombay High Court's judgment setting aside the write-down of YES Bank's INR 8,415 crores of Additional Tier 1 (AT1) bonds and dismissed the appeals filed by YES Bank, the Administrator, the Reserve Bank of India, and the Union of India. Reinstating the AT-1 principal amount is expected to have a pro forma impact of approximately 240 basis points on the Common Equity Tier 1 (CET-1) ratio (bringing it to 11.4%), while the overall Tier 1 capital ratio is expected to remain around 13.7% on a pro forma basis.",
+    "confidence": "high",
+    "citations": [
+     {
+      "ref": "c1",
+      "quote": "Court's judgment of 15th October 2026 concerning the INR \n8,415 crores of Additional Tier 1 bonds written down in March 2020.",
+      "document_id": 20,
+      "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+      "doc_type": "concall",
+      "page": 3,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     },
+     {
+      "ref": "c1",
+      "quote": "The Honorable Supreme Court has upheld the Bombay High Court's judgment setting \nspreading the AT-1 write-down, and dismissed the appeals filed by YES Bank, the \nAdministrator, the Reserve Bank of India, and the Union of India.",
+      "document_id": 20,
+      "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+      "doc_type": "concall",
+      "page": 3,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     },
+     {
+      "ref": "c1",
+      "quote": "the reinstatement of the AT-1 principal amount is expected to have a pro forma impact \nof approximately 240 basis points on our Common Equity Tier 1 ratio, including Profits. \nOur overall Tier 1 capital ratio is expected to remain around 13.7% on a pro forma basis.",
+      "document_id": 20,
+      "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+      "doc_type": "concall",
+      "page": 3,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     },
+     {
+      "ref": "c2",
+      "quote": "CET-1 %\n13.7%\n11.4%",
+      "document_id": 21,
+      "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
+      "doc_type": "results",
+      "page": 7,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
      }
     ],
     "dropped_citations": 0,

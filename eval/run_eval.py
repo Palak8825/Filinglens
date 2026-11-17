@@ -99,6 +99,26 @@ def _norm_path(p: str) -> str:
     return str(p).replace("/", "\\").lower().lstrip(".\\")
 
 
+_path_period: dict[str, str] = {}
+
+
+def period_of(path: str) -> str:
+    """Fiscal period of a document (by normalised path); the path itself when the period is unknown."""
+    if not _path_period:
+        with get_session() as s:
+            _path_period.update({_norm_path(p): (fp or _norm_path(p))
+                                 for p, fp in s.execute(select(Document.path, Document.fiscal_period)).all()})
+    return _path_period.get(_norm_path(path), _norm_path(path))
+
+
+def covers_all_periods(gold: set[tuple[str, int]], found_paths: set[str]) -> bool:
+    """cross_doc success = at least one gold document from EVERY fiscal period the gold spans. Counting
+    distinct files instead made it unreachable: the corpus holds byte-identical duplicate filings (e.g. three
+    copies of one TCS results PDF) and retrieval de-duplicates identical text, so only one copy can appear."""
+    need = {period_of(p) for p, _ in gold}
+    return bool(gold) and need <= {period_of(p) for p in found_paths}
+
+
 def gold_set(q: dict) -> set[tuple[str, int]]:
     return {(_norm_path(g["path"]), int(g["page"])) for g in q.get("gold", []) if g.get("path") and g.get("page")}
 
@@ -127,7 +147,7 @@ def _rank_of_gold(q: dict, hits) -> tuple[int | None, bool]:
         if key in gold and _evidence_ok(q, h.text):
             first = first or rank
             docs_seen.add(key[0])
-    return first, docs_needed <= docs_seen
+    return first, covers_all_periods(gold, docs_seen)
 
 
 # ---------------------------------------------------------------- retrieval ablation
@@ -180,6 +200,20 @@ def judge(question: str, gold: str, pred: str) -> tuple[bool, str]:
     return bool(j.get("correct")), str(j.get("reason", ""))[:300]
 
 
+PENDING = "PENDING"
+
+
+def safe_judge(question: str, gold: str, pred: str) -> tuple[bool | None, str, str]:
+    """judge() that never loses work: if the judge model is down (503/504/429 after retries), the answer is
+    kept with correct=None and judge_model=PENDING, and the next run grades it without re-answering."""
+    try:
+        ok, reason = judge(question, gold, pred)
+        return ok, reason, JUDGE_MODEL
+    except Exception as e:  # noqa: BLE001
+        print(f"    [judge unavailable, grading deferred] {type(e).__name__}: {str(e)[:90]}")
+        return None, "", PENDING
+
+
 def _must_include_ok(q: dict, pred: str) -> bool | None:
     keys = q.get("must_include") or []
     if not keys:
@@ -208,7 +242,7 @@ def _rescore(r: dict, q: dict) -> dict:
     ok = [k in gold and (not q.get("evidence") or _evidence_ok(q, texts.get(cid, "")))
           for k, cid in zip(hits, r.get("hit_ids") or [None] * len(hits))]
     r["gold_rank"] = next((i for i, good in enumerate(ok, 1) if good), None)
-    r["gold_all_docs"] = bool(gold) and {p for p, _ in gold} <= {k[0] for k, good in zip(hits, ok) if good}
+    r["gold_all_docs"] = covers_all_periods(gold, {k[0] for k, good in zip(hits, ok) if good})
     r["type"], r["answerable"] = q["type"], q["answerable"]
     return r
 
@@ -240,9 +274,10 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
                 and "hit_ids" in cached:
             if q["answerable"] and cached.get("judge_model") != JUDGE_MODEL:
                 # Graded by another model (older runs used the answering model as judge): re-grade only.
-                cached["correct"], cached["judge_reason"] = judge(q["question"], q["gold_answer"], cached["answer"])
-                cached["judge_model"] = JUDGE_MODEL
-                print(f"  [{name}] {q['id']} re-judged with {JUDGE_MODEL}: {'ok' if cached['correct'] else 'BAD'}")
+                cached["correct"], cached["judge_reason"], cached["judge_model"] = safe_judge(
+                    q["question"], q["gold_answer"], cached["answer"])
+                if cached["judge_model"] != PENDING:
+                    print(f"  [{name}] {q['id']} judged with {JUDGE_MODEL}: {'ok' if cached['correct'] else 'BAD'}")
                 rejudged = True
             out.append(_rescore(cached, q))
             continue
@@ -251,13 +286,13 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
         latency = time.time() - t
         ref_page = {f"c{i}": (doc_path(h.document_id), h.page) for i, h in enumerate(hits, 1)}
         raw_keys = [ref_page.get(str(c.get("ref")), (None, 0)) for c in raw]
-        correct, reason = (None, "")
+        correct, reason, jmodel = (None, "", None)
         if q["answerable"]:
-            correct, reason = judge(q["question"], q["gold_answer"], ans.answer)
+            correct, reason, jmodel = safe_judge(q["question"], q["gold_answer"], ans.answer)
         r = {
             "id": q["id"], "symbol": q["symbol"], "question": q["question"], "gold_answer": q.get("gold_answer"),
             "abstained": ans.abstained, "correct": correct, "judge_reason": reason,
-            "judge_model": JUDGE_MODEL if q["answerable"] else None, "answer_model": ans.model,
+            "judge_model": jmodel, "answer_model": ans.model,
             "must_include_ok": _must_include_ok(q, ans.answer) if q["answerable"] else None,
             "n_raw": len(raw), "n_verified": len(ans.citations), "dropped": ans.dropped_citations,
             "raw_keys": raw_keys, "ver_keys": [(doc_path(c.document_id), c.page) for c in ans.citations],
@@ -281,7 +316,8 @@ def _run_config(qs: list[dict], name: str, mode: str, rr: bool, prompt: str, pac
 
 
 def summarize(results: list[dict]) -> dict:
-    ans = [r for r in results if r["answerable"]]
+    ans_all = [r for r in results if r["answerable"]]
+    ans = [r for r in ans_all if r.get("judge_model") != PENDING]  # accuracy only over graded answers
     unans = [r for r in results if not r["answerable"]]
     raw = sum(r["n_raw"] for r in results)
     ver = sum(r["n_verified"] for r in ans)
@@ -289,7 +325,7 @@ def summarize(results: list[dict]) -> dict:
     pct = lambda a, b: {"k": a, "n": b, "v": a / b if b else float("nan")}  # noqa: E731
     mi = [r for r in ans if r["must_include_ok"] is not None]
     return {
-        "n_answerable": len(ans), "n_unanswerable": len(unans),
+        "n_answerable": len(ans), "n_unanswerable": len(unans), "n_pending_judge": len(ans_all) - len(ans),
         "accuracy": pct(sum(1 for r in ans if r["correct"]), len(ans)),
         "accuracy_by_type": {t: pct(sum(1 for r in ans if r["type"] == t and r["correct"]),
                                     sum(1 for r in ans if r["type"] == t)) for t in TYPES if t != "unanswerable"
@@ -382,6 +418,10 @@ def main() -> None:
     if not a.retrieval_only:
         for name in [c for c in a.configs.split(",") if c]:
             e2e[name] = summarize(run_config(qs, name, a.pace))
+    pending = sum(m.get("n_pending_judge", 0) for m in e2e.values())
+    if pending:
+        print(f"WARNING: {pending} answer(s) not yet graded (judge model unavailable); re-run to grade them. "
+              "Accuracy below excludes them.")
     md = report(qs, abl, e2e)
     (HERE / "report.md").write_text(md, encoding="utf-8")
     (HERE / "report.json").write_text(json.dumps({"ablation": abl, "e2e": e2e}, indent=2), encoding="utf-8")
