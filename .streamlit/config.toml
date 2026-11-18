@@ -37,3 +37,7 @@ borderColor = "#33332f"
 linkColor = "#86b6ef"
 dataframeHeaderBackgroundColor = "#1f1f1d"
 chartCategoricalColors = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#0ca30c", "#9085e9", "#e66767"]
+
+[client]
+# Hide the "Deploy" button and developer menu items that mean nothing to a visitor.
+toolbarMode = "minimal"

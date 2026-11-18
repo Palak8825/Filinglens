@@ -21,7 +21,9 @@ import pandas as pd
 import requests
 import streamlit as st
 
-API = os.environ.get("FILINGLENS_API", "http://localhost:8000")
+# 127.0.0.1, not "localhost": on Windows "localhost" tries IPv6 (::1) first and every request then waits ~2 s
+# before falling back to IPv4, where uvicorn listens. A Brief makes ~20 calls, so that was ~40 s per page.
+API = os.environ.get("FILINGLENS_API", "http://127.0.0.1:8000").replace("://localhost", "://127.0.0.1")
 
 st.set_page_config(page_title="FilingLens", page_icon="🔎", layout="wide", initial_sidebar_state="expanded")
 
@@ -291,7 +293,9 @@ def bar_chart(df: pd.DataFrame, x: str, y: str, x_title: str, tooltip: list, col
                tooltip=tooltip)
     if color is not None:
         enc["color"] = color
-    return alt.Chart(df).mark_bar(cornerRadiusEnd=4, size=14).encode(**enc).properties(height=alt.Step(step))
+    # Left padding: labels are measured before the web font loads and drawn wider after, which clipped first letters.
+    return (alt.Chart(df).mark_bar(cornerRadiusEnd=4, size=14).encode(**enc)
+            .properties(height=alt.Step(step), padding={"left": 24, "top": 5, "right": 5, "bottom": 5}))
 
 
 LEVEL_COLOR = alt.Color("level:N", title="Risk level",
@@ -682,11 +686,14 @@ def dashboard() -> None:
     table = df[df["level"].isin(levels or [])].copy()
     table["Level"] = table["level"].map(lambda k: f"{LEVEL[k]['icon']} {LEVEL[k]['label']}")
     table["Flags"] = table["flags"].map(lambda fs: ", ".join(FLAG_NAMES.get(f, f) for f in fs) or "—")
-    st.dataframe(table[["symbol", "Level", "score", "Flags", "Q&A"]], hide_index=True, width="stretch",
+    # Text, not a checkbox: a checkbox column looks clickable but isn't.
+    table["In Ask"] = table["Q&A"].map(lambda v: "Yes" if v else "—")
+    st.dataframe(table[["symbol", "Level", "score", "Flags", "In Ask"]], hide_index=True, width="stretch",
                  column_config={"symbol": st.column_config.TextColumn("Stock"),
                                 "score": st.column_config.ProgressColumn("Score", min_value=0,
                                                                          max_value=int(df["score"].max() or 1), format="%d"),
-                                "Q&A": st.column_config.CheckboxColumn("In Ask")})
+                                "In Ask": st.column_config.TextColumn("In Ask", help="Can you question this "
+                                                                      "company's filings on the Ask page?")})
 
     section("Stock detail")
     default = st.session_state.get("symbol", "IDEA")
@@ -729,7 +736,9 @@ def flag_page() -> None:
     if not fl:
         st.warning(f"{symbol} no longer triggers this flag.")
         return
-    sev = "🔴 Severe" if fl["severity"] == 3 else "🟠 Warning"
+    # Severity of this one flag (adds to the stock's score); the dashboard's High/Elevated/Low is the stock's level.
+    sev = ("🔴 High-severity flag" if fl["severity"] == 3 else "🟠 Medium-severity flag") + \
+        f" · adds {fl['severity']} to the risk score"
     st.markdown(f"<p class='fl-muted' style='margin:0'>{symbol} · {sev}</p>", unsafe_allow_html=True)
     st.title(fl["title"])
 
@@ -742,7 +751,10 @@ def flag_page() -> None:
     if structured:
         section("The filed numbers")
         rows = [{"period": e.get("period") or e.get("as_of"), **e["values"]} for e in structured]
-        tdf = pd.DataFrame(rows).rename(columns=VALUE_LABELS)
+        # One row per measure, one column per period: fits the page instead of scrolling sideways.
+        tdf = (pd.DataFrame(rows).set_index("period").rename(columns=VALUE_LABELS).T
+               .reset_index().rename(columns={"index": "Measure"}))
+        tdf.columns = [str(c) for c in tdf.columns]
         st.dataframe(tdf, hide_index=True, width="stretch")
         if code in ("pledge_creep", "pledge_high", "promoter_stake_drop"):
             ch = shareholding_chart(symbol, height=340)
