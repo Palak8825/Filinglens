@@ -7,6 +7,9 @@
 Built solo for **Arthaton 2026** (AI for personal and business finance).
 🎬 **Demo video:** _<YouTube link>_ · 📦 **Data download:** [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Palak8825/Filinglens?quickstart=1)
+**▶ Run the real app in your browser, no install.** It sets itself up the first time (about 6 minutes), then the app opens in a new tab. You can paste a free [Gemini key](https://aistudio.google.com/apikey) on the setup page to ask your own questions; without one, the prepared Briefs, examples, dashboard and red flags all work.
+
 ![FilingLens home page: a verified answer next to the highlighted source page](docs/images/home.png)
 
 **Contents:** [Why FilingLens?](#why-filinglens) · [See it in action](#see-it-in-action) · [How it works](#how-it-works) · [Quick start](#quick-start) · [AI models, APIs and libraries](#ai-models-apis-and-libraries) · [Does it work? (Evaluation)](#does-it-work-evaluation) · [Red flags](#red-flags) · [Limitations](#limitations) · [Under the hood](#under-the-hood) (safeguards, FilingLens's own API, **project structure**, engineering notes) · [License](#license)
@@ -109,7 +112,9 @@ There's no vector database and no LangChain: just SQLite, a numpy file and a few
 
 ## Quick start
 
-You'll need **Python 3.12** (3.10+ should work), Git, and **about 5 GB of free disk space**: ~1 GB for the demo data and the rest for Python packages (PyTorch is the big one). **No API key is needed** to try it.
+**Easiest: in your browser.** Click **Open in GitHub Codespaces** at the top (free with a GitHub account). It installs everything, downloads and checks the demo data, and opens the app, in about 6 minutes the first time and about a minute when you come back to it. To ask your own questions, paste a Gemini key on the setup page, or later run `echo LLM_API_KEY=your-key > .env && bash .devcontainer/start.sh` in its terminal. The setup lives in [`.devcontainer/`](.devcontainer).
+
+**On your own machine:** you'll need **Python 3.12** (3.10+ should work), Git, and **about 5 GB of free disk space**: ~1 GB for the demo data and the rest for Python packages (PyTorch is the big one). **No API key is needed** to try it.
 
 **1. Get the code**
 
@@ -294,6 +299,7 @@ Other honest caveats:
 
 ```text
 filinglens/
+├── .devcontainer/           # GitHub Codespaces: install, download demo data, start the app
 ├── api/main.py              # the engine (FastAPI): ask, brief, flags, pages, PDFs, eval
 ├── core/
 │   ├── retrieve.py          # hybrid search (BM25 + embeddings), quarter detection
