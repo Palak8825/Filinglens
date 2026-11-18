@@ -1,50 +1,115 @@
 # FilingLens
 
-## Answers from Indian company filings, proven on the page
+### Answers from Indian company filings, proven on the page
 
-> **Every claim cites the exact PDF page, and code checks each citation before you see it.**
-
-FilingLens answers questions about the public filings of Indian listed companies (NSE/BSE quarterly results, earnings-call transcripts, exchange announcements, shareholding patterns). It retrieves with **hybrid RAG** (BM25 + dense embeddings, fused with Reciprocal Rank Fusion, then a cross-encoder reranker), makes the LLM quote its source for every claim, and then **checks every quote in code** against the page it cites. Next to the answers sit a **rules-only red-flag engine** (no LLM) and a per-stock **Brief**, and all of it is measured by an **evaluation harness** whose judge model never grades its own output.
+**Ask a question about a listed company. Get a plain answer, plus the exact page of the company's own filing it came from, with the sentence highlighted.**
 
 Built solo for **Arthaton 2026** (AI for personal and business finance).
-**Demo video:** _<YouTube link>_ · **Release data:** [v1.0-data](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
+🎬 **Demo video:** _<YouTube link>_ · 📦 **Data download:** [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
 
-Built with: Python · FastAPI · Streamlit · Gemini API · sentence-transformers (bge-small) · cross-encoder reranker · SQLite + a flat numpy vector index · pymupdf. No vector database, no LangChain or LlamaIndex: the retrieval path is a few hundred lines you can read end to end.
+![FilingLens home page: a verified answer next to the highlighted source page](docs/images/home.png)
 
-Not a trading tool: no orders, no broker keys, no portfolio, no money. Research and investor protection only.
-
----
-
-## 1. What FilingLens is trying to prove
-
-1. **Citations can be addressable.** Every chunk keeps its page number, so a citation opens the exact page, with the quoted line highlighted.
-2. **Citations can be verified outside the model.** The model proposes a quote; code checks the quote really appears in the excerpt it was attributed to. Failed citations are dropped and counted.
-3. **Risk signals can be auditable.** Red flags are thresholds over filed data, printed in the interface and linked to the filing behind them. An LLM-generated risk score can't be audited; a threshold over a shareholding filing can.
-4. **All of it can be measured.** Hand-labelled questions with gold pages, a retrieval ablation, citation precision with and without the verifier, and correct refusals on unanswerable questions.
+**Contents:** [Why FilingLens?](#why-filinglens) · [See it in action](#see-it-in-action) · [How it works](#how-it-works) · [Quick start](#quick-start) · [Does it work? (Evaluation)](#does-it-work-evaluation) · [Red flags](#red-flags) · [Limitations](#limitations) · [Under the hood](#under-the-hood) (models, API, **project structure**, engineering notes)
 
 ---
 
-## 2. What you can do with it
+## Why FilingLens?
 
-| Page | What you see |
+Every listed company in India files its quarterly results, earnings-call transcripts and shareholding details with the stock exchanges. It's all public, and it's the most reliable information there is. But it runs to **hundreds of pages per company per quarter**, mostly dense PDFs and tables.
+
+You could paste a filing into a chatbot, but chatbots sometimes **make things up**: a confident number, a quote nobody ever said. With money involved, "probably right" isn't good enough.
+
+FilingLens is built around one rule: **if it can't show you the page, it doesn't say it.**
+
+- 📄 **Every claim comes with its source page**, with the exact sentence highlighted, and a button to open the original PDF.
+- ✅ **Every quote is checked by code before you see it.** If the AI cites something that isn't on that page, the citation is thrown out.
+- 🚩 **Warning signs from simple, visible rules**, not AI guesswork. For example, "promoters pledged more of their shares" or "the auditor resigned", each with the filing that proves it.
+- 📊 **It's measured.** 30 hand-checked test questions, published results, including where it fails.
+
+> **Who it's for:** a retail investor doing homework before buying a stock, a student learning to read company results, or anyone who wants to check what a company *actually* said. It's a research tool: no trading, no tips, no money involved.
+
+---
+
+## See it in action
+
+**Example:** *"How did YES Bank's gross NPA ratio change from Q1 FY27 to Q2 FY27?"*
+
+> **Answer:** YES Bank's gross NPA ratio improved from 1.3% in Q1 FY27 to 1.2% in Q2 FY27.
+> **Source:** Results · Q2 FY27 · Page 11, *"GNPA ratio at 1.2% compared to 1.6% in Q2FY26 and 1.3% in Q1FY27"* ✅ verified
+
+The answer shows how it was checked (8 passages read, 1 quote given, 1 confirmed, 0 rejected), and the page itself, with the line highlighted:
+
+![Ask page: answer, the 'how this answer was checked' strip, and the highlighted source page](docs/images/ask.png)
+
+### What you can do
+
+| | |
 |---|---|
-| **Landing** | A splash screen with one way in. |
-| **Home** | The corpus at a glance and a live example: a verified answer next to its source page, quote highlighted. |
-| **Brief** | A cited summary of any company: the latest quarter's numbers, what management said, red flags, and notable events. Every line is a verified citation, or the section says plainly that the filings don't cover it. |
-| **Dashboard** | A risk screen of all 44 stocks: score, level, the flags behind them, how often each rule fires, and promoter holding and encumbrance over time. Each flag opens a **detail page** with the rule, its threshold, the filed numbers, the evidence pages and links to the original filings. |
-| **Ask** | Pick a stock and ask, or click an example. The answer shows how it was checked (passages found, quotes given, confirmed or rejected); each citation shows the quote highlighted on the rendered page and a **Verify it yourself** box: open the PDF at the cited page, see the original filing on BSE, copy the exact quote. General questions also get a one-click "Open the Brief?" offer. |
-| **Evaluation** | The measured results in plain language, with the technical tables one click away. |
+| **📋 Brief:** a one-page summary of any company: the latest quarter's numbers, what management said, red flags and notable filings. Every line is a checked quote; if the filings don't cover something, it says so instead of guessing. | ![Brief page](docs/images/brief.png) |
+| **🚩 Risk dashboard:** all 44 companies screened for warning signs, with a score, the rules that fired, and promoter holding over time. | ![Risk dashboard](docs/images/dashboard.png) |
+| **🔍 Flag details:** click any flag to see the rule, its threshold, the filed numbers and a link to the original filing on NSE. | ![Flag detail page](docs/images/flag.png) |
+| **📈 Evaluation:** the test results in plain language, with the technical tables one click away. | ![Evaluation page](docs/images/eval.png) |
 
 ---
 
-## 3. Quick start
+## How it works
 
-### Prerequisites
-- Python 3.12 (3.10+ should work)
-- Git, and about 5 GB free for the demo: ~1 GB for the download and its extracted data, the rest for the Python packages (PyTorch is the large one). The full data needs about 8 GB more.
-- Optional: a free [Google AI Studio](https://aistudio.google.com) key, only needed to ask your own questions
+The whole idea fits in one picture: **find the right pages → let the AI answer only from them → check every quote in code.**
 
-### 1. Clone and install
+```mermaid
+flowchart TD
+  subgraph Offline["🗂️ Built once, offline"]
+    A["📄 2,924 filings from BSE and NSE"] --> B["✂️ Chunking: passages that never cross a page"]
+    B --> C["🔤 Keyword index (BM25)"]
+    B --> D["🧠 Meaning index (embeddings)"]
+  end
+  Q["❓ Your question"] --> P["🗓️ Work out the quarter: 'latest' → Q2 FY27"]
+  P --> R["🔎 Hybrid retrieval: 40 best passages"]
+  C --> R
+  D --> R
+  R --> K["🏅 Reranker keeps the best 8"]
+  K --> L["🤖 LLM answers, quoting its sources"]
+  L --> V{"🔍 Verifier: is each quote<br/>really on that page?"}
+  V -- yes --> OK["✅ Answer + highlighted page"]
+  V -- no --> X["❌ Citation dropped and counted"]
+
+  classDef data fill:#eef4ff,stroke:#3b6fd8,color:#0b2a66
+  classDef step fill:#ffffff,stroke:#3b6fd8,color:#0b2a66
+  classDef ai fill:#f3ecff,stroke:#7c4dff,color:#2d1065
+  classDef good fill:#e8f7ee,stroke:#1f9d55,color:#0d4d2a
+  classDef bad fill:#fdecec,stroke:#d64545,color:#6b1111
+  class A,B,C,D data
+  class Q,P,R,K step
+  class L ai
+  class V,OK good
+  class X bad
+```
+
+Here's what each step does, using the YES Bank question above:
+
+1. **Chunking.** Each filing is cut into passages of about 450 tokens (a few paragraphs) that **never cross a page break**, so every passage knows its exact page number. That's what makes "page 11" possible. Earnings calls are split by speaker, so an analyst's question stays with management's answer.
+2. **Understanding the quarter.** "Latest quarter", "Q2 FY27" or "as of 30 September 2026" all become *Q2 FY27*, and the search only looks at that quarter's filings. No AI is needed for this step; it's plain rules.
+3. **Retrieval: finding the right pages.** This is **hybrid RAG** (retrieval-augmented generation: the AI answers only from passages that were retrieved for it). Two searches run side by side:
+   - **keyword search** (BM25) catches exact terms like "GNPA" or "CASA";
+   - **meaning search** (embeddings) catches paraphrases, like "bad loans" for "NPA".
+
+   Their results are merged (Reciprocal Rank Fusion), giving the 40 most promising passages.
+4. **Reranking.** A second, sharper model (a cross-encoder) reads each of the 40 passages next to the question and keeps the **best 8**. Only those 8 go to the AI.
+5. **Answering.** The LLM (Google Gemini) must answer from those 8 passages only, and back every claim with a **word-for-word quote** and the passage it came from.
+6. **Verifying.** Code, not the AI, checks that every quote really appears in the passage it points to. Quotes that don't match are dropped and counted. An answer left with no verified quote is marked "Unverified".
+7. **Showing the proof.** Each verified quote is highlighted on a picture of the actual PDF page, with buttons to open the PDF and the original filing on the BSE website.
+
+The **Brief** reuses the same pipeline: it asks a fixed set of questions about each company (latest results, management commentary), then adds the red flags and the **notable filings**. Those are ranked by how rare each type of announcement is across all 44 companies. Indian law (SEBI's Regulation 30) already requires companies to report material events, so FilingLens ranks that legal feed instead of asking an AI what seems important.
+
+There's no vector database and no LangChain: just SQLite, a numpy file and a few hundred lines of retrieval code you can read end to end.
+
+---
+
+## Quick start
+
+You'll need **Python 3.12** (3.10+ should work), Git, and **about 5 GB of free disk space**: ~1 GB for the demo data and the rest for Python packages (PyTorch is the big one). **No API key is needed** to try it.
+
+**1. Get the code**
 
 ```bash
 git clone https://github.com/Palak8825/Filinglens.git
@@ -54,227 +119,197 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Download the prebuilt data
+**2. Download the data** from the [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data) into any folder, then unpack it. The script checks every file's checksum first.
 
-From the [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data), download one option into a folder. The setup script checks every zip against its checksum file before extracting into `./data`.
-
-| Option | Files | What it contains | Setup |
+| Option | Download | What you get | Command |
 |---|---|---|---|
-| **Demo** (~500 MB, recommended) | `filinglens-demo.zip`, `SHA256SUMS-demo.txt` | Q&A index for 5 stocks (IDEA, PAYTM, RELIANCE, VEDL, YESBANK), every page the example answers and prepared Briefs cite, red flags for all 44 stocks | `python -m scripts.setup_release <folder> --demo` |
-| **Full** (~3.5 GB) | `filinglens-index.zip`, `filinglens-pdfs-part1.zip`, `filinglens-pdfs-part2.zip`, `SHA256SUMS.txt` | 14 stocks, 929 filings, 41,219 chunks, and every PDF the app can cite | `python -m scripts.setup_release <folder>` |
+| **Demo** (~500 MB, recommended) | `filinglens-demo.zip` + `SHA256SUMS-demo.txt` | 5 companies (IDEA, PAYTM, RELIANCE, VEDL, YESBANK) you can question, every page the examples cite, red flags for all 44 | `python -m scripts.setup_release <folder> --demo` |
+| **Full** (~3.5 GB) | `filinglens-index.zip`, `filinglens-pdfs-part1.zip`, `filinglens-pdfs-part2.zip` + `SHA256SUMS.txt` | 14 companies, 929 filings, 41,219 passages | `python -m scripts.setup_release <folder>` |
 
-If a download stops part-way (on Windows, `curl` sometimes fails with an SSL error), download it in your browser instead, or resume with `curl -L --ssl-no-revoke -C - -O <file URL>`. The checksum check catches any incomplete file.
+If a download stops part-way (on Windows, `curl` sometimes fails with an SSL error), use your browser, or resume with `curl -L --ssl-no-revoke -C - -O <file URL>`.
 
-### 3. Run
+**3. Run it** (two terminals)
 
 ```bash
-uvicorn api.main:app                 # API on http://localhost:8000
-streamlit run web/app.py             # UI on http://localhost:8501 (second terminal)
+uvicorn api.main:app             # the engine, on http://localhost:8000
+streamlit run web/app.py         # the app, on http://localhost:8501
 ```
 
-If you run the API on another port, set `FILINGLENS_API` (e.g. `FILINGLENS_API=http://localhost:8100`) before starting Streamlit.
+If the engine runs on another port, set `FILINGLENS_API=http://localhost:<port>` before starting the app.
 
-**Without an API key**, the Brief for the demo stocks, the example answers (marked **⚡**), the dashboard, red flags and every cited page work. A new question returns a message saying a key is needed.
-**With a key** (`cp .env.example .env`, set `LLM_API_KEY`), you can ask anything about the indexed stocks.
+- **Without a key:** the Briefs for the demo companies, the example answers, the dashboard, the red flags and every cited page all work.
+- **With a key** (copy `.env.example` to `.env` and set `LLM_API_KEY`; the free [Google AI Studio](https://aistudio.google.com) tier works), you can ask anything about the indexed companies.
 
-### 4. Check it works offline
+**4. Check everything works** (optional): `python -m scripts.selftest` runs offline in under a minute, with no key and no internet, and tests chunking, retrieval, the verifier and the red flags.
 
-```bash
-python -m scripts.selftest           # under a minute, no network, no key; uses a separate data/selftest DB
-```
+<details>
+<summary><b>⚡ Why some answers are marked "Example answer"</b></summary>
 
-It checks chunking (including the transcript fix below), retrieval, period resolution and the period guard, the citation verifier, red flags, the answer cache, notable-event normalisation, the Brief's "not covered" rule and eval formatting.
-
-### Prepared content (disclosure)
-
-The example answers (`demo/answer_cache.json`, 11 questions) and the Briefs for the 5 demo stocks (`demo/brief_cache.json`) were generated in advance by `python -m scripts.warm_cache` and `python -m scripts.warm_brief`, through **the same pipeline the app runs live**. Each entry is stored whole: answer, verified citations, dropped-citation count, the model that answered, and the date. In the UI they carry an **⚡ Example answer** or **⚡ Prepared brief** label. Questions that aren't prepared are always answered live, and live questions are never written to the cache. The cache exists so a reviewer without a key sees real pipeline output, and so a demo survives a free-tier outage.
+So that anyone can try FilingLens without an API key, the 11 example questions and the Briefs for the 5 demo companies were generated in advance (`scripts/warm_cache.py`, `scripts/warm_brief.py`) using **exactly the same pipeline the app runs live**. Each one is stored complete, with its verified citations, the model that answered and the date, and carries an **⚡ Example answer** / **⚡ Prepared brief** label. Any question that isn't one of these is always answered live, and live answers are never saved into the examples. This also keeps the demo working if the free AI tier is having a bad day.
+</details>
 
 ---
 
-## 4. How it works
+## Does it work? (Evaluation)
 
-```text
-PDF ─ pymupdf ─ section/speaker-aware chunks (one page each) ─┬─ BM25
-                                                              └─ bge-small embeddings → flat float32 file
-question ─ period guard / period resolver ─ hybrid retrieve top-40 (BM25 + dense, RRF) ─ cross-encoder rerank top-8
-         ─ LLM → JSON {answer, citations[{ref, quote}]} ─ citation verifier ─ answer + highlighted page images
-NSE shareholding XBRL + BSE announcements / audit reports + prices ─ facts ─ core/flags.py (rules) ─ risk score
-exchange announcements (all 44 stocks) ─ core/notable.py (rarity ranking, no LLM) ─ notable events ─┐
-fixed questions through the same answer pipeline + red flags + notable events ───────────────────────┴─ Brief
-```
+I wrote **30 test questions** about 10 companies and, for each one, recorded the correct answer and the exact page or pages where it appears in the filings. These are the **gold pages**. Each gold figure was checked by hand against the PDF. Then FilingLens answered every question and was scored against them.
 
-- **Chunking** (`ingest/chunk.py`): about 450 tokens, never crossing a page, so every chunk has exactly one page number. Transcripts are split by speaker, and adjacent utterances are merged so an analyst's question stays with its answer.
-- **Period resolver** (`core/retrieve.py`, no LLM): explicit quarters ("Q2 FY27", "Q3 FY26 vs Q2 FY27"), quarter-end dates ("as of 30 September 2026" → Q2 FY27) and relative phrases ("latest quarter", "QoQ") become a hard filter on fiscal period. The UI shows how a relative phrase was read.
-- **Period guard:** when every quarter a question names is outside the indexed filings, and it isn't a range or comparison ("since FY22" still retrieves), FilingLens answers with the corpus boundary instead of searching (see the worked example in Limitations).
-- **Verifier** (`core/verify.py`): a quote survives only if it appears in the cited chunk, as an exact substring or with a rapidfuzz `partial_ratio` ≥ 92 for quotes of 20+ characters; shorter quotes must match exactly and contain both a word and a number. If the model cited something but nothing verified, the answer is marked "Unverified".
-- **Notable events** (`core/notable.py`, no LLM): SEBI's LODR Regulation 30 requires listed companies to disclose material events to the exchange, so the announcement feed *is* the material-events feed. FilingLens ranks that legally required stream instead of guessing what matters: rarity of each (normalised) announcement type across all 44 stocks first, then labelled boosts for legal, credit, governance and corporate-action events, a demotion for known routine paperwork, and unusual filing activity measured against the whole universe in the same window.
-- **Brief** (`core/brief.py`): four fixed sections. Latest quarter (bank-style or company-style questions) and what management said run predetermined questions through the unchanged answer pipeline; red flags and notable events are deterministic. A section without a verified citation shows "The filings don't cover this."
-- **Storage:** SQLite plus a flat numpy vector file. At 41k chunks × 384 dimensions, cosine similarity is one matrix multiply on CPU.
+**A sample of the test questions:**
 
----
-
-## 5. AI models and APIs used
-
-| Role | Model / API | Config (`core/config.py`, `.env.example`) | Notes |
+| Type | Company | Question | Correct answer |
 |---|---|---|---|
-| Answer generation | Google Gemini API, `gemini-3.1-flash-lite` | `LLM_MODEL` | JSON mode, temperature 0. Chosen on the 30-question eval (see Evaluation). The model that actually answered is recorded with each answer. |
-| Fallbacks | `gemini-3.5-flash-lite`, then `gemini-3.5-flash` | `LLM_FALLBACK_MODELS` | Used only on 429/500/503/504. `gemini-2.5-*` is retired for new keys. Fallback is off during eval runs. |
-| Eval judge | Gemini API, `gemini-3-flash-preview` | `JUDGE_MODEL` | Differs from every answering model, so no model grades itself. |
-| Escalation (off) | `gemini-3.5-flash` | `ESCALATE_MODEL` | Built and measurable as the `hybrid+rerank+esc` arm, but off by default: the refusals it targeted no longer occur with the current model. |
-| Embeddings | `BAAI/bge-small-en-v1.5` (sentence-transformers, local CPU) | `EMBED_MODEL`, `EMBED_DIM=384` | An opt-in BGE query instruction (`EMBED_QUERY_INSTRUCTION`) was tested and changed nothing for the production setup. |
-| Reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2` (local CPU) | `RERANK_MODEL`, `RERANK=1` | |
-| Data | BSE corporate announcements, NSE shareholding-pattern XBRL, Yahoo Finance prices (`yfinance`) | | Fetched once and frozen; nothing is fetched at query time. |
+| Factual | YES Bank | What was the net interest margin in Q2 FY27? | 2.6% |
+| Cross-quarter | Infosys | How did FY27 revenue growth guidance change between Q1 FY27 and Q2 FY27? | Cut from 1.5–3% to 1–2% |
+| Reasoning | Vodafone Idea | Why did the Government of India become a shareholder in 2023? | Interest owed under the 2021 telecom relief package was converted into equity |
+| Red flag | Paytm | Which statutory auditor of Paytm Payments Services resigned, and when? | Price Waterhouse Chartered Accountants LLP, effective 7 Aug 2023 |
+| Not in the filings | HDFC Bank | What was the net interest margin in Q1 FY22? | Should say "not in the filings" (the collection starts in 2023) |
+| Not in the filings | ZEE | How many paying subscribers does ZEE5 have? | Should say "not in the filings" |
 
-An Anthropic provider exists as an alternative (`LLM_PROVIDER=anthropic`); it was not used for any reported numbers. Libraries: pymupdf, rank_bm25, numpy, SQLAlchemy/SQLite, rapidfuzz, FastAPI, Streamlit/Altair, pandas.
+The full set: 9 factual, 4 reasoning, 5 cross-quarter, 2 red-flag and **10 deliberately unanswerable** questions, to test whether it admits when it doesn't know (`eval/questions.jsonl`).
 
----
+**The results:**
 
-## 6. Red flags
-
-Rules only. Every flag carries its evidence (filing, page, quote or filed numbers). Thresholds come from `THRESHOLDS` in `core/flags.py` and are printed in the UI.
-
-| Flag | Fires when | Severity | Source |
-|---|---|---|---|
-| `pledge_creep` | Encumbered share of promoter holding up ≥ 10pp over 4 quarters | 3 | NSE shareholding pattern (XBRL) |
-| `pledge_high` | Encumbered share of promoter holding ≥ 50% | 2 | same |
-| `promoter_stake_drop` | Promoter holding down ≥ 3pp in one quarter, or ≥ 5pp over 12 quarters | 2 | same |
-| `auditor_change` | Statutory auditor resigns (3) or a subsidiary's auditor resigns (2) | 2–3 | BSE announcements |
-| `audit_qualification` | A results filing contains a qualified, adverse or disclaimer opinion | 3 | Audit reports inside BSE results PDFs |
-| `float_pump` | Largest 3-month return in the last year ≥ 100% with public float < 25% | 3 | Yahoo Finance prices + NSE public % |
-
-Score = sum of severities: **high** at 5+, **elevated** at 2+, **low** otherwise. "Encumbered" follows SEBI's definition (pledge + non-disposal undertakings + other); the flag text shows the split. VEDL, for example, is 100% encumbered with 0% pledged, which a pledge-only check would miss. On the current data, 17 of 44 stocks are flagged; the other 27, including HDFCBANK, INFY and TCS, fire nothing.
-
----
-
-## 7. Evaluation
-
-**30 hand-labelled questions over 10 stocks** (`eval/questions.jsonl`): 9 factual, 4 reasoning, 5 cross-quarter, 2 red-flag and 10 unanswerable. Each answerable question lists every acceptable (document, page); gold figures were checked against the rendered PDF page, and the 21 newer questions were audited by two independent reviews.
-
-The evaluation asks four questions:
-
-**1. Does retrieval put the right page in front of the model?** (a gold page among the 8 excerpts the LLM reads)
-
-| Retrieval | Right page in top 8 | MRR | Cross-quarter: every quarter's filing found |
-|---|---|---|---|
-| BM25 only | 18/20 | 0.75 | 3/5 |
-| Dense only | 17/20 | 0.64 | 2/5 |
-| Hybrid (RRF) | 20/20 | 0.82 | 5/5 |
-| **Hybrid + rerank (FilingLens)** | **20/20** | **0.85** | **5/5** |
-
-**2. Are the answers right?** **3. Are the citations real and on the right page?** **4. Does it refuse when the filings don't have the answer?**
-
-| Metric (production setup) | Result |
+| Question we asked | Result |
 |---|---|
-| Answers correct (20 answerable) | **20/20** (factual 9/9, reasoning 4/4, cross-quarter 5/5, red-flag 2/2) |
-| Verified citations on a gold page | **30/30** |
-| Model citations rejected by the verifier | 0/30 |
-| Correct "not in the filings" (10 unanswerable) | **10/10**, of which **1** by the period guard (a rule, reported separately so the model isn't credited for it) |
-| Answerable questions wrongly refused | 0/20 |
-| Median answer time | 6.0 s |
+| Are the answers correct? | ✅ **20 / 20** answerable questions |
+| Is every citation on a correct (gold) page? | ✅ **30 / 30** citations |
+| Does it say "not in the filings" when it should? | ✅ **10 / 10**. One of those came from a simple rule rather than the AI, and is counted separately |
+| Does it wrongly refuse questions it could answer? | ✅ **0 / 20** |
+| How fast? | about **6 seconds** per answer |
 
-**How the answering model was chosen.** The same pipeline was run with two models:
+**Why hybrid retrieval?** An answer can only be right if the right page reaches the AI, so I tested four ways of searching. The score is how often a gold page landed in the 8 passages the AI reads:
 
-| Setup | Correct | Cross-quarter | Wrongly refused | Median time |
-|---|---|---|---|---|
-| `gemini-3.1-flash-lite` (production) | 20/20 | 5/5 | 0/20 | 6.0 s |
-| `gemini-3.5-flash-lite` (earlier default) | 16/20 | 2/5 | 2/20 | 10.2 s |
-| `gemini-3.5-flash-lite`, no rerank | 16/20 | – | 2/20 | – |
+| Search method | Right page in top 8 | Cross-quarter: found every quarter needed |
+|---|---|---|
+| Keyword only (BM25) | 18 / 20 | 3 / 5 |
+| Meaning only (embeddings) | 17 / 20 | 2 / 5 |
+| Both combined (hybrid) | 20 / 20 | 5 / 5 |
+| **Both + reranker (FilingLens)** | **20 / 20** | **5 / 5**, and ranks the right page highest (MRR 0.85 vs 0.82) |
 
-The earlier model refused cross-quarter comparisons even with both quarters' figures in its excerpts; the current one answers them.
+**Choosing the AI model.** I ran the same pipeline with two Gemini models. `gemini-3.1-flash-lite` got **20/20** in 6.0 s; `gemini-3.5-flash-lite` got 16/20 in 10.2 s, because it refused cross-quarter comparisons even with both quarters' numbers in front of it. So the app uses 3.1-flash-lite.
 
 **Read these numbers with care.**
 - 20 answerable questions is a small sample: strong evidence, not proof.
-- Gold lists of three original seed questions were extended with pages the model cited that are verifiably correct (a deck table and a call page), which moved citation precision from 26/30 to 30/30; each changed question carries a note.
-- Answers are graded by `gemini-3-flash-preview` against a gold answer, plus a deterministic `must_include` check where given. Cells over fewer than 5 questions print counts, not percentages.
+- Gold pages for three of the original questions were extended with pages the model cited that are verifiably correct (for example, the same figure in a results table), which moved citation precision from 26/30 to 30/30. Each change is noted in the file.
+- Answers are graded by a different AI model (`gemini-3-flash-preview`) than the one answering, so no model grades its own work, plus a plain must-include check where possible.
 
-Reproduce: `python -m eval.run_eval --configs hybrid+rerank,hybrid+rerank@3.5lite,hybrid@3.5lite`. Answers are cached in `eval/cache/`; the run writes `eval/report.md` and `eval/report.json`. A judge outage defers grading instead of losing answers (`--defer-judge`), and `--redo <ids>` re-answers specific questions after a pipeline change.
-
----
-
-## 8. Key safeguards
-
-- **Temperature 0** on every LLM call; answers only from the retrieved excerpts.
-- **Quotes are checked in code**, not trusted from the model; failed citations are dropped and counted, and an answer with no verified citation is marked "Unverified".
-- **Period guard:** questions about quarters outside the corpus get the corpus boundary, not a guess.
-- **Red flags involve no LLM**: thresholds over filed data, printed in the UI, linked to evidence.
-- **Brief sections without a verified citation say so** instead of showing uncited text.
-- **Notable events involve no LLM**: a ranking of legally required disclosures, with the reason for each item shown.
-- **No secrets in the repo**: `.env` is git-ignored; public filings only.
+Reproduce: `python -m eval.run_eval --configs hybrid+rerank,hybrid+rerank@3.5lite,hybrid@3.5lite` (writes `eval/report.md`).
 
 ---
 
-## 9. API endpoints
+## Red flags
 
-| Method | Endpoint | Description |
+No AI here: just clear rules over what companies file. Each flag shows its rule, its threshold and the filing behind it (`core/flags.py`).
+
+| Flag | In plain words | Fires when | Severity |
+|---|---|---|---|
+| `pledge_creep` | Promoters are tying up more of their shares | Encumbered share of promoter holding up ≥ 10 points over 4 quarters | 3 |
+| `pledge_high` | Most promoter shares are tied up | Encumbered share of promoter holding ≥ 50% | 2 |
+| `promoter_stake_drop` | Promoters own a lot less than before | Holding down ≥ 3 points in a quarter, or ≥ 5 points over 12 quarters | 2 |
+| `auditor_change` | The auditor walked away | Statutory auditor resigns (3), or a subsidiary's auditor resigns (2) | 2–3 |
+| `audit_qualification` | The auditor wouldn't fully sign off | A qualified, adverse or disclaimer opinion in a results filing | 3 |
+| `float_pump` | A huge price jump in a thinly traded stock | ≥ 100% rise in 3 months with public float < 25% | 3 |
+
+The score is the sum of severities: **high** at 5+, **elevated** at 2+. "Encumbered" follows SEBI's definition (pledges, plus non-disposal undertakings and other restrictions). Vedanta, for example, is 100% encumbered but 0% pledged, which a pledge-only check would miss. Today, 17 of the 44 companies are flagged; the other 27, including HDFC Bank, Infosys and TCS, fire nothing.
+
+---
+
+## Limitations
+
+**"Verified" means the quote is real, not that the answer is right.** My own test caught this. Asked *"What was HDFC Bank's net interest margin in Q1 FY22?"* (a period the collection doesn't cover), an early version answered "4.1%" with a **verified** citation. The quote was real, but it came from the **Q1 FY24** earnings call. The verifier checks that a quote *exists*; it can't tell that the period was wrong. **The fix:** a rule now spots questions about quarters outside the collection and answers with the collection's boundary instead of searching.
+
+Other honest caveats:
+- **The reasoning isn't verified.** The quotes are checked; the conclusions drawn from them are not.
+- **Scanner typos.** Some companies' PDFs contain OCR errors from their own scanners (e.g. "financlal"), on about 3% of pages. The verifier can't catch these: the text is really there, just misspelled.
+- **About 5% of pages are pure images** with no text, so they can't be searched or cited.
+- **Notable filings see a narrow feed.** The downloader mostly kept announcements about auditors and leadership changes, so court rulings (like the YES Bank AT1 Supreme Court verdict) show up through results and earnings calls instead.
+- **Frozen snapshot:** 44 companies, 2,924 filings since April 2023, not live. Questions cover 14 companies (no annual reports, to keep it runnable on a laptop); the demo download covers 5.
+- **The flags are signals, not advice.** A falling promoter stake can mean dilution rather than selling: Vodafone Idea's drop (50.4% → 25.6%) came from shares issued to the government, which one of the example answers explains with citations.
+
+---
+
+## Under the hood
+
+<details>
+<summary><b>AI models and data sources</b></summary>
+
+| Role | Model / source | Notes |
 |---|---|---|
-| `POST` | `/ask` | Answer a question (cached example or live), with verified citations |
-| `GET` | `/brief/{symbol}` | The Brief for a stock (prepared, or `?live=true` with a key) |
-| `GET` | `/notable/{symbol}` | Ranked notable events for a stock |
-| `GET` | `/flags/{symbol}` · `/screen` | Red flags for one stock · risk screen of all stocks |
-| `GET` | `/shareholding/{symbol}` | Quarterly promoter holding and encumbrance |
-| `GET` | `/doc/{id}/page/{page}.png` | Rendered page image (`?hl=` highlights a quote) |
-| `GET` | `/doc/{id}/pdf` · `/doc/{id}/info` | The filing itself (opens at `#page=N`) · its metadata and BSE link |
-| `GET` | `/evidence/pdf` · `/evidence/page.png` | Flag-evidence filings outside the search index (paths confined to `data/raw`) |
-| `GET` | `/overview` · `/eval` · `/examples` · `/briefs` · `/status` | Corpus stats · eval report · example questions · prepared briefs · key/model status |
+| Answers | Google Gemini `gemini-3.1-flash-lite` | Temperature 0, JSON output; chosen on the evaluation |
+| Fallbacks | `gemini-3.5-flash-lite`, then `gemini-3.5-flash` | Only when the main model is overloaded (429/5xx) |
+| Evaluation judge | `gemini-3-flash-preview` | Never the same model as the one answering |
+| Embeddings (meaning search) | `BAAI/bge-small-en-v1.5`, local CPU | 384 dimensions |
+| Reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2`, local CPU | |
+| Data | BSE announcements, NSE shareholding XBRL, Yahoo Finance prices | Downloaded once and frozen |
 
----
+All settings live in `core/config.py` and `.env.example`. An Anthropic provider exists as an option but wasn't used for any reported numbers.
+</details>
 
-## 10. Project structure
+<details>
+<summary><b>Key safeguards</b></summary>
+
+- Temperature 0, and answers only from the retrieved passages.
+- Quotes are checked in code; failed citations are dropped and counted.
+- Questions about quarters outside the collection get the boundary, not a guess.
+- Red flags and notable filings use no AI.
+- Brief sections without a verified quote say "the filings don't cover this".
+- No secrets in the repo (`.env` is git-ignored); public filings only.
+</details>
+
+<details>
+<summary><b>API endpoints</b></summary>
+
+| Method | Endpoint | What it returns |
+|---|---|---|
+| `POST` | `/ask` | An answer with verified citations |
+| `GET` | `/brief/{symbol}` | A company's Brief |
+| `GET` | `/notable/{symbol}` | Ranked notable filings |
+| `GET` | `/flags/{symbol}` · `/screen` | Red flags for one company · all companies |
+| `GET` | `/shareholding/{symbol}` | Promoter holding and encumbrance by quarter |
+| `GET` | `/doc/{id}/page/{page}.png` | A rendered page (`?hl=` highlights a quote) |
+| `GET` | `/doc/{id}/pdf` · `/doc/{id}/info` | The filing PDF · its details and BSE link |
+| `GET` | `/overview` · `/eval` · `/examples` · `/briefs` · `/status` | Stats · evaluation · examples · prepared Briefs · key status |
+</details>
+
+<details>
+<summary><b>Project structure</b></summary>
 
 ```text
 filinglens/
-├── api/main.py              # FastAPI: ask, brief, notable, flags, pages, PDFs, eval
+├── api/main.py              # the engine (FastAPI): ask, brief, flags, pages, PDFs, eval
 ├── core/
-│   ├── answer.py            # retrieve → rerank → LLM → verify; period guard; escalation (off)
-│   ├── retrieve.py          # hybrid BM25 + dense retrieval, RRF, period resolver and guard
-│   ├── rerank.py            # cross-encoder reranker
-│   ├── verify.py            # citation verifier
-│   ├── flags.py             # rule-based red flags and thresholds
-│   ├── notable.py           # Reg-30 notable-event ranking (no LLM)
-│   ├── brief.py             # the per-stock Brief
-│   ├── answer_cache.py      # prepared example answers
-│   ├── llm.py, config.py    # Gemini/Anthropic wrapper with fallbacks; settings
-│   └── db.py, vectors.py, periods.py
-├── ingest/                  # BSE fetch, PDF parse, chunking, embeddings, shareholding/auditor/market facts
-├── eval/                    # questions.jsonl, run_eval.py, harvest.py, report.md/json
-├── scripts/                 # setup_release, package_release, selftest, warm_cache, warm_brief, ocr_noise
-├── demo/                    # questions.json, answer_cache.json, brief_cache.json, notable_subjects.json
-├── web/app.py               # Streamlit UI
-└── .streamlit/config.toml   # theme (light and dark)
+│   ├── retrieve.py          # hybrid search (BM25 + embeddings), quarter detection
+│   ├── rerank.py            # the reranker
+│   ├── answer.py            # retrieve → rerank → LLM → verify
+│   ├── verify.py            # the citation checker
+│   ├── flags.py             # red-flag rules and thresholds
+│   ├── notable.py           # notable-filing ranking (no AI)
+│   ├── brief.py             # the per-company Brief
+│   └── llm.py, config.py, db.py, vectors.py, ...
+├── ingest/                  # download filings, read PDFs, chunk, embed
+├── eval/                    # test questions, evaluation runner, report
+├── scripts/                 # setup_release, selftest, warm_cache, warm_brief, ...
+├── demo/                    # example questions and prepared answers
+├── docs/images/             # screenshots for this README
+└── web/app.py               # the app (Streamlit)
 ```
+</details>
+
+<details>
+<summary><b>Engineering notes: silent bugs found and fixed</b></summary>
+
+None of these raised an error; each would have quietly made results worse.
+
+- **Earnings-call text was being dropped.** Text at the top of a page, before the first speaker label, was thrown away: about 12% of transcript text. Fixed, with a test; transcripts re-processed (8,294 → 9,498 passages).
+- **A real quote with the wrong period passed the checker.** See Limitations; fixed with the out-of-range quarter rule.
+- **Cross-quarter success was impossible to score.** Duplicate filings meant "every gold file found" could never be true; it's now judged per quarter.
+- **Judge outages threw away answers.** Grading is now deferred and resumed.
+- **BSE links went dead** when BSE moved old attachments; links are now rewritten.
+- **A retired Gemini model broke the fallback chain**; replaced.
+</details>
 
 ---
 
-## 11. Limitations
+## Related work
 
-- **Verified isn't correct: a worked example.** The verifier is a guarantee, not a catch: every quote shown has been checked against its source page, and across 30 citations in the final eval run it rejected none. Its boundary is that it checks a quote is *present*, not what it *means*. Our own eval caught this:
-  - *Question:* "What was HDFC Bank's net interest margin in Q1 FY22?" (unanswerable: the corpus starts in 2023)
-  - *Answer given:* "In Q1 FY22 … core net interest margin was at 4.1%", with one **verified** citation
-  - *Where the quote really came from:* the **Q1 FY24** earnings call ("The core net interest margin for the quarter was at 4.1%"). The quote was real; the period label was wrong, and the verifier can't see periods.
-  - *Fix:* the period guard (`core/retrieve.py: uncovered_period`), counted separately in the eval.
-- **Reasoning isn't verified.** The verifier checks quotes, not the reasoning built on them.
-- **Filer-OCR noise.** Some filings carry a text layer made by the company's own scanner software. A heuristic (`python -m scripts.ocr_noise`) finds likely OCR misreadings (e.g. "financlal") on about 3.3% of indexed pages (611 of 18,707) and 4.2% of results pages; the verifier can't catch these, because the text is present, just wrong.
-- **Image-only pages** (about 4.7% of PDF pages) have no text layer and aren't indexed.
-- **Notable events see a narrow feed.** The downloader kept announcements about auditors, resignations and appointments, so notable events rank leadership and auditor changes; court rulings and similar events surface through results and earnings calls instead (e.g. the YES Bank AT1 Supreme Court ruling appears in the Brief's and Ask's cited answers, not in notable events).
-- **Brief coverage depends on what's indexed.** For VEDL, the latest quarter's press release isn't indexed, so the Brief says the filings don't cover that section rather than filling it in.
-- **Frozen corpus:** 44 stocks and 2,924 filings since April 2023; not live. Q&A covers 14 stocks and skips annual reports (CPU embedding cost); flags cover all 44; the demo download indexes 5.
-- **Heuristic flags, not advice.** `promoter_stake_drop` can't tell selling from dilution: IDEA's drop (50.36% → 25.64%) came from equity issued to the Government of India, which one of the example answers explains with citations.
-
----
-
-## 12. Engineering notes: silent bugs found and fixed
-
-None of these raised an error; each would have surfaced as quietly worse results.
-
-- **Transcript text was being dropped.** The speaker splitter discarded text before the first speaker label on a page, usually the previous speaker still talking: about 12% of transcript text, and 38% of speaker pages, in a 40-transcript sample. Fixed in `ingest/chunk.py` with a selftest guard; transcripts re-chunked in place (`python -m ingest.run --rechunk concall`), 8,294 → 9,498 chunks.
-- **A real quote with the wrong period passed the verifier.** See Limitations; fixed with the period guard.
-- **Cross-quarter success was unreachable.** The corpus holds byte-identical duplicate filings and retrieval de-duplicates them, so "every gold file retrieved" could never be true. Now judged per fiscal period.
-- **Judge outages discarded generated answers.** Grading is now deferred and resumed.
-- **BSE links died.** BSE moves attachments from `AttachLive` to `AttachHis`; links are rewritten on the way out.
-- **A retired fallback model broke the fallback chain** (`gemini-2.5-flash-lite`), and a **Streamlit deprecation** could have broken a fresh install's first page; both fixed.
-
----
-
-## 13. Related work
-
-Transcript summarisers exist for US, HK and A-share markets (e.g. BeeBee AI). FilingLens differs in its India-specific filing types, page-level citations verified in code, deterministic risk flags, a Reg-30-based notable-events ranking, and a published evaluation.
+Transcript summarisers exist for US, Hong Kong and Chinese markets (e.g. BeeBee AI). FilingLens is different in four ways: it focuses on Indian filing types, every citation is page-level and checked in code, its risk flags are rule-based, and it publishes its evaluation.
