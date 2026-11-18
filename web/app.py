@@ -286,8 +286,11 @@ def screen_df() -> pd.DataFrame:
 
 def no_key_banner() -> None:
     if not OVERVIEW["has_api_key"]:
-        st.info(f"Running without an API key: red flags, the dashboard and the {OVERVIEW['cached_answers']} example "
-                "answers all work. Add `LLM_API_KEY` to `.env` to ask your own questions.", icon="🔑")
+        how = ("To ask your own questions, run this in the Codespace terminal with a free Gemini key: "
+               "`echo LLM_API_KEY=your-key > .env && bash .devcontainer/start.sh`"
+               if os.environ.get("CODESPACE_NAME") else "Add `LLM_API_KEY` to `.env` to ask your own questions.")
+        st.info(f"Running without an API key: the prepared Briefs, red flags, the dashboard and the "
+                f"{OVERVIEW['cached_answers']} example answers all work. {how}", icon="🔑")
 
 
 # ------------------------------------------------------------------------------------------- charts
