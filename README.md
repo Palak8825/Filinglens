@@ -1,8 +1,8 @@
 # FilingLens
 
-### Answers from Indian company filings, proven on the page
+### Before you put money into a company, check what it actually filed.
 
-**Ask a question about a listed company. Get a plain answer, plus the exact page of the company's own filing it came from, with the sentence highlighted.**
+**Answers from Indian company filings, proven on the page.** Ask a question about a listed company and get a plain answer, plus the exact page of the company's own filing it came from, with the sentence highlighted. Or screen 44 companies for warning signs in their filings.
 
 Built solo for **Arthaton 2026** (AI for personal and business finance).
 🎬 **Demo video:** _<YouTube link>_ · 📦 **Data download:** [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
@@ -19,14 +19,14 @@ Every listed company in India files its quarterly results, earnings-call transcr
 
 You could paste a filing into a chatbot, but chatbots sometimes **make things up**: a confident number, a quote nobody ever said. With money involved, "probably right" isn't good enough.
 
-FilingLens is built around one rule: **if it can't show you the page, it doesn't say it.**
+FilingLens is for the moment **before you put money into a company**, and it is built around one rule: **if it can't show you the page, it doesn't say it.**
 
 - 📄 **Every claim comes with its source page**, with the exact sentence highlighted, and a button to open the original PDF.
 - ✅ **Every quote is checked by code before you see it.** If the AI cites something that isn't on that page, the citation is thrown out.
-- 🚩 **Warning signs from simple, visible rules**, not AI guesswork. For example, "promoters pledged more of their shares" or "the auditor resigned", each with the filing that proves it.
+- 🚩 **Warning signs from simple, visible rules**, not AI guesswork. For example, "promoters pledged more of their shares" or "the auditor resigned", each with the filing that proves it. **17 of the 44 companies show at least one today.** Re-run on only the data available at the time, the rules flagged **Gensol** from April 2024: its promoters had tied up 63% of their shares (up from 42%), rising to 82% by December 2024. That was a year before its loans went into default and the market regulator stepped in, in 2025.
 - 📊 **It's measured.** 30 hand-checked test questions, published results, including where it fails.
 
-> **Who it's for:** a retail investor doing homework before buying a stock, a student learning to read company results, or anyone who wants to check what a company *actually* said. It's a research tool: no trading, no tips, no money involved.
+> **Who it's for:** a retail investor doing homework before buying a stock, a student learning to read company results, or anyone who wants to check what a company *actually* said. It's a research tool for decisions you make yourself: it doesn't trade, give tips or touch your money.
 
 ---
 
@@ -232,6 +232,8 @@ No AI here: just clear rules over what companies file. Each flag shows its rule,
 | `float_pump` | A huge price jump in a thinly traded stock | ≥ 100% rise in 3 months with public float < 25% | 3 |
 
 The score is the sum of severities: **high** at 5+, **elevated** at 2+. "Encumbered" follows SEBI's definition (pledges, plus non-disposal undertakings and other restrictions). Vedanta, for example, is 100% encumbered but 0% pledged, which a pledge-only check would miss. Today, 17 of the 44 companies are flagged; the other 27, including HDFC Bank, Infosys and TCS, fire nothing.
+
+**Would it have warned you in time? One case, checked.** Re-running the rules on only the shareholding filings available at each date, Gensol is flagged **elevated** (`pledge_creep`) from its March 2024 filing, published 10 April 2024: encumbered promoter shares rose from 41.8% to 63.1%. The flag stays on every quarter after that (78.4%, 79.8%, then 81.7% in the filing of 16 January 2025). It becomes **high** only in the March 2025 filing, when the promoter stake fell from 62.65% to 35.87% as the collapse played out. So the early warning came from rising encumbrance, not from the stake drop. The thresholds were set when the rules were first written (14 Nov) and haven't changed since. This is one company, checked with hindsight, not a backtest across the market; see Limitations for the cases the rules miss.
 
 ---
 
