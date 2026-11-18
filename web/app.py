@@ -406,7 +406,8 @@ def home() -> None:
     tiles += [
               (f"{o['filings_indexed']:,}", "Filings you can question", f"{len(o['symbols_indexed'])} stocks"),
               (f"{o['symbols_screened']}", "Stocks screened for red flags", f"{flagged} flagged"),
-              ("100%", "Citations checked", "against the source page")]
+              # A property, not a score: only citations that pass the checker are ever shown.
+              ("✓", "Every citation checked", "against its page before you see it")]
     # The corpus count comes from data/raw/manifest.jsonl; if a download lacks it, drop the tile rather than show "—".
     for c, (v, l, s) in zip(st.columns(len(tiles)), tiles):
         c.markdown(stat(v, l, s), unsafe_allow_html=True)

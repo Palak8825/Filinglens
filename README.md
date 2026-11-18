@@ -73,6 +73,8 @@ flowchart TD
   V -- yes --> OK["✅ Answer + highlighted page"]
   V -- no --> X["❌ Citation dropped and counted"]
 
+  style Offline fill:#f8fafc,stroke:#cbd5e1,color:#334155
+
   classDef data fill:#eef4ff,stroke:#3b6fd8,color:#0b2a66
   classDef step fill:#ffffff,stroke:#3b6fd8,color:#0b2a66
   classDef ai fill:#f3ecff,stroke:#7c4dff,color:#2d1065
@@ -171,10 +173,10 @@ The full set: 9 factual, 4 reasoning, 5 cross-quarter, 2 red-flag and **10 delib
 
 | Question we asked | Result |
 |---|---|
-| Are the answers correct? | ✅ **20 / 20** answerable questions |
-| Is every citation on a correct (gold) page? | ✅ **30 / 30** citations |
-| Does it say "not in the filings" when it should? | ✅ **10 / 10**. One of those came from a simple rule rather than the AI, and is counted separately |
-| Does it wrongly refuse questions it could answer? | ✅ **0 / 20** |
+| Are the answers correct? | **20 / 20** answerable questions |
+| Is every citation on a correct (gold) page? | **30 / 30** citations |
+| Does it say "not in the filings" when it should? | **10 / 10**. One of those came from a simple rule rather than the AI, and is counted separately |
+| Does it wrongly refuse questions it could answer? | **0 / 20** |
 | How fast? | about **6 seconds** per answer |
 
 **Why hybrid retrieval?** An answer can only be right if the right page reaches the AI, so I tested four ways of searching. The score is how often a gold page landed in the 8 passages the AI reads:
@@ -184,13 +186,13 @@ The full set: 9 factual, 4 reasoning, 5 cross-quarter, 2 red-flag and **10 delib
 | Keyword only (BM25) | 18 / 20 | 3 / 5 |
 | Meaning only (embeddings) | 17 / 20 | 2 / 5 |
 | Both combined (hybrid) | 20 / 20 | 5 / 5 |
-| **Both + reranker (FilingLens)** | **20 / 20** | **5 / 5**, and ranks the right page highest (MRR 0.85 vs 0.82) |
+| **Both + reranker (FilingLens)** | **20 / 20** | **5 / 5**, and puts the right page nearer the top |
 
-**Choosing the AI model.** I ran the same pipeline with two Gemini models. `gemini-3.1-flash-lite` got **20/20** in 6.0 s; `gemini-3.5-flash-lite` got 16/20 in 10.2 s, because it refused cross-quarter comparisons even with both quarters' numbers in front of it. So the app uses 3.1-flash-lite.
+**Choosing the AI model.** I ran the same pipeline with two Gemini models. `gemini-3.1-flash-lite` got **20/20** in 6.0 s; `gemini-3.5-flash-lite` got 16/20 in 10.2 s, because it refused cross-quarter comparisons even with both quarters' numbers in front of it. So the app uses 3.1-flash-lite. Note that the model was picked on these same 30 questions, so the headline numbers are an in-sample result.
 
 **Read these numbers with care.**
 - 20 answerable questions is a small sample: strong evidence, not proof.
-- Gold pages for three of the original questions were extended with pages the model cited that are verifiably correct (for example, the same figure in a results table), which moved citation precision from 26/30 to 30/30. Each change is noted in the file.
+- Gold pages for three of the original questions were extended with pages the model cited that are verifiably correct (for example, the same figure in a results table), which moved citation precision from 26/30 to 30/30. Each change is noted in the file. Because those were the production setup's citations, the hybrid + reranker row in the search table above benefits slightly.
 - Answers are graded by a different AI model (`gemini-3-flash-preview`) than the one answering, so no model grades its own work, plus a plain must-include check where possible.
 
 Reproduce: `python -m eval.run_eval --configs hybrid+rerank,hybrid+rerank@3.5lite,hybrid@3.5lite` (writes `eval/report.md`).
