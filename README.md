@@ -41,7 +41,7 @@ Not a trading tool: no orders, no broker keys, no portfolio, no money. Research 
 
 ### Prerequisites
 - Python 3.12 (3.10+ should work)
-- Git, and about 1 GB free for the demo download (about 4 GB for the full data)
+- Git, and about 5 GB free for the demo: ~1 GB for the download and its extracted data, the rest for the Python packages (PyTorch is the large one). The full data needs about 8 GB more.
 - Optional: a free [Google AI Studio](https://aistudio.google.com) key, only needed to ask your own questions
 
 ### 1. Clone and install
@@ -63,6 +63,8 @@ From the [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/ta
 | **Demo** (~500 MB, recommended) | `filinglens-demo.zip`, `SHA256SUMS-demo.txt` | Q&A index for 5 stocks (IDEA, PAYTM, RELIANCE, VEDL, YESBANK), every page the example answers and prepared Briefs cite, red flags for all 44 stocks | `python -m scripts.setup_release <folder> --demo` |
 | **Full** (~3.5 GB) | `filinglens-index.zip`, `filinglens-pdfs-part1.zip`, `filinglens-pdfs-part2.zip`, `SHA256SUMS.txt` | 14 stocks, 929 filings, 41,219 chunks, and every PDF the app can cite | `python -m scripts.setup_release <folder>` |
 
+If a download stops part-way (on Windows, `curl` sometimes fails with an SSL error), download it in your browser instead, or resume with `curl -L --ssl-no-revoke -C - -O <file URL>`. The checksum check catches any incomplete file.
+
 ### 3. Run
 
 ```bash
@@ -78,7 +80,7 @@ If you run the API on another port, set `FILINGLENS_API` (e.g. `FILINGLENS_API=h
 ### 4. Check it works offline
 
 ```bash
-python -m scripts.selftest           # seconds, no network, no key; uses a separate data/selftest DB
+python -m scripts.selftest           # under a minute, no network, no key; uses a separate data/selftest DB
 ```
 
 It checks chunking (including the transcript fix below), retrieval, period resolution and the period guard, the citation verifier, red flags, the answer cache, notable-event normalisation, the Brief's "not covered" rule and eval formatting.

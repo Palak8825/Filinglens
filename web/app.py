@@ -808,6 +808,18 @@ def ask_page() -> None:
     next_step(EVAL, "Evaluation →", "How accurate the answers are, measured on hand-checked questions.")
 
 
+def brief_offer(symbol: str, question: str) -> None:
+    """Offer, never route: the typed question is still answered (or explained) below."""
+    if not is_general_question(question):
+        return
+    with st.container(border=True):
+        o1, o2 = st.columns([3, 1], vertical_alignment="center")
+        o1.markdown(f"This looks like a general question. Open the Brief for {symbol}?")
+        if o2.button("Open the Brief →", key=f"offer-{symbol}", width="stretch"):
+            st.session_state["brief_symbol"] = symbol
+            st.switch_page(BRIEF)
+
+
 def ask_tab(symbol: str, f: dict) -> None:
     examples = [e["question"] for e in get_json(f"/examples?symbol={symbol}")]
     if examples:
@@ -832,22 +844,26 @@ def ask_tab(symbol: str, f: dict) -> None:
                                                      "doc_type": None if doc_type == "any" else doc_type}, timeout=180)
         if resp.ok:
             st.session_state["last"] = resp.json()
+            st.session_state.pop("nokey", None)
         elif resp.status_code == 503:
-            st.info(resp.json().get("detail", "No API key set."), icon="🔑")
+            # Kept in session state so the message and the Brief offer survive the rerun a button click causes.
+            st.session_state.pop("last", None)
+            st.session_state["nokey"] = {"symbol": symbol, "question": q,
+                                         "detail": resp.json().get("detail", "No API key set.")}
         else:
             st.error(f"Something went wrong ({resp.status_code}). Please try again.")
+
+    nk = st.session_state.get("nokey")
+    if nk and nk["symbol"] == symbol:
+        st.info(nk["detail"], icon="🔑")
+        # No key: the prepared Brief still covers a general question, so offer it here too.
+        brief_offer(symbol, nk["question"])
+        return
 
     r = st.session_state.get("last")
     if not (r and r.get("symbol") == symbol):
         return
-    if is_general_question(r.get("question", "")):
-        # Offer, never route: the typed question is still answered below.
-        with st.container(border=True):
-            o1, o2 = st.columns([3, 1], vertical_alignment="center")
-            o1.markdown(f"This looks like a general question. Open the Brief for {symbol}?")
-            if o2.button("Open the Brief →", key=f"offer-{symbol}", width="stretch"):
-                st.session_state["brief_symbol"] = symbol
-                st.switch_page(BRIEF)
+    brief_offer(symbol, r.get("question", ""))
     main, side = st.columns([3, 2], gap="large")
     with main:
         n_ok, n_drop = len(r["citations"]), r["dropped_citations"]
