@@ -57,9 +57,10 @@ CONFIGS = {  # name -> (retrieval mode, rerank, prompt version, model override o
     "hybrid@v2": ("hybrid", False, "v2", None),                 # prompt arm: same model, relaxed prompt
     "hybrid@flash": ("hybrid", False, "v1", "gemini-3.5-flash"),  # model arm: same prompt, bigger model
     "hybrid@v2+flash": ("hybrid", False, "v2", "gemini-3.5-flash"),
-    # Weak-model arm: an older, smaller model. Its job is to give the verifier something to reject, so
-    # the report can show what an unchecked pipeline would have displayed (precision w/o verifier).
-    "hybrid+rerank@weak": ("hybrid", True, "v1", "gemini-3.1-flash-lite"),
+    # Model arms. gemini-3.1-flash-lite was first run here as a "weak" arm and outscored 3.5-flash-lite
+    # (20/20 vs 16/20, 0 vs 2 false refusals), so it became the production model on 2026-11-18.
+    "hybrid+rerank@3.5lite": ("hybrid", True, "v1", "gemini-3.5-flash-lite"),
+    "hybrid@3.5lite": ("hybrid", False, "v1", "gemini-3.5-flash-lite"),
     "hybrid+rerank@v2": ("hybrid", True, "v2", None),
     "hybrid+rerank@flash": ("hybrid", True, "v1", "gemini-3.5-flash"),  # model arm on the production pipeline
     # Escalate on refusal: production model first; gemini-3.5-flash only when it refuses with passages in hand,

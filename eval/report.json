@@ -2,41 +2,41 @@
   "ablation": {
     "bm25": {
       "factual": {
-        "n": 4,
-        "hits": 4,
-        "all_gold": 4,
-        "hit@8": 1.0,
-        "mrr": 0.875,
-        "all_gold@8": 1.0
+        "n": 9,
+        "hits": 8,
+        "all_gold": 8,
+        "hit@8": 0.8888888888888888,
+        "mrr": 0.7407407407407408,
+        "all_gold@8": 0.8888888888888888
       },
       "all": {
-        "n": 7,
-        "hits": 7,
-        "all_gold": 7,
-        "hit@8": 1.0,
-        "mrr": 0.9285714285714286,
-        "all_gold@8": 1.0
+        "n": 20,
+        "hits": 18,
+        "all_gold": 16,
+        "hit@8": 0.9,
+        "mrr": 0.7541666666666667,
+        "all_gold@8": 0.8
       },
       "reasoning": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 4,
+        "hits": 4,
+        "all_gold": 3,
         "hit@8": 1.0,
-        "mrr": 1.0,
-        "all_gold@8": 1.0
+        "mrr": 0.7916666666666666,
+        "all_gold@8": 0.75
       },
       "cross_doc": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
-        "hit@8": 1.0,
-        "mrr": 1.0,
-        "all_gold@8": 1.0
+        "n": 5,
+        "hits": 4,
+        "all_gold": 3,
+        "hit@8": 0.8,
+        "mrr": 0.65,
+        "all_gold@8": 0.6
       },
       "flag": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 2,
+        "hits": 2,
+        "all_gold": 2,
         "hit@8": 1.0,
         "mrr": 1.0,
         "all_gold@8": 1.0
@@ -44,41 +44,41 @@
     },
     "vector": {
       "factual": {
-        "n": 4,
-        "hits": 4,
-        "all_gold": 3,
-        "hit@8": 1.0,
-        "mrr": 0.4732142857142857,
-        "all_gold@8": 0.75
+        "n": 9,
+        "hits": 8,
+        "all_gold": 8,
+        "hit@8": 0.8888888888888888,
+        "mrr": 0.6296296296296297,
+        "all_gold@8": 0.8888888888888888
       },
       "all": {
-        "n": 7,
-        "hits": 6,
-        "all_gold": 4,
-        "hit@8": 0.8571428571428571,
-        "mrr": 0.43112244897959184,
-        "all_gold@8": 0.5714285714285714
+        "n": 20,
+        "hits": 17,
+        "all_gold": 15,
+        "hit@8": 0.85,
+        "mrr": 0.635,
+        "all_gold@8": 0.75
       },
       "reasoning": {
-        "n": 1,
-        "hits": 0,
-        "all_gold": 0,
-        "hit@8": 0.0,
-        "mrr": 0.0,
-        "all_gold@8": 0.0
+        "n": 4,
+        "hits": 3,
+        "all_gold": 3,
+        "hit@8": 0.75,
+        "mrr": 0.625,
+        "all_gold@8": 0.75
       },
       "cross_doc": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 0,
-        "hit@8": 1.0,
-        "mrr": 0.125,
-        "all_gold@8": 0.0
+        "n": 5,
+        "hits": 4,
+        "all_gold": 2,
+        "hit@8": 0.8,
+        "mrr": 0.5066666666666666,
+        "all_gold@8": 0.4
       },
       "flag": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 2,
+        "hits": 2,
+        "all_gold": 2,
         "hit@8": 1.0,
         "mrr": 1.0,
         "all_gold@8": 1.0
@@ -86,41 +86,41 @@
     },
     "hybrid": {
       "factual": {
+        "n": 9,
+        "hits": 9,
+        "all_gold": 9,
+        "hit@8": 1.0,
+        "mrr": 0.837037037037037,
+        "all_gold@8": 1.0
+      },
+      "all": {
+        "n": 20,
+        "hits": 20,
+        "all_gold": 19,
+        "hit@8": 1.0,
+        "mrr": 0.8241666666666667,
+        "all_gold@8": 0.95
+      },
+      "reasoning": {
         "n": 4,
         "hits": 4,
         "all_gold": 3,
         "hit@8": 1.0,
-        "mrr": 0.7083333333333334,
+        "mrr": 0.8,
         "all_gold@8": 0.75
       },
-      "all": {
-        "n": 7,
-        "hits": 6,
-        "all_gold": 5,
-        "hit@8": 0.8571428571428571,
-        "mrr": 0.5952380952380952,
-        "all_gold@8": 0.7142857142857143
-      },
-      "reasoning": {
-        "n": 1,
-        "hits": 0,
-        "all_gold": 0,
-        "hit@8": 0.0,
-        "mrr": 0.0,
-        "all_gold@8": 0.0
-      },
       "cross_doc": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 5,
+        "hits": 5,
+        "all_gold": 5,
         "hit@8": 1.0,
-        "mrr": 0.3333333333333333,
+        "mrr": 0.75,
         "all_gold@8": 1.0
       },
       "flag": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 2,
+        "hits": 2,
+        "all_gold": 2,
         "hit@8": 1.0,
         "mrr": 1.0,
         "all_gold@8": 1.0
@@ -128,41 +128,41 @@
     },
     "hybrid+rerank": {
       "factual": {
+        "n": 9,
+        "hits": 9,
+        "all_gold": 9,
+        "hit@8": 1.0,
+        "mrr": 0.8888888888888888,
+        "all_gold@8": 1.0
+      },
+      "all": {
+        "n": 20,
+        "hits": 20,
+        "all_gold": 19,
+        "hit@8": 1.0,
+        "mrr": 0.8479166666666667,
+        "all_gold@8": 0.95
+      },
+      "reasoning": {
         "n": 4,
         "hits": 4,
         "all_gold": 3,
         "hit@8": 1.0,
-        "mrr": 0.875,
+        "mrr": 0.4895833333333333,
         "all_gold@8": 0.75
       },
-      "all": {
-        "n": 7,
-        "hits": 7,
-        "all_gold": 6,
-        "hit@8": 1.0,
-        "mrr": 0.8095238095238095,
-        "all_gold@8": 0.8571428571428571
-      },
-      "reasoning": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
-        "hit@8": 1.0,
-        "mrr": 0.16666666666666666,
-        "all_gold@8": 1.0
-      },
       "cross_doc": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 5,
+        "hits": 5,
+        "all_gold": 5,
         "hit@8": 1.0,
         "mrr": 1.0,
         "all_gold@8": 1.0
       },
       "flag": {
-        "n": 1,
-        "hits": 1,
-        "all_gold": 1,
+        "n": 2,
+        "hits": 2,
+        "all_gold": 2,
         "hit@8": 1.0,
         "mrr": 1.0,
         "all_gold@8": 1.0
@@ -171,140 +171,226 @@
   },
   "e2e": {
     "hybrid+rerank": {
-      "n_answerable": 7,
-      "n_unanswerable": 2,
+      "n_answerable": 20,
+      "n_unanswerable": 10,
+      "n_pending_judge": 0,
       "accuracy": {
-        "k": 6,
-        "n": 7,
-        "v": 0.8571428571428571
+        "k": 20,
+        "n": 20,
+        "v": 1.0
       },
       "accuracy_by_type": {
         "factual": {
+          "k": 9,
+          "n": 9,
+          "v": 1.0
+        },
+        "reasoning": {
           "k": 4,
           "n": 4,
           "v": 1.0
         },
-        "reasoning": {
-          "k": 1,
-          "n": 1,
+        "cross_doc": {
+          "k": 5,
+          "n": 5,
           "v": 1.0
         },
-        "cross_doc": {
-          "k": 0,
-          "n": 1,
-          "v": 0.0
-        },
         "flag": {
-          "k": 1,
-          "n": 1,
+          "k": 2,
+          "n": 2,
           "v": 1.0
         }
       },
       "must_include_agree": {
-        "k": 7,
-        "n": 7,
+        "k": 20,
+        "n": 20,
         "v": 1.0
       },
       "citation_precision": {
-        "k": 6,
-        "n": 6,
+        "k": 30,
+        "n": 30,
         "v": 1.0
       },
       "citation_precision_no_verifier": {
-        "k": 6,
-        "n": 6,
+        "k": 30,
+        "n": 30,
         "v": 1.0
       },
       "verifier_rejection": {
         "k": 0,
-        "n": 6,
+        "n": 30,
         "v": 0.0
       },
-      "n_raw_citations": 6,
+      "n_raw_citations": 30,
       "abstention": {
-        "k": 2,
-        "n": 2,
+        "k": 10,
+        "n": 10,
         "v": 1.0
       },
-      "false_abstention": {
+      "abstention_by_rule": {
         "k": 1,
-        "n": 7,
-        "v": 0.14285714285714285
+        "n": 10,
+        "v": 0.1
+      },
+      "false_abstention": {
+        "k": 0,
+        "n": 20,
+        "v": 0.0
       },
       "unsupported_answers": {
         "k": 0,
-        "n": 7,
+        "n": 20,
         "v": 0.0
       },
-      "median_latency_s": 4.17
+      "median_latency_s": 5.99
     },
-    "hybrid": {
-      "n_answerable": 7,
-      "n_unanswerable": 2,
+    "hybrid+rerank@3.5lite": {
+      "n_answerable": 20,
+      "n_unanswerable": 10,
+      "n_pending_judge": 0,
       "accuracy": {
-        "k": 6,
-        "n": 7,
-        "v": 0.8571428571428571
+        "k": 16,
+        "n": 20,
+        "v": 0.8
       },
       "accuracy_by_type": {
         "factual": {
-          "k": 4,
-          "n": 4,
+          "k": 9,
+          "n": 9,
           "v": 1.0
         },
         "reasoning": {
-          "k": 0,
-          "n": 1,
-          "v": 0.0
+          "k": 3,
+          "n": 4,
+          "v": 0.75
         },
         "cross_doc": {
-          "k": 1,
-          "n": 1,
-          "v": 1.0
+          "k": 2,
+          "n": 5,
+          "v": 0.4
         },
         "flag": {
-          "k": 1,
-          "n": 1,
+          "k": 2,
+          "n": 2,
           "v": 1.0
         }
       },
       "must_include_agree": {
-        "k": 7,
-        "n": 7,
-        "v": 1.0
+        "k": 19,
+        "n": 20,
+        "v": 0.95
       },
       "citation_precision": {
-        "k": 7,
-        "n": 7,
+        "k": 23,
+        "n": 23,
         "v": 1.0
       },
       "citation_precision_no_verifier": {
-        "k": 7,
-        "n": 7,
+        "k": 23,
+        "n": 23,
         "v": 1.0
       },
       "verifier_rejection": {
         "k": 0,
-        "n": 7,
+        "n": 23,
         "v": 0.0
       },
-      "n_raw_citations": 7,
+      "n_raw_citations": 23,
       "abstention": {
-        "k": 2,
-        "n": 2,
+        "k": 10,
+        "n": 10,
         "v": 1.0
       },
-      "false_abstention": {
+      "abstention_by_rule": {
         "k": 1,
-        "n": 7,
-        "v": 0.14285714285714285
+        "n": 10,
+        "v": 0.1
+      },
+      "false_abstention": {
+        "k": 2,
+        "n": 20,
+        "v": 0.1
       },
       "unsupported_answers": {
         "k": 0,
-        "n": 7,
+        "n": 20,
         "v": 0.0
       },
-      "median_latency_s": 1.77
+      "median_latency_s": 10.15
+    },
+    "hybrid@3.5lite": {
+      "n_answerable": 20,
+      "n_unanswerable": 10,
+      "n_pending_judge": 0,
+      "accuracy": {
+        "k": 16,
+        "n": 20,
+        "v": 0.8
+      },
+      "accuracy_by_type": {
+        "factual": {
+          "k": 9,
+          "n": 9,
+          "v": 1.0
+        },
+        "reasoning": {
+          "k": 2,
+          "n": 4,
+          "v": 0.5
+        },
+        "cross_doc": {
+          "k": 3,
+          "n": 5,
+          "v": 0.6
+        },
+        "flag": {
+          "k": 2,
+          "n": 2,
+          "v": 1.0
+        }
+      },
+      "must_include_agree": {
+        "k": 19,
+        "n": 20,
+        "v": 0.95
+      },
+      "citation_precision": {
+        "k": 26,
+        "n": 26,
+        "v": 1.0
+      },
+      "citation_precision_no_verifier": {
+        "k": 26,
+        "n": 26,
+        "v": 1.0
+      },
+      "verifier_rejection": {
+        "k": 0,
+        "n": 26,
+        "v": 0.0
+      },
+      "n_raw_citations": 26,
+      "abstention": {
+        "k": 10,
+        "n": 10,
+        "v": 1.0
+      },
+      "abstention_by_rule": {
+        "k": 1,
+        "n": 10,
+        "v": 0.1
+      },
+      "false_abstention": {
+        "k": 2,
+        "n": 20,
+        "v": 0.1
+      },
+      "unsupported_answers": {
+        "k": 0,
+        "n": 20,
+        "v": 0.0
+      },
+      "median_latency_s": 2.62
     }
   }
 }

@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     llm_provider: str = "gemini"
     llm_api_key: str = ""
     # flash-lite: 1-2 s per answer when benchmarked 2026-11-14; newer flash models were 503-ing.
-    llm_model: str = "gemini-3.5-flash-lite"
-    llm_fallback_models: str = "gemini-3.5-flash,gemini-3.1-flash-lite"  # gemini-2.5-* retired for new keys (Nov 2026)
+    llm_model: str = "gemini-3.1-flash-lite"  # beat 3.5-flash-lite on the 30-question eval (20/20 vs 16/20), faster
+    llm_fallback_models: str = "gemini-3.5-flash-lite,gemini-3.5-flash"  # gemini-2.5-* retired for new keys (Nov 2026)
     llm_timeout_s: int = 60
     # Eval grader. Deliberately a different model from the one answering, so no model grades its own
     # output (self-preference bias), and not one any eval arm answers with. JUDGE_MODEL in .env overrides it.
