@@ -46,7 +46,9 @@ def main(folder: Path, demo: bool = False) -> int:
                     return 1
             zf.extractall(root)
         print("ok, extracted")
-    print("Done. Next: add LLM_API_KEY to .env, then `uvicorn api.main:app` and `streamlit run web/app.py`.")
+    print("Done. Next: run `uvicorn api.main:app`, then `streamlit run web/app.py` in a second terminal.\n"
+          "No API key needed for the example answers, briefs, red flags and dashboard; "
+          "optionally set LLM_API_KEY in .env (copy .env.example) to ask your own questions.")
     return 0
 
 

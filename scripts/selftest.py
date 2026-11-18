@@ -61,6 +61,10 @@ def _mk(symbol: str, doc_type: str, text: str, title: str) -> int:
 
 
 def main() -> int:
+    try:  # Windows consoles default to cp1252; print the summary line's dash instead of mojibake
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
     fails: list[str] = []
     from core.config import settings
     from core.db import Base, engine
