@@ -4,13 +4,13 @@
    "symbol": "YESBANK",
    "question": "What was the net interest margin in the latest quarter and why did it move?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 2406,
    "answer": {
     "question": "What was the net interest margin in the latest quarter and why did it move?",
     "symbol": "YESBANK",
-    "answer": "In the latest quarter (Q2 FY27), the Net Interest Margin stood at 2.6%. The sequential moderation of approximately 12 to 14 basis points was largely attributable to the FCNR(B) mobilization and the associated liquidity and deployment profile.",
+    "answer": "The Net Interest Margin (NIM) for Q2FY27 was 2.6%. The sequential moderation of approximately 12 to 14 basis points was primarily driven by FCNR(B) deposit mobilization and the associated liquidity and deployment profile.",
     "confidence": "high",
     "citations": [
      {
@@ -26,27 +26,29 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for YESBANK.",
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "YESBANK|v1|what is management's roa guidance for fy27 and where is h1 tracking": {
    "symbol": "YESBANK",
    "question": "What is management's ROA guidance for FY27 and where is H1 tracking?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 2406,
    "answer": {
     "question": "What is management's ROA guidance for FY27 and where is H1 tracking?",
     "symbol": "YESBANK",
-    "answer": "Management's guidance is for fiscal '27 ROA to be 1% for the full year (or as an average for FY27). For H1, the bank is clocking at a 90 basis points ROA.",
+    "answer": "Management has provided guidance for a 1% ROA for the full fiscal year 2027. As of the first half of FY27, the bank is tracking at a 90 basis points ROA.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c1",
-      "quote": "fiscal '27 ROA should be a 1% for full year. We are clocking at a 90 basis points for H1.",
+      "quote": "So, Jayant, what we had said is that fiscal '27 ROA should be a 1% for full year. We are clocking at a 90 basis points for H1.",
       "document_id": 20,
       "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
       "doc_type": "concall",
@@ -57,27 +59,29 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "IDEA|v1|what were revenue and ebitda in the latest quarter, and how did they grow": {
    "symbol": "IDEA",
    "question": "What were revenue and EBITDA in the latest quarter, and how did they grow?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 1561,
    "answer": {
     "question": "What were revenue and EBITDA in the latest quarter, and how did they grow?",
     "symbol": "IDEA",
-    "answer": "In the latest quarter (Q2FY27), revenue for the quarter was Rs. 11,884 Cr, representing a YoY growth of 6.2% and 1.7% on a QoQ basis. Cash EBITDA for the quarter was Rs. 2,498 Cr, a YoY growth of 11.2%. EBITDA for the quarter was Rs. 4,981 Cr, a YoY growth of 6.3%.",
+    "answer": "In Q2FY27, Vodafone Idea reported revenue of Rs. 11,884 Cr, representing a YoY growth of 6.2% and a QoQ growth of 1.7%. EBITDA for the quarter was Rs. 4,981 Cr, reflecting a YoY growth of 6.3%. Additionally, Cash EBITDA for the quarter was Rs. 2,498 Cr, which grew 11.2% YoY.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c1",
-      "quote": "Revenue for the quarter was Rs. 11,884 Cr, a YoY growth of 6.2% and 1.7% on a QoQ basis. Cash \nEBITDA for the quarter was Rs. 2,498 Cr, a YoY growth of 11.2%. EBITDA for the quarter was Rs. 4,981 \nCr, a YoY growth of 6.3%.",
+      "quote": "Revenue for the quarter was Rs. 11,884 Cr, a YoY growth of 6.2% and 1.7% on a QoQ basis. Cash EBITDA for the quarter was Rs. 2,498 Cr, a YoY growth of 11.2%. EBITDA for the quarter was Rs. 4,981 Cr, a YoY growth of 6.3%.",
       "document_id": 580,
       "title": "Board of Directors at their meeting held on 12 November 2026, interalia, approved the Unaudited Financial Results (Standalone and Consolidated) for the Second Quarter ended 30 September 2026.",
       "doc_type": "results",
@@ -88,22 +92,24 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for IDEA.",
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "IDEA|v1|what was the bank debt and the cash and bank balance as of september 30, 2026": {
    "symbol": "IDEA",
    "question": "What was the bank debt and the cash and bank balance as of September 30, 2026?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 1561,
    "answer": {
     "question": "What was the bank debt and the cash and bank balance as of September 30, 2026?",
     "symbol": "IDEA",
-    "answer": "As on September 30, 2026, the bank debt stood at Rs. 943 Cr while the cash and bank balance stood at Rs. 5,470 Cr.",
+    "answer": "As of September 30, 2026, the company's bank debt stood at Rs. 943 Cr, and the cash and bank balance stood at Rs. 5,470 Cr.",
     "confidence": "high",
     "citations": [
      {
@@ -119,39 +125,51 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": "Interpreted the quarter-end date as Q2 FY27.",
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "VEDL|v1|have the promoters pledged or otherwise encumbered their shares, and why": {
    "symbol": "VEDL",
    "question": "Have the promoters pledged or otherwise encumbered their shares, and why?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 1924,
    "answer": {
     "question": "Have the promoters pledged or otherwise encumbered their shares, and why?",
     "symbol": "VEDL",
-    "answer": "Yes, encumbrances are subsisting on the shareholding of the five promoter and promoter group entities of VEDL. These have been created due to the nature of the conditions and/or arrangements mentioned in facility agreements entered into by VRL and/or its subsidiaries.",
+    "answer": "Yes, the promoter and promoter group entities of VEDL have encumbered their shares. These encumbrances exist due to the nature of conditions and/or arrangements specified in facility agreements entered into by Vedanta Resources Limited (VRL) and/or its subsidiaries. While these arrangements fall under the definition of 'encumbrance' per Takeover Regulations, it has been clarified that no pledge has been created over the equity shares of VEDL in relation to the Facility Agreement as of the date of the July 2026 disclosure.",
     "confidence": "high",
     "citations": [
      {
-      "ref": "c1",
-      "quote": "Such encumbrances have been created due to the nature of the \nconditions and/or arrangements mentioned in such facility agreements.",
-      "document_id": 702,
-      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on June ....",
+      "ref": "c4",
+      "quote": "Such encumbrances have been created due to the nature of the conditions and/or arrangements mentioned in such facility agreements.",
+      "document_id": 915,
+      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on April ....",
       "doc_type": "shareholding",
       "page": 5,
       "verified": true,
       "fiscal_period": "Q4FY25"
      },
      {
-      "ref": "c1",
-      "quote": "This is on account of encumbrances already subsisting on the shareholding of the five promoter and promoter \ngroup entities of VEDL in accordance with the provisions of the previous facility(ies) agreement",
-      "document_id": 702,
-      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on June ....",
+      "ref": "c6",
+      "quote": "For completeness, it is clarified that no pledge has been created by VRL or its subsidiaries over the equity shares of VEDL in relation to the Facility Agreement as on the date of this disclosure.",
+      "document_id": 710,
+      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on July ....",
+      "doc_type": "shareholding",
+      "page": 5,
+      "verified": true,
+      "fiscal_period": "Q1FY27"
+     },
+     {
+      "ref": "c4",
+      "quote": "Given the nature of conditions and/or arrangements under the Facility Agreement, the Encumbrances and other conditions therein are likely to fall within the definition of the term ‘encumbrance’ provided under Chapter V of the Takeover Regulations.",
+      "document_id": 915,
+      "title": "The Exchange has received the Disclosures of reasons for encumbrance by promoter of listed companies under Reg. 31(1) read with Regulation 28(3) of SEBI (SAST) Regulations, 2011 on April ....",
       "doc_type": "shareholding",
       "page": 5,
       "verified": true,
@@ -160,22 +178,24 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "RELIANCE|v1|how much did digital services ebitda grow year-on-year in q2 fy27": {
    "symbol": "RELIANCE",
    "question": "How much did Digital Services EBITDA grow year-on-year in Q2 FY27?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 3487,
    "answer": {
     "question": "How much did Digital Services EBITDA grow year-on-year in Q2 FY27?",
     "symbol": "RELIANCE",
-    "answer": "In Q2 FY27, Digital Services EBITDA grew by 17.7% year-on-year to ₹ 22,223 crore (from ₹ 18,882 crore in Q2 FY26).",
+    "answer": "Digital Services EBITDA grew by 17.7% year-on-year in Q2 FY27, reaching ₹22,223 crore.",
     "confidence": "high",
     "citations": [
      {
@@ -187,61 +207,53 @@
       "page": 2,
       "verified": true,
       "fiscal_period": "Q2FY27"
-     },
-     {
-      "ref": "c5",
-      "quote": "Digital Services\n18,882\n22,223\n17.7%",
-      "document_id": 94,
-      "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
-      "doc_type": "results",
-      "page": 11,
-      "verified": true,
-      "fiscal_period": "Q2FY27"
      }
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "RELIANCE|v1|what drove the oil-to-chemicals segment's performance in the latest quarter": {
    "symbol": "RELIANCE",
    "question": "What drove the oil-to-chemicals segment's performance in the latest quarter?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 3487,
    "answer": {
     "question": "What drove the oil-to-chemicals segment's performance in the latest quarter?",
     "symbol": "RELIANCE",
-    "answer": "The oil-to-chemicals segment's performance in Q2 FY27 was driven by unprecedented strength in transportation fuel cracks (which reached historic highs and were up 3-3.7x year-on-year) and improved downstream chemical margins, with polyester chain margins recovering sharply to a 3-year high led by PX and PTA deltas. Additionally, tight fuel markets and advantaged feedstock sourcing contributed, though earnings growth was constrained by SAED-related costs and under-recoveries in the Jio-bp business.",
+    "answer": "The Oil to Chemicals (O2C) segment achieved record performance in Q2 FY27, driven by unprecedented strength in transportation fuel cracks, which reached historic highs, and improved downstream chemical margins. Additionally, polyester chain margins recovered sharply to a 3-year high, led by PX and PTA deltas. These gains were partially offset by continued SAED-related costs and under-recoveries in the Jio-bp business.",
     "confidence": "high",
     "citations": [
      {
-      "ref": "c5",
-      "quote": "Tight fuel markets, advantaged feedstock sourcing",
-      "document_id": 94,
-      "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
+      "ref": "c7",
+      "quote": "Segment EBITDA for 2Q FY27 increased sharply by 67.9% Y-o-Y to ₹ 25,203 crore ($ 2.6 billion) with unprecedented strength in transportation fuel cracks and improved downstream chemical margins.",
+      "document_id": 95,
+      "title": "In continuation of our letter of today''s date on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026, we attach a copy ....",
       "doc_type": "results",
-      "page": 11,
-      "verified": true,
-      "fiscal_period": "Q2FY27"
-     },
-     {
-      "ref": "c5",
-      "quote": "High logistics cost, SAED constrained EBITDA",
-      "document_id": 94,
-      "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
-      "doc_type": "results",
-      "page": 11,
+      "page": 14,
       "verified": true,
       "fiscal_period": "Q2FY27"
      },
      {
       "ref": "c7",
-      "quote": "Segment EBITDA for 2Q FY27 increased sharply by 67.9% Y-o-Y to ₹ 25,203 crore ($ 2.6 billion) with unprecedented strength in transportation fuel cracks and improved downstream chemical margins. Fuel cracks were up 3-3.7x Y-o-Y and reached historic highs during the quarter. Polyester chain margins also recovered sharply, reaching a 3-year high, led by PX and PTA deltas. Earnings growth was constrained by continued SAED-related costs and under-recoveries in Jio-bp business.",
+      "quote": "Fuel cracks were up 3-3.7x Y-o-Y and reached historic highs during the quarter. Polyester chain margins also recovered sharply, reaching a 3-year high, led by PX and PTA deltas.",
+      "document_id": 95,
+      "title": "In continuation of our letter of today''s date on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026, we attach a copy ....",
+      "doc_type": "results",
+      "page": 14,
+      "verified": true,
+      "fiscal_period": "Q2FY27"
+     },
+     {
+      "ref": "c7",
+      "quote": "Earnings growth was constrained by continued SAED-related costs and under-recoveries in Jio-bp business.",
       "document_id": 95,
       "title": "In continuation of our letter of today''s date on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026, we attach a copy ....",
       "doc_type": "results",
@@ -252,39 +264,31 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for RELIANCE.",
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "PAYTM|v1|why did the statutory auditor resign": {
    "symbol": "PAYTM",
    "question": "Why did the statutory auditor resign?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 2667,
    "answer": {
     "question": "Why did the statutory auditor resign?",
     "symbol": "PAYTM",
-    "answer": "For the company's statutory auditors (M/s. Price Waterhouse Chartered Accountants LLP), they completed their term at the conclusion of the 23rd AGM. For the material subsidiary's (Paytm Payments Services Limited) statutory auditors who resigned, they did not raise any concern or issue.",
+    "answer": "Regarding the resignation of M/s. Price Waterhouse Chartered Accountants LLP as statutory auditors of the material subsidiary, Paytm Payments Services Limited, the company stated that the auditors did not raise any concern or issue.",
     "confidence": "high",
     "citations": [
      {
       "ref": "c2",
-      "quote": "The Statutory Auditors have not raised any concern or issue.",
+      "quote": "The Statutory Auditors have not raised any concern or issue. The Board of Directors of PPSL have noted their resignation and placed on record its appreciation to M/s Price Waterhouse Chartered Accountants LLP for their contribution.",
       "document_id": 412,
       "title": "Change in Statutory Auditors in Material Subsidiary of the Company i.e., Paytm Payments Services Limited",
-      "doc_type": "announcement",
-      "page": 1,
-      "verified": true,
-      "fiscal_period": null
-     },
-     {
-      "ref": "c4",
-      "quote": "M/s. Price Waterhouse Chartered Accountants LLP (Firm Registration No. 012754N/N500016) \nhave completed their term as the Statutory Auditors of the Company at the conclusion of the 23rd \nAGM.",
-      "document_id": 411,
-      "title": "Appointment of Statutory Auditors of the Company",
       "doc_type": "announcement",
       "page": 1,
       "verified": true,
@@ -293,17 +297,19 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "IDEA|v1|why were equity shares issued to the government of india, and what did it do to the debt": {
    "symbol": "IDEA",
    "question": "Why were equity shares issued to the Government of India, and what did it do to the debt?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 1561,
    "answer": {
     "question": "Why were equity shares issued to the Government of India, and what did it do to the debt?",
@@ -346,20 +352,22 @@
     "abstained": false,
     "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "YESBANK|v1|how did yes bank's gross npa ratio change from q1 fy27 to q2 fy27": {
    "symbol": "YESBANK",
    "question": "How did YES Bank's gross NPA ratio change from Q1 FY27 to Q2 FY27?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 2406,
    "answer": {
     "question": "How did YES Bank's gross NPA ratio change from Q1 FY27 to Q2 FY27?",
     "symbol": "YESBANK",
-    "answer": "YES Bank's gross NPA ratio decreased from 1.3% in Q1 FY27 to 1.2% in Q2 FY27.",
+    "answer": "YES Bank's gross NPA ratio improved from 1.3% in Q1 FY27 to 1.2% in Q2 FY27.",
     "confidence": "high",
     "citations": [
      {
@@ -375,17 +383,19 @@
     ],
     "dropped_citations": 0,
     "abstained": false,
-    "model": "gemini-3.5-flash-lite",
+    "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   },
   "YESBANK|v1|what did the supreme court rule on yes bank's at1 bonds, and how would it hit the bank's capital": {
    "symbol": "YESBANK",
    "question": "What did the Supreme Court rule on YES Bank's AT1 bonds, and how would it hit the bank's capital?",
    "prompt": "v1",
-   "requested_model": "gemini-3.5-flash-lite",
-   "generated_on": "2026-11-17",
+   "requested_model": "gemini-3.1-flash-lite",
+   "generated_on": "2026-11-18",
    "index_chunks": 2406,
    "answer": {
     "question": "What did the Supreme Court rule on YES Bank's AT1 bonds, and how would it hit the bank's capital?",
@@ -418,7 +428,9 @@
     "abstained": false,
     "model": "gemini-3.1-flash-lite",
     "period_note": null,
-    "prompt": "v1"
+    "prompt": "v1",
+    "abstain_source": null,
+    "escalated": false
    }
   }
  }
