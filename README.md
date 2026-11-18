@@ -9,7 +9,7 @@ Built solo for **Arthaton 2026** (AI for personal and business finance).
 
 ![FilingLens home page: a verified answer next to the highlighted source page](docs/images/home.png)
 
-**Contents:** [Why FilingLens?](#why-filinglens) · [See it in action](#see-it-in-action) · [How it works](#how-it-works) · [Quick start](#quick-start) · [Does it work? (Evaluation)](#does-it-work-evaluation) · [Red flags](#red-flags) · [Limitations](#limitations) · [Under the hood](#under-the-hood) (models, API, **project structure**, engineering notes)
+**Contents:** [Why FilingLens?](#why-filinglens) · [See it in action](#see-it-in-action) · [How it works](#how-it-works) · [Quick start](#quick-start) · [AI models, APIs and libraries](#ai-models-apis-and-libraries) · [Does it work? (Evaluation)](#does-it-work-evaluation) · [Red flags](#red-flags) · [Limitations](#limitations) · [Under the hood](#under-the-hood) (safeguards, FilingLens's own API, **project structure**, engineering notes)
 
 ---
 
@@ -152,6 +152,25 @@ So that anyone can try FilingLens without an API key, the 11 example questions a
 
 ---
 
+## AI models, APIs and libraries
+
+**Only one step uses a hosted AI service: writing the final answer.** The search models (embeddings and reranker) run on your own computer, with no network call. That is why everything except a brand-new question works without a key, and why the free Gemini tier is enough.
+
+| Role | Model / service | Notes |
+|---|---|---|
+| Answers | Google Gemini `gemini-3.1-flash-lite` (Gemini API) | Temperature 0, JSON output; chosen on the evaluation |
+| Fallbacks | `gemini-3.5-flash-lite`, then `gemini-3.5-flash` | Only when the main model is overloaded (429/5xx) |
+| Evaluation judge | `gemini-3-flash-preview` | Never the same model as the one answering |
+| Embeddings (meaning search) | `BAAI/bge-small-en-v1.5`, runs locally on CPU | 384 dimensions, no API call |
+| Reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2`, runs locally on CPU | No API call |
+| Data | BSE announcements, NSE shareholding XBRL, Yahoo Finance prices (via `yfinance`) | Downloaded once and frozen |
+
+**Getting a key:** a free Gemini API key from [Google AI Studio](https://aistudio.google.com) goes in `.env` as `LLM_API_KEY`. All settings live in `core/config.py` and `.env.example`. An Anthropic provider is included as an option but wasn't used for any reported numbers.
+
+**Open-source libraries, with thanks:** [PyMuPDF](https://github.com/pymupdf/PyMuPDF) (PDF text and page images) · [rank_bm25](https://github.com/dorianbrown/rank_bm25) (keyword search) · [sentence-transformers](https://github.com/UKPLab/sentence-transformers) (embeddings and reranker) · [RapidFuzz](https://github.com/rapidfuzz/RapidFuzz) (quote checking) · [NumPy](https://numpy.org) · [pandas](https://pandas.pydata.org) · [SQLAlchemy](https://www.sqlalchemy.org) · [FastAPI](https://fastapi.tiangolo.com) + [Uvicorn](https://www.uvicorn.org) · [Streamlit](https://streamlit.io) · [Altair](https://altair-viz.github.io) (charts) · [pydantic](https://docs.pydantic.dev) + pydantic-settings · [tenacity](https://github.com/jd/tenacity) (retries) · [requests](https://requests.readthedocs.io) · [yfinance](https://github.com/ranaroussi/yfinance) · [pytesseract](https://github.com/madmaze/pytesseract) (optional OCR) · [tqdm](https://github.com/tqdm/tqdm) · [python-dotenv](https://github.com/theskumar/python-dotenv) · [google-generativeai](https://github.com/google-gemini/generative-ai-python) · [anthropic](https://github.com/anthropics/anthropic-sdk-python). Full list with versions in `requirements.txt`.
+
+---
+
 ## Does it work? (Evaluation)
 
 I wrote **30 test questions** about 10 companies and, for each one, recorded the correct answer and the exact page or pages where it appears in the filings. These are the **gold pages**. Each gold figure was checked by hand against the PDF. Then FilingLens answered every question and was scored against them.
@@ -233,21 +252,6 @@ Other honest caveats:
 ## Under the hood
 
 <details>
-<summary><b>AI models and data sources</b></summary>
-
-| Role | Model / source | Notes |
-|---|---|---|
-| Answers | Google Gemini `gemini-3.1-flash-lite` | Temperature 0, JSON output; chosen on the evaluation |
-| Fallbacks | `gemini-3.5-flash-lite`, then `gemini-3.5-flash` | Only when the main model is overloaded (429/5xx) |
-| Evaluation judge | `gemini-3-flash-preview` | Never the same model as the one answering |
-| Embeddings (meaning search) | `BAAI/bge-small-en-v1.5`, local CPU | 384 dimensions |
-| Reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2`, local CPU | |
-| Data | BSE announcements, NSE shareholding XBRL, Yahoo Finance prices | Downloaded once and frozen |
-
-All settings live in `core/config.py` and `.env.example`. An Anthropic provider exists as an option but wasn't used for any reported numbers.
-</details>
-
-<details>
 <summary><b>Key safeguards</b></summary>
 
 - Temperature 0, and answers only from the retrieved passages.
@@ -259,7 +263,7 @@ All settings live in `core/config.py` and `.env.example`. An Anthropic provider 
 </details>
 
 <details>
-<summary><b>API endpoints</b></summary>
+<summary><b>FilingLens's own API (for developers)</b></summary>
 
 | Method | Endpoint | What it returns |
 |---|---|---|
