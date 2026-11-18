@@ -9,7 +9,7 @@ Built solo for **Arthaton 2026** (AI for personal and business finance).
 
 ![FilingLens home page: a verified answer next to the highlighted source page](docs/images/home.png)
 
-**Contents:** [Why FilingLens?](#why-filinglens) · [See it in action](#see-it-in-action) · [How it works](#how-it-works) · [Quick start](#quick-start) · [AI models, APIs and libraries](#ai-models-apis-and-libraries) · [Does it work? (Evaluation)](#does-it-work-evaluation) · [Red flags](#red-flags) · [Limitations](#limitations) · [Under the hood](#under-the-hood) (safeguards, FilingLens's own API, **project structure**, engineering notes)
+**Contents:** [Why FilingLens?](#why-filinglens) · [See it in action](#see-it-in-action) · [How it works](#how-it-works) · [Quick start](#quick-start) · [AI models, APIs and libraries](#ai-models-apis-and-libraries) · [Does it work? (Evaluation)](#does-it-work-evaluation) · [Red flags](#red-flags) · [Limitations](#limitations) · [Under the hood](#under-the-hood) (safeguards, FilingLens's own API, **project structure**, engineering notes) · [License](#license)
 
 ---
 
@@ -329,3 +329,9 @@ None of these raised an error; each would have quietly made results worse.
 ## Related work
 
 Transcript summarisers exist for US, Hong Kong and Chinese markets (e.g. BeeBee AI). FilingLens is different in four ways: it focuses on Indian filing types, every citation is page-level and checked in code, its risk flags are rule-based, and it publishes its evaluation.
+
+---
+
+## License
+
+The code is released under the [MIT License](LICENSE) © 2026 Palak Agarwal. The filings, shareholding data and prices it works with belong to their original publishers (the companies, BSE, NSE and Yahoo Finance) and are not covered by this license.
