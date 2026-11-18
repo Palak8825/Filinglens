@@ -833,6 +833,19 @@ def brief_offer(symbol: str, question: str) -> None:
             st.switch_page(BRIEF)
 
 
+# Same rule as core.brief.is_lender (kept here because the UI talks to the engine only over HTTP).
+LENDERS = {"YESBANK", "HDFCBANK", "INDUSINDBK", "IIFL", "ICICIBANK", "SBIN", "PNB", "RBLBANK", "BANDHANBNK",
+           "BAJFINANCE", "SAMMAANCAP"}
+
+
+def placeholder_question(symbol: str) -> str:
+    """The "E.g." question in the Ask box, suited to the company; pressing Ask on an empty box asks it."""
+    s = symbol.upper()
+    if s in LENDERS or s.endswith("BANK") or s.endswith("BNK"):
+        return "What was the net interest margin in the latest quarter, and why did it move?"
+    return "What were the headline revenue and net profit for the latest quarter, and how did they change year on year?"
+
+
 def ask_tab(symbol: str, f: dict) -> None:
     examples = [e["question"] for e in get_json(f"/examples?symbol={symbol}")]
     if examples:
@@ -842,15 +855,18 @@ def ask_tab(symbol: str, f: dict) -> None:
             st.session_state["q"] = picked
             st.session_state["pending"] = True
 
+    sample = placeholder_question(symbol)
     with st.form("ask", border=False):
-        q = st.text_input("Question", key="q",
-                          placeholder="E.g. What was the net interest margin in the latest quarter, and why did it move?")
+        q = st.text_input("Question", key="q", placeholder=f"E.g. {sample}")
         c1, c2, c3 = st.columns([2, 1, 1], vertical_alignment="bottom")
         doc_type = c1.selectbox("Search in", ["any", "results", "concall", "announcement", "shareholding"],
                                 format_func=lambda k: "All filings" if k == "any" else DOC_TYPES.get(k, k))
         live = c2.toggle("Ask live", value=False, disabled=not OVERVIEW["has_api_key"],
                          help="Generate a fresh answer now, even for an example question.")
         submitted = c3.form_submit_button("Ask", type="primary", width="stretch")
+    st.caption("Press **Ask** on an empty box to try the example, or type your own question.")
+    if submitted and not (q or "").strip():
+        q = sample  # empty box: ask the "E.g." question shown in it
     if (submitted or st.session_state.pop("pending", False)) and q:
         with st.spinner("Finding the right pages and checking every quote…"):
             resp = requests.post(f"{API}/ask", json={"symbol": symbol, "question": q, "use_cache": not live,
