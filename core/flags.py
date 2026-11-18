@@ -6,7 +6,6 @@ Inputs
   shareholding   ingest/shareholding.py  (NSE quarterly shareholding pattern, XBRL)
   auditor_event  ingest/auditor.py       (BSE announcements + audit reports in results filings)
   float          ingest/market.py       (Yahoo Finance prices + NSE public shareholding)
-  rpt            producer not built (needs annual reports) — this flag stays silent until it is
 """
 from __future__ import annotations
 
@@ -31,7 +30,6 @@ THRESHOLDS = {
     "encumbrance_high_abs": 50.0,  # or encumbered level ≥ this (pledge + NDU + other, SEBI definition)
     "promoter_sell_qoq_pp": 3.0,   # promoter stake down ≥ this in one quarter (last 4 quarters)
     "promoter_sell_cum_pp": 5.0,   # or down ≥ this across the 12-quarter window
-    "rpt_growth": 0.5,             # related-party txn / revenue up ≥ 50% YoY
     "float_pump_return": 1.0,      # 3m return ≥ 100%
     "float_pump_free_float": 25.0, # with free float < 25%
 }
@@ -129,16 +127,6 @@ def auditor_flags(symbol: str) -> list[Flag]:
     return out
 
 
-def rpt_flags(symbol: str) -> list[Flag]:
-    r = _facts(symbol, "rpt")
-    if len(r) >= 2:
-        a, b = r[-2].payload.get("rpt_to_revenue", 0.0), r[-1].payload.get("rpt_to_revenue", 0.0)
-        if a > 0 and (b - a) / a >= THRESHOLDS["rpt_growth"]:
-            return [Flag("rpt_spike", 2, "Related-party transactions rising",
-                         f"RPT/revenue rose from {a:.1%} to {b:.1%}.", [_ev(r[-2]), _ev(r[-1])])]
-    return []
-
-
 def float_flags(symbol: str) -> list[Flag]:
     f = _facts(symbol, "float")
     if f:
@@ -154,7 +142,7 @@ def float_flags(symbol: str) -> list[Flag]:
 
 
 def score(symbol: str) -> dict:
-    flags = promoter_flags(symbol) + auditor_flags(symbol) + rpt_flags(symbol) + float_flags(symbol)
+    flags = promoter_flags(symbol) + auditor_flags(symbol) + float_flags(symbol)
     total = sum(f.severity for f in flags)
     level = "high" if total >= 5 else "elevated" if total >= 2 else "low"
     return {"symbol": symbol, "score": total, "level": level, "flags": [asdict(f) for f in flags], "thresholds": THRESHOLDS}

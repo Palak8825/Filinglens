@@ -49,7 +49,7 @@ class Fact(Base):
     __tablename__ = "facts"
     id: Mapped[int] = mapped_column(primary_key=True)
     symbol: Mapped[str] = mapped_column(String(32), index=True)
-    kind: Mapped[str] = mapped_column(String(32), index=True)  # shareholding|pledge|auditor_event|guidance|rpt|float
+    kind: Mapped[str] = mapped_column(String(32), index=True)  # shareholding|pledge|auditor_event|guidance|float
     period: Mapped[Optional[str]] = mapped_column(String(16))
     as_of: Mapped[Optional[date]] = mapped_column(Date)
     payload: Mapped[dict] = mapped_column(JSON)
