@@ -10,8 +10,9 @@ Produces
   filinglens-pdfs-partN.zip   every PDF in the index or cited by a flag (each part < 1.9 GB)
   SHA256SUMS.txt
 or, with --demo,
-  filinglens-demo.zip         index for the symbols in demo/answer_cache.json, every PDF the cached answers
-                              cite, those symbols' latest two quarters of results + concalls, and the
+  filinglens-demo.zip         index for the symbols in demo/answer_cache.json and demo/brief_cache.json, every
+                              PDF the cached answers and prepared briefs cite (plus the briefs' notable filings),
+                              those symbols' latest two quarters of results + concalls, and the
                               auditor-flag evidence. Flags still cover all symbols (facts are kept whole).
   SHA256SUMS-demo.txt
 Unpack with `python -m scripts.setup_release <folder>` (or `... <folder> --demo`) from the repo root.
@@ -123,8 +124,20 @@ def build_demo(out: Path) -> None:
     entries = json.loads(answer_cache.CACHE_FILE.read_text(encoding="utf-8"))["entries"].values()
     if not entries:
         raise SystemExit("demo/answer_cache.json is empty; run `python -m scripts.warm_cache` first.")
-    symbols = sorted({e["symbol"] for e in entries})
     cited_ids = {c["document_id"] for e in entries for c in e["answer"]["citations"]}
+    # Prepared briefs (demo/brief_cache.json): every page they cite, and the indexed filings their notable
+    # events link to, so a cached brief shows its pages with no network and no API key.
+    from core import brief as brief_mod
+    from core.notable import notable
+
+    brief_syms = brief_mod.cached_symbols()
+    cited_ids |= brief_mod.cited_document_ids()
+    notable_paths = set()
+    for sym in brief_syms:
+        nb = notable(sym)
+        cited_ids |= {i["document_id"] for i in nb["items"] if i.get("document_id")}
+        notable_paths |= {i["path"] for i in nb["items"] if i.get("path")}
+    symbols = sorted({e["symbol"] for e in entries} | set(brief_syms))
 
     db_file = Path(settings.database_url.split("///", 1)[1])
     con = sqlite3.connect(db_file)
@@ -142,6 +155,7 @@ def build_demo(out: Path) -> None:
                     key=lambda p: (p[4:], p[:2]), reverse=True)[:2]
         pdfs |= {d.path for d in docs if d.symbol == sym and d.doc_type in ("results", "concall") and d.fiscal_period in qs}
     pdfs |= auditor
+    pdfs |= notable_paths  # notable events of non-indexed filings open via /evidence/pdf
     missing_cited = [d.path for d in docs if d.id in cited_ids and not Path(d.path.replace("\\", "/")).exists()]
     if missing_cited:
         raise SystemExit(f"cited PDFs missing on disk: {missing_cited[:3]}")

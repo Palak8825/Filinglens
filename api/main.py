@@ -226,3 +226,30 @@ def eval_report() -> dict:
     rep = clean(rep)
     return {**rep, "n_questions": len(qs), "question_types": dict(Counter(q["type"] for q in qs)),
             "question_symbols": sorted({q["symbol"] for q in qs})}
+
+
+@app.get("/notable/{symbol}")
+def notable_ep(symbol: str, n: int = 5) -> dict:
+    """Notable events from the filing feed: rarity across all companies + keyword labels. No LLM."""
+    from core.notable import notable
+
+    return notable(symbol.upper(), n)
+
+
+@app.get("/brief/{symbol}")
+def brief_ep(symbol: str, live: bool = False) -> dict:
+    """The Brief. Prepared (cached) briefs work with no API key; live=true builds one now (needs a key, ~4 LLM
+    calls). Without either, the rule-based sections come back and the cited sections are marked not prepared."""
+    from core.brief import get_brief
+
+    if live and not has_api_key():
+        raise HTTPException(status_code=503, detail="No LLM_API_KEY set. Prepared briefs still work.")
+    return get_brief(symbol.upper(), live=live)
+
+
+@app.get("/briefs")
+def briefs_ep() -> list[str]:
+    """Symbols with a prepared brief."""
+    from core.brief import cached_symbols
+
+    return cached_symbols()

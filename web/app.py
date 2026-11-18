@@ -11,6 +11,7 @@ palette; risk levels use the reserved status colours and always carry an icon + 
 """
 from __future__ import annotations
 
+import html
 import os
 import re
 from urllib.parse import quote
@@ -472,6 +473,176 @@ def flag_cards(symbol: str, f: dict, key: str) -> None:
                 open_flag(symbol, fl["code"])
 
 
+# ------------------------------------------------------------------------------------------- brief
+st.markdown("""
+<style>
+  .fl-why { display: inline-block; padding: .14rem .55rem; border-radius: .4rem; font-size: .78rem; line-height: 1.35;
+            background: rgba(237,161,0,.14); border: 1px solid rgba(237,161,0,.45); margin: .1rem 0 .35rem; }
+  .fl-why.act { background: rgba(98,80,214,.12); border-color: rgba(98,80,214,.4); }
+  .fl-brief-h { font-size: 1.12rem; font-weight: 700; margin: 0 0 .35rem; letter-spacing: -0.01em; }
+  .fl-nc { opacity: .75; font-style: italic; margin: .2rem 0 .3rem; }
+</style>
+""", unsafe_allow_html=True)
+
+# A question with no number, no period and no financial metric reads as "tell me about this company":
+# the Brief answers that better. Detected by the ABSENCE of specifics; the question is still answered.
+_SPECIFIC_RE = re.compile(
+    r"\d|\b(q[1-4]|h[12]|fy|quarter|quarterly|year|annual|month|latest|since|ytd|yoy|qoq)\b|"
+    r"\b(revenue|sales|turnover|ebitda|ebit|margin|profit|loss|pat|eps|earnings|income|expense|cost|debt|borrowing|"
+    r"cash|capex|nim|npa|gnpa|nnpa|casa|deposit|advances|loan|credit|asset|roa|roe|roce|ratio|dividend|guidance|"
+    r"outlook|arpu|subscriber|user|growth|pledge|encumb|shareholding|stake|promoter|auditor|audit|rating|interest|"
+    r"tax|order book|capacity|volume|segment|subsidiary|provision|impairment|valuation|price|bond|at1|court|"
+    r"penalty|merger|acquisition|buyback|dilution|capital|liquidity|exposure|write-?off|tariff|spectrum|agr)\w*",
+    re.I)
+
+
+def is_general_question(q: str) -> bool:
+    return bool((q or "").strip()) and not _SPECIFIC_RE.search(q)
+
+
+def nice_date(d: str | None) -> str:
+    try:
+        t = pd.Timestamp(d)
+        return f"{t.day} {t.strftime('%b %Y')}"
+    except (ValueError, TypeError):
+        return d or ""
+
+
+def strip_refs(text: str) -> str:
+    """The model's [c3]-style excerpt markers mean nothing to a reader; the citations are listed below."""
+    return " ".join(re.sub(r"\s*\[c\d+\](?:\s*,\s*\[c\d+\])*", "", text or "").split())
+
+
+def brief_citations(cits: list[dict], key: str) -> None:
+    tabs = st.tabs([f"[{i}] {DOC_TYPES.get(c['doc_type'], c['doc_type'])} · {c.get('fiscal_period') or '—'} · Page {c['page']}"
+                    for i, c in enumerate(cits, 1)])
+    for tab, c in zip(tabs, cits):
+        with tab:
+            left, right = st.columns([2, 3], gap="large")
+            with left:
+                st.markdown(f'<div class="fl-quote">“{html.escape(" ".join(c["quote"].split()))}”</div>',
+                            unsafe_allow_html=True)
+                st.caption(f"{c['title'][:140]} · Page {c['page']}")
+                verify_box(c["document_id"], c["page"], c["quote"], stacked=True)
+            with right:
+                show_page(page_url(c["document_id"], c["page"], hl=c["quote"]))
+
+
+def notable_card(it: dict, key: str) -> None:
+    with st.container(border=True):
+        a, b = st.columns([3, 2], gap="large")
+        s = it.get("sentence")
+        c = s["citations"][0] if s and s.get("covered") and s.get("citations") else None
+        with a:
+            st.markdown(f"**{html.escape(it.get('display') or it['title'])}**")
+            st.caption(f"{nice_date(it['filed_on'])} · {DOC_TYPES.get(it['doc_type'], it['doc_type'])}")
+            st.markdown(f'<span class="fl-why">{html.escape(it["why"])}</span>', unsafe_allow_html=True)
+            if c:
+                st.markdown(html.escape(strip_refs(s["text"])))
+                st.markdown(f'<div class="fl-quote">“{html.escape(" ".join(c["quote"].split()))}”</div>',
+                            unsafe_allow_html=True)
+                with st.expander(f"See it highlighted on page {c['page']}"):
+                    show_page(page_url(c["document_id"], c["page"], hl=c["quote"]))
+        with b:
+            if c:
+                verify_box(c["document_id"], c["page"], c["quote"], stacked=True)
+            else:
+                verify_box(it.get("document_id"), it.get("page") or 1, path=it.get("path"),
+                           source_url=it.get("source_url"), stacked=True)
+
+
+def brief_view(symbol: str, key: str) -> None:
+    """The Brief: four short sections where every line is a verified citation or says the filings don't cover it."""
+    live_key = f"brief-live-{symbol}"
+    try:
+        b = st.session_state.get(live_key) or get_json(f"/brief/{symbol}")
+    except requests.RequestException:
+        st.error("The brief couldn't be loaded. Please try again.")
+        return
+    secs = {s["key"]: s for s in b["sections"]}
+    n_cit = sum(len(s.get("citations") or []) for s in b["sections"] if s.get("covered"))
+    n_cit += sum(len((i.get("sentence") or {}).get("citations") or []) for i in secs["notable"]["notable"]["items"])
+    badges = []
+    if n_cit:
+        badges.append(f'<span class="fl-badge">✓ {n_cit} verified citation{"s" if n_cit != 1 else ""}</span>')
+    if b.get("cached"):
+        badges.append('<span class="fl-badge ex">⚡ Prepared brief</span>')
+    if badges:
+        st.markdown("".join(badges), unsafe_allow_html=True)
+    st.markdown(f'<p class="fl-muted" style="margin-top:.4rem">Every line is a quote checked against {symbol}\'s filings, '
+                'or says plainly that the filings don\'t cover it.</p>', unsafe_allow_html=True)
+
+    for sec in b["sections"]:
+        with st.container(border=True):
+            st.markdown(f'<div class="fl-brief-h">{sec["title"]}</div>', unsafe_allow_html=True)
+            if "question" in sec:
+                if not sec.get("prepared"):
+                    st.markdown('<div class="fl-nc">Not prepared for this stock yet.</div>', unsafe_allow_html=True)
+                    if sec["key"] == "quarter":  # one button prepares both cited sections
+                        if OVERVIEW["has_api_key"] and symbol in INDEXED:
+                            if st.button("Prepare the cited sections now", key=f"prep-{key}-{symbol}",
+                                         help="Answers both questions from the filings and checks every quote. "
+                                              "Takes about a minute."):
+                                with st.spinner("Finding the right pages and checking every quote…"):
+                                    r = requests.get(f"{API}/brief/{symbol}", params={"live": "true"}, timeout=400)
+                                if r.ok:
+                                    st.session_state[live_key] = r.json()
+                                    st.rerun()
+                                st.error(f"Something went wrong ({r.status_code}). Please try again.")
+                        elif symbol not in INDEXED:
+                            st.caption("This stock's filings aren't in the search index yet, so only the rule-based "
+                                       "sections are available.")
+                        else:
+                            st.caption("Add `LLM_API_KEY` to `.env` to prepare these sections.")
+                    continue
+                if not sec["covered"]:
+                    st.markdown('<div class="fl-nc">The filings don\'t cover this.</div>', unsafe_allow_html=True)
+                    st.caption(f"Asked: {sec['question']}")
+                    continue
+                st.markdown(f'<div class="fl-answer">{html.escape(strip_refs(sec["text"]))}</div>', unsafe_allow_html=True)
+                if sec.get("period_note"):
+                    st.caption("🗓️ " + sec["period_note"])
+                brief_citations(sec["citations"], key=f"{key}-{sec['key']}")
+            elif sec["key"] == "flags":
+                f = sec["flags"]
+                st.markdown(f"{chip(f['level'])} <span class='fl-muted'>&nbsp;Score {f['score']} · "
+                            f"{len(f['flags'])} flag(s), from clear rules over filed data</span>", unsafe_allow_html=True)
+                st.markdown("<div style='height:.4rem'></div>", unsafe_allow_html=True)
+                flag_cards(symbol, f, key=f"brief-{key}-{symbol}")
+            else:
+                nb = sec["notable"]
+                if not (nb["items"] or nb["activity"]):
+                    st.markdown('<div class="fl-nc">The filings don\'t cover this: nothing unusual stands out in '
+                                f'{symbol}\'s filings.</div>', unsafe_allow_html=True)
+                for it in nb["items"]:
+                    notable_card(it, key)
+                act = nb.get("activity")
+                if act:
+                    with st.container(border=True):
+                        st.markdown("**Unusual filing activity**")
+                        st.markdown(f'<span class="fl-why act">{html.escape(act["why"])}</span>', unsafe_allow_html=True)
+                        st.caption("Filed in that stretch: " + "; ".join(t[:90] for t in act["titles"]))
+                st.caption("Ranked by how rare each filing is across all 44 companies, plus labels for legal, credit, "
+                           "auditor and leadership events. Routine paperwork is pushed down. No AI involved.")
+
+
+def brief_page() -> None:
+    st.title("Brief")
+    st.markdown('<p class="fl-muted">A cited summary of any company: the latest quarter, what management said, '
+                'red flags and notable filings.</p>', unsafe_allow_html=True)
+    no_key_banner()
+    syms = sorted(set(screen_df()["symbol"]) | INDEXED)
+    pre = st.session_state.pop("brief_symbol", None) or st.session_state.get("symbol")
+    pre = pre if pre in syms else ("YESBANK" if "YESBANK" in syms else syms[0])
+    symbol = st.selectbox("Stock", syms, index=syms.index(pre))
+    st.session_state["symbol"] = symbol
+    brief_view(symbol, key="page")
+    if symbol in INDEXED and st.button(f"Ask your own question about {symbol} →", type="primary"):
+        st.session_state["ask_symbol"] = symbol
+        st.switch_page(ASK)
+    next_step(DASH, "Dashboard →", "See which of the 44 stocks the rule engine flags, and why.")
+
+
 def dashboard() -> None:
     st.title("Risk dashboard")
     st.markdown('<p class="fl-muted">Red flags from clear rules over shareholding patterns, auditor filings and prices. '
@@ -531,6 +702,10 @@ def dashboard() -> None:
     else:
         st.caption("No promoter shareholding series for this stock (for example, it has no identified promoter).")
     flag_cards(sym, f, key=f"dash-{sym}")
+    if st.button("View the Brief →", key=f"brief-{sym}", help=f"A cited summary of {sym}: latest quarter, management, "
+                                                             "red flags and notable filings."):
+        st.session_state["brief_symbol"] = sym
+        st.switch_page(BRIEF)
     if sym in INDEXED and st.button(f"Ask about {sym}'s filings →", type="primary"):
         st.session_state["ask_symbol"] = sym
         st.switch_page(ASK)
@@ -625,6 +800,15 @@ def ask_page() -> None:
                     f"<span class='fl-muted'>&nbsp;Score {f['score']} · {len(f['flags'])} flag(s)</span></div>",
                     unsafe_allow_html=True)
 
+    tab_brief, tab_ask = st.tabs(["Brief", "Ask a question"])
+    with tab_brief:
+        brief_view(symbol, key="ask")
+    with tab_ask:
+        ask_tab(symbol, f)
+    next_step(EVAL, "Evaluation →", "How accurate the answers are, measured on hand-checked questions.")
+
+
+def ask_tab(symbol: str, f: dict) -> None:
     examples = [e["question"] for e in get_json(f"/examples?symbol={symbol}")]
     if examples:
         picked = st.pills("Try an example", examples, selection_mode="single", key=f"pill-{symbol}")
@@ -655,8 +839,15 @@ def ask_page() -> None:
 
     r = st.session_state.get("last")
     if not (r and r.get("symbol") == symbol):
-        next_step(EVAL, "Evaluation →", "How accurate the answers are, measured on hand-checked questions.")
         return
+    if is_general_question(r.get("question", "")):
+        # Offer, never route: the typed question is still answered below.
+        with st.container(border=True):
+            o1, o2 = st.columns([3, 1], vertical_alignment="center")
+            o1.markdown(f"This looks like a general question. Open the Brief for {symbol}?")
+            if o2.button("Open the Brief →", key=f"offer-{symbol}", width="stretch"):
+                st.session_state["brief_symbol"] = symbol
+                st.switch_page(BRIEF)
     main, side = st.columns([3, 2], gap="large")
     with main:
         n_ok, n_drop = len(r["citations"]), r["dropped_citations"]
@@ -700,7 +891,6 @@ def ask_page() -> None:
         if ch is not None:
             section("Promoter holding")
             st.altair_chart(ch, width="stretch")
-    next_step(EVAL, "Evaluation →", "How accurate the answers are, measured on hand-checked questions.")
 
 
 def evaluation() -> None:
@@ -787,11 +977,13 @@ def evaluation() -> None:
 
 LAND = st.Page(landing, title="FilingLens", icon="🔎", default=True)
 HOME = st.Page(home, title="Home", icon="🏠", url_path="home")
+BRIEF = st.Page(brief_page, title="Brief", icon="📋", url_path="brief")
 DASH = st.Page(dashboard, title="Dashboard", icon="📊", url_path="dashboard")
 ASK = st.Page(ask_page, title="Ask", icon="💬", url_path="ask")
 EVAL = st.Page(evaluation, title="Evaluation", icon="📏", url_path="evaluation")
 FLAG = st.Page(flag_page, title="Red flag", icon="🚩", url_path="flag")
 NAV = [(HOME, "Home", "🏠", "Overview and a live example"),
+       (BRIEF, "Brief", "📋", "A cited summary of any company"),
        (DASH, "Dashboard", "📊", "Red flags for all 44 stocks"),
        (ASK, "Ask", "💬", "Question any company's filings"),
        (EVAL, "Evaluation", "📏", "How accurate it is")]

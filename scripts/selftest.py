@@ -238,6 +238,48 @@ def main() -> int:
         if got != want:
             fails.append(f"eval fmt {cell}: expected {want}, got {got}")
 
+    # 8. notable events: title normalisation (no LLM). Word order, dates, numbers, names and boilerplate drop out.
+    from core.notable import signature, tokens
+
+    sig_cases = [
+        ("Intimation of Board Meeting", "Board Meeting Intimation", True, "word order"),
+        ("Board meeting intimation for 12th August, 2025 (Q1 FY26)", "Intimation of Board Meeting on 3 Feb 2024", True,
+         "dates, quarters stripped"),
+        ("Disclosure under Regulation 30 of SEBI (LODR) Regulations, 2015 - Resignation of Mr. A. B. Sharma as Director",
+         "Resignation of Ms. Priya Rao as Director", True, "regulation boilerplate and names stripped"),
+        ("Trading Window Closure", "Order of the Hon'ble NCLT", False, "different events differ"),
+    ]
+    for a, b, same, label in sig_cases:
+        got = signature(a) == signature(b)
+        print(f"[{'ok' if got == same else 'FAIL'}] notable normalisation, {label}: {signature(a)!r} vs {signature(b)!r}")
+        if got != same:
+            fails.append(f"notable normalisation {label}")
+    leaked = [t for t in tokens("Allotment of 1,25,000 shares at Rs. 450.50 crore on 30.09.2025 in FY26 Q2", "TESTCO")
+              if any(ch.isdigit() for ch in t) or t in ("fy", "q2", "september")]
+    print(f"[{'ok' if not leaked else 'FAIL'}] notable normalisation strips numbers/amounts/dates: {leaked or 'clean'}")
+    if leaked:
+        fails.append(f"notable tokens kept numbers/dates: {leaked}")
+
+    # 9. the Brief never shows uncited text: abstained or zero verified citations → "not covered"
+    from core.brief import NOT_COVERED, render_section
+
+    brief_cases = [
+        ("abstained", {"answer": "Not found in the filings available.", "abstained": True, "citations": []}, False),
+        ("answer with no verified citation", {"answer": "Revenue grew 12%.", "abstained": False, "citations": []}, False),
+        ("no answer at all", None, False),
+        ("cited but opens by saying the filings lack it",
+         {"answer": "The provided filings do not contain specific guidance for the quarter.", "abstained": False,
+          "citations": [{"document_id": 1, "page": 3, "quote": "forward-looking statements"}]}, False),
+        ("answer with a verified citation", {"answer": "Revenue grew 12%.", "abstained": False,
+                                             "citations": [{"document_id": 1, "page": 2, "quote": "Revenue grew 12%"}]}, True),
+    ]
+    for label, ans, want in brief_cases:
+        r = render_section(ans)
+        ok = r["covered"] == want and (want or (r["text"] == NOT_COVERED and not r["citations"]))
+        print(f"[{'ok' if ok else 'FAIL'}] brief section, {label}: {'shown with citations' if r['covered'] else r['text']}")
+        if not ok:
+            fails.append(f"brief section {label}")
+
     print()
     if fails:
         print(f"{len(fails)} FAILURE(S):")
