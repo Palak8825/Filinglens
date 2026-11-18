@@ -45,7 +45,7 @@ The answer shows how it was checked (8 passages read, 1 quote given, 1 confirmed
 
 | | |
 |---|---|
-| **📋 Brief:** a one-page summary of any company: the latest quarter's numbers, what management said, red flags and notable filings. Every line is a checked quote; if the filings don't cover something, it says so instead of guessing. | ![Brief page](docs/images/brief.png) |
+| **📋 Brief:** a one-page summary of any company: the latest quarter's numbers, what management said, red flags and notable filings. Every line is a checked quote; if it can't find a quote for something, it says so instead of guessing. Full Briefs for the 14 indexed companies; red flags and notable filings for all 44. | ![Brief page](docs/images/brief.png) |
 | **🚩 Risk dashboard:** all 44 companies screened for warning signs, with a score, the rules that fired, and promoter holding over time. | ![Risk dashboard](docs/images/dashboard.png) |
 | **🔍 Flag details:** click any flag to see the rule, its threshold, the filed numbers and a link to the original filing on NSE. | ![Flag detail page](docs/images/flag.png) |
 | **📈 Evaluation:** the test results in plain language, with the technical tables one click away. | ![Evaluation page](docs/images/eval.png) |
@@ -125,8 +125,8 @@ pip install -r requirements.txt
 
 | Option | Download | What you get | Command |
 |---|---|---|---|
-| **Demo** (~500 MB, recommended) | `filinglens-demo.zip` + `SHA256SUMS-demo.txt` | 5 companies (IDEA, PAYTM, RELIANCE, VEDL, YESBANK) you can question, every page the examples cite, red flags for all 44 | `python -m scripts.setup_release <folder> --demo` |
-| **Full** (~3.5 GB) | `filinglens-index.zip`, `filinglens-pdfs-part1.zip`, `filinglens-pdfs-part2.zip` + `SHA256SUMS.txt` | 14 companies, 929 filings, 41,219 passages | `python -m scripts.setup_release <folder>` |
+| **Demo** (~870 MB, recommended) | `filinglens-demo.zip` + `SHA256SUMS-demo.txt` | All 14 indexed companies: every prepared Brief and example answer with the pages they cite, the latest two quarters' results and earnings calls for your own questions, and red flags for all 44 | `python -m scripts.setup_release <folder> --demo` |
+| **Full** (~3.5 GB) | `filinglens-index.zip`, `filinglens-pdfs-part1.zip`, `filinglens-pdfs-part2.zip`, `filinglens-pdfs-part3.zip` + `SHA256SUMS.txt` | 14 companies, 931 filings, 41,314 passages | `python -m scripts.setup_release <folder>` |
 
 If a download stops part-way (on Windows, `curl` sometimes fails with an SSL error), use your browser, or resume with `curl -L --ssl-no-revoke -C - -O <file URL>`.
 
@@ -139,7 +139,7 @@ streamlit run web/app.py         # the app, on http://localhost:8501
 
 If the engine runs on another port, set `FILINGLENS_API=http://localhost:<port>` before starting the app.
 
-- **Without a key:** the Briefs for the demo companies, the example answers, the dashboard, the red flags and every cited page all work.
+- **Without a key:** the Briefs for all 14 indexed companies, the example answers, the dashboard, the red flags and every cited page all work.
 - **With a key** (copy `.env.example` to `.env` and set `LLM_API_KEY`; the free [Google AI Studio](https://aistudio.google.com) tier works), you can ask anything about the indexed companies.
 
 **4. Check everything works** (optional): `python -m scripts.selftest` runs offline in under a minute, with no key and no internet, and tests chunking, retrieval, the verifier and the red flags.
@@ -147,7 +147,7 @@ If the engine runs on another port, set `FILINGLENS_API=http://localhost:<port>`
 <details>
 <summary><b>⚡ Why some answers are marked "Example answer"</b></summary>
 
-So that anyone can try FilingLens without an API key, the 11 example questions and the Briefs for the 5 demo companies were generated in advance (`scripts/warm_cache.py`, `scripts/warm_brief.py`) using **exactly the same pipeline the app runs live**. Each one is stored complete, with its verified citations, the model that answered and the date, and carries an **⚡ Example answer** / **⚡ Prepared brief** label. Any question that isn't one of these is always answered live, and live answers are never saved into the examples. This also keeps the demo working if the free AI tier is having a bad day.
+So that anyone can try FilingLens without an API key, the 11 example questions and the Briefs for all 14 indexed companies were generated in advance (`scripts/warm_cache.py`, `scripts/warm_brief.py`) using **exactly the same pipeline the app runs live**. One addition for Briefs: if a section came back without a quotable answer, or had a sentence dropped for stating a figure that isn't in its quotes, it was asked once more with a reminder to quote every figure, and the better of the two was kept. Every prepared figure was also checked by hand against its page. Each one is stored complete, with its verified citations, the model that answered and the date, and carries an **⚡ Example answer** / **⚡ Prepared brief** label. Any question that isn't one of these is always answered live, and live answers are never saved into the examples. This also keeps the demo working if the free AI tier is having a bad day.
 </details>
 
 ---
@@ -237,14 +237,21 @@ The score is the sum of severities: **high** at 5+, **elevated** at 2+. "Encumbe
 
 ## Limitations
 
-**"Verified" means the quote is real, not that the answer is right.** My own test caught this. Asked *"What was HDFC Bank's net interest margin in Q1 FY22?"* (a period the collection doesn't cover), an early version answered "4.1%" with a **verified** citation. The quote was real, but it came from the **Q1 FY24** earnings call. The verifier checks that a quote *exists*; it can't tell that the period was wrong. **The fix:** a rule now spots questions about quarters outside the collection and answers with the collection's boundary instead of searching.
+**"Verified" means the quote is real, not that the answer is right.** My own testing caught this twice, for two different reasons:
+
+1. **Wrong period.** Asked *"What was HDFC Bank's net interest margin in Q1 FY22?"* (a period the collection doesn't cover), an early version answered "4.1%" with a **verified** citation. The quote was real, but it came from the **Q1 FY24** earnings call. **The fix:** a rule now spots questions about quarters outside the collection and answers with the collection's boundary instead of searching.
+2. **Wrong column.** Asked for Vedanta's latest-quarter revenue, Ask answered "₹6,395 crore", citing a real row of a results table. But when a PDF table is turned into text, the numbers lose their column headers: that figure sat under the *previous* quarter, and the current quarter's cell was empty. **The mitigation:** any quote that is mostly figures now carries a *"Read from a table: check the column on the page"* note, and the Brief asks the model to cite the table's header row too, so the period of each number can be checked.
+
+In both cases the verifier did its job: it checks that a quote *exists* on the page, not which period it describes. The evaluation has the same blind spot, because citations are scored by page: a wrong-column read on the right page still counts as a hit.
 
 Other honest caveats:
 - **The reasoning isn't verified.** The quotes are checked; the conclusions drawn from them are not.
 - **Scanner typos.** Some companies' PDFs contain OCR errors from their own scanners (e.g. "financlal"), on about 3% of pages. The verifier can't catch these: the text is really there, just misspelled.
 - **About 5% of pages are pure images** with no text, so they can't be searched or cited.
+- **Some "transcripts" on BSE are just a link.** Three companies filed a one-page cover letter pointing to their website instead of the transcript itself. For Adani Enterprises and IndusInd Bank (Q2 FY27), the transcript was downloaded from the company's own website and indexed, with that URL as its source. Vedanta's could not be fetched, so its Brief says it found no quotable answer for what management said.
 - **Notable filings see a narrow feed.** The downloader mostly kept announcements about auditors and leadership changes, so court rulings (like the YES Bank AT1 Supreme Court verdict) show up through results and earnings calls instead.
-- **Frozen snapshot:** 44 companies, 2,924 filings since April 2023, not live. Questions cover 14 companies (no annual reports, to keep it runnable on a laptop); the demo download covers 5.
+- **Frozen snapshot:** 44 companies, 2,924 filings since April 2023, not live. Questions and full Briefs cover 14 companies (no annual reports, to keep it runnable on a laptop); the other 30 are screened for red flags only.
+- **Damaged text in a company's own PDF.** Zee's Q2 FY27 results PDF has a text layer that reads "2,472" for a total income the printed page shows as 22,472. A quote of it verifies, because the text really says that. FilingLens found this while checking the prepared Briefs by hand, and its Brief now explains why it shows no figure rather than a wrong one. There may be similar cases that haven't been found.
 - **The flags are signals, not advice.** A falling promoter stake can mean dilution rather than selling: Vodafone Idea's drop (50.4% → 25.6%) came from shares issued to the government, which one of the example answers explains with citations.
 
 ---
@@ -258,7 +265,9 @@ Other honest caveats:
 - Quotes are checked in code; failed citations are dropped and counted.
 - Questions about quarters outside the collection get the boundary, not a guess.
 - Red flags and notable filings use no AI.
-- Brief sections without a verified quote say "the filings don't cover this".
+- Brief sections without a verified quote say "No quotable answer found", never an uncited answer.
+- Figures quoted from a table carry a "check the column on the page" note (a fixed rule, no AI).
+- In a Brief, any sentence stating a figure that appears in none of its quotes is removed before you see it (a fixed rule, no AI). Checking the prepared Briefs found the model computing changes itself, and once taking a figure from a mislabelled chart.
 - No secrets in the repo (`.env` is git-ignored); public filings only.
 </details>
 

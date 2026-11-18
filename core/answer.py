@@ -39,7 +39,22 @@ Rules:
 - Be concise. Numbers must match the excerpt exactly, including units and period.
 Return JSON: {"answer": str, "citations": [{"ref": str, "quote": str}], "confidence": "high"|"medium"|"low"}"""
 
-PROMPTS = {"v1": SYSTEM, "v2": SYSTEM_V2}
+# v3 (the Brief): v2 plus a rule for tables. Headline figures often sit only in a results table, with half-year
+# columns between the quarterly ones. The model stitched the cells it wanted into one quote (skipping columns, or
+# joining them with "..."), which is not contiguous text, so the verifier rightly rejected every citation and the
+# section showed nothing although the numbers were correct. Quoting each table row exactly as written verifies.
+# A separate version so v1/v2 evaluation numbers stay reproducible.
+SYSTEM_V3 = SYSTEM_V2.replace(
+    "- Be concise.",
+    "- Tables: each citation quotes exactly ONE table row, from its label through the cells you need, in order,\n"
+    "  as it appears in the excerpt (e.g. \"EBITDA* 63 53 18%\"). A quote that spans several rows, skips cells or\n"
+    "  uses \"...\" is NOT verbatim and will be rejected, so for three figures give three separate citations.\n"
+    "  Also cite the column-header row as a SEPARATE citation of its own (e.g. \"Particulars (₹ crores) Q3FY25\n"
+    "  Q3FY24 YoY (%)\"); never prepend it to a data row. Use it to match each number to its period.\n"
+    "- State only numbers that appear in your quotes, copied exactly. Do not calculate changes or ratios yourself:\n"
+    "  if a year-on-year change is not printed, give both figures instead. Leave out any figure you cannot quote.\n"
+    "- Be concise.")
+PROMPTS = {"v1": SYSTEM, "v2": SYSTEM_V2, "v3": SYSTEM_V3}
 
 
 @dataclass

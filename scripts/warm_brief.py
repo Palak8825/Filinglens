@@ -34,6 +34,37 @@ def summary(symbol: str) -> str:
     return ", ".join(parts)
 
 
+RETRY_NOTE = " Quote the table row or sentence for every figure you state, and leave out any figure you cannot quote."
+
+
+def score(ans: dict | None) -> tuple[int, int, int]:
+    """Higher is better: shown at all, fewer sentences dropped by the number-grounding rule, more text shown."""
+    r = brief.render_section(ans)
+    if not r["covered"]:
+        return (0, 0, 0)
+    full = len(brief._SENTENCE.split(ans["answer"].strip()))
+    shown = len(brief._SENTENCE.split(r["text"]))
+    return (1, -(full - shown), len(r["text"]))
+
+
+def improve(sym: str, llm: dict, only: set[str] | None, tries: int = 2) -> None:
+    """A section that came back not covered, or had sentences dropped for unquoted figures, is asked again with a
+    reminder to quote every figure; the best-scoring answer is kept (shown under the original question)."""
+    for key, q in brief.questions(sym).items():
+        if only is not None and key not in only:
+            continue
+        best = llm["sections"].get(key)
+        for _ in range(tries):
+            s = score(best)
+            if s[0] and s[1] == 0:
+                break
+            alt = brief._ask(sym, q["question"] + RETRY_NOTE, q["doc_type"])
+            alt["question"] = q["question"]
+            if score(alt) > s:
+                best = alt
+        llm["sections"][key] = best
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--symbols", default=DEMO)
@@ -56,6 +87,7 @@ def main() -> None:
             continue
         t = time.time()
         llm = brief.build_llm_parts(sym, only, cached["llm"] if (cached and only) else None)
+        improve(sym, llm, only)
         brief.cache_put(sym, llm)
         print(f"  {sym:<10} {time.time() - t:5.1f}s  {summary(sym)}")
         time.sleep(a.pace)

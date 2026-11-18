@@ -1,6 +1,6 @@
 """
 The Brief: a one-page summary of a stock where every line is a verified citation or an explicit
-"The filings don't cover this."
+"No quotable answer found."
 
 Sections
   1. Latest quarter at a glance   predetermined question through the normal answer pipeline (sector-aware)
@@ -28,7 +28,9 @@ from pathlib import Path
 from core.config import settings
 
 CACHE_FILE = Path(__file__).resolve().parent.parent / "demo" / "brief_cache.json"
-NOT_COVERED = "The filings don't cover this."
+# Owns the limit: "the filings don't cover this" read as if the company hadn't disclosed it, which was false
+# (e.g. VEDL's figures were in a table FilingLens couldn't quote). The UI adds the explanation underneath.
+NOT_COVERED = "No quotable answer found."
 _lock = threading.Lock()
 
 # Banks and lenders get NIM / asset quality / deposits instead of revenue / EBITDA.
@@ -39,9 +41,12 @@ Q_LENDER = ("In the latest quarter, what were the net interest margin, the gross
             "deposit growth, and the net profit, with the year-on-year change where stated?")
 # Asks for the press-release headline sentences, not table cells: quotes stitched across table cells are not
 # contiguous text, so the verifier (rightly) rejected them and the section showed as not covered.
-Q_OTHER = ("What were the headline results for the latest quarter, as stated in the results press release or "
-           "highlights: revenue, EBITDA and net profit, with their year-on-year change?")
-Q_MGMT = "What guidance or outlook did management give on the latest quarter earnings call?"
+Q_OTHER = ("What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, "
+           "with their year-on-year change? Use the results press release or highlights where available.")
+# Not "guidance" alone: several companies (HDFC Bank among them) say on the call that they don't give guidance,
+# so that question found nothing to quote. Outlook, priorities and risks are discussed on every call.
+Q_MGMT = ("On the latest quarter earnings call, what did management say about the outlook, their priorities "
+          "or the key risks, including any guidance given?")
 
 SECTIONS = [
     {"key": "quarter", "title": "Latest quarter at a glance"},
@@ -52,9 +57,10 @@ SECTIONS = [
 NOTABLE_SENTENCES = 2
 # Prompt v2 (core/answer.py) answers the parts of a multi-metric question the excerpts support and says what
 # they don't, where v1 refuses the whole question when one metric is missing. The Brief asks for four metrics
-# at once, so v1 left sections empty even when revenue and EBITDA were on the page. Citations are verified the
-# same way under both.
-BRIEF_PROMPT = "v2"
+# at once, so v1 left sections empty even when revenue and EBITDA were on the page. v3 adds the table rule
+# (quote one row at a time): ADANIENT and GENSOL had correct figures but stitched table quotes that the verifier
+# rejected. Citations are verified the same way under all versions.
+BRIEF_PROMPT = "v3"
 
 
 def is_lender(symbol: str) -> bool:
@@ -86,11 +92,65 @@ def covered(answer: dict | None) -> bool:
             and not _LEADS_WITH_NO.search(answer.get("answer") or ""))
 
 
+# ------------------------------------------------------------------------------------------ number grounding
+# The verifier proves each quote is on its page, but the answer text around the quotes is the model's. Reviewing
+# the 14 prepared Briefs found figures that were in no quote: a net interest margin with no source, a change
+# the model computed itself (and rounded wrongly), a number "corrected" from an OCR-damaged quote. So: any
+# sentence of a Brief answer containing a number that appears in none of its quotes is dropped. A rule, no AI.
+_MONTH = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?"
+_NOT_FIGURES = re.compile(
+    r"\[c\d+(?:\s*,\s*c\d+)*\]"                                   # citation refs
+    r"|\b(?:q[1-4]|h[12]|9m)?\s*fy\s*'?\s*\d{2,4}\b|\bq[1-4]\b"    # periods: Q2 FY27, FY28, Q2FY27, Q3
+    rf"|\b{_MONTH}\s+\d{{1,2}}(?:st|nd|rd|th)?,?\s+(?:19|20)\d\d"  # September 30, 2026
+    rf"|\b\d{{1,2}}(?:st|nd|rd|th)?\s+{_MONTH},?\s+(?:19|20)\d\d"  # 30 September 2026
+    r"|\b(?:19|20)\d\d\b"                                          # years
+    r"|(?:^|(?<=\s))\d\)",                                         # list markers "1)"
+    re.I)
+_SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z])")
+
+
+# Not inside a word like "O2C" or "FY27"; a unit may follow directly ("4,28,832crs", "720cr").
+_FIGURE = re.compile(r"(?<![A-Za-z\d])\d[\d,]*(?:\.\d+)?(?!\d)")
+
+
+def _figures(text: str) -> set[str]:
+    out = set()
+    for m in _FIGURE.findall(_NOT_FIGURES.sub(" ", text)):
+        n = m.replace(",", "").rstrip(",")
+        n = n.rstrip("0").rstrip(".") if "." in n else n
+        if n and not (n.isdigit() and int(n) < 10):  # single-digit counts ("Tier 1", "3 states") aren't figures
+            out.add(n)
+    return out
+
+
+def ground_numbers(text: str, quotes: list[str]) -> str:
+    """Drop every sentence that states a figure found in none of the quotes."""
+    have = set().union(*(_figures(q) for q in quotes)) if quotes else set()
+    kept = [s for s in _SENTENCE.split(text.strip()) if _figures(s) <= have]
+    return " ".join(kept)
+
+
+# Defects in a filing's own PDF text layer, found by checking prepared Briefs against the page images. The quote
+# is faithful to the text, so the verifier passes it, but the figure is wrong. Matched on the quote, so the rule
+# stops applying if a regenerated answer no longer uses it.
+DAMAGED_QUOTES = {
+    "ZEEL": ("total income [1(a) to 1(c) +2] 2,472",
+             "ZEEL's PDF text reads \"2,472\" for total income where the printed page shows 22,472 (the half-year "
+             "total confirms it), so FilingLens doesn't show these figures."),
+}
+
+
 def render_section(answer: dict | None) -> dict:
-    """What the UI shows for an LLM-backed section: the cited answer, or the not-covered line. Never uncited text."""
+    """What the UI shows for an LLM-backed section: the cited answer, or the not-covered line. Never uncited text,
+    and never a figure that isn't in one of the quotes."""
+    bad = DAMAGED_QUOTES.get((answer or {}).get("symbol", ""))
+    if bad and any(bad[0] in " ".join(c["quote"].split()).lower() for c in answer.get("citations") or []):
+        return {"covered": False, "text": NOT_COVERED, "citations": [], "period_note": None, "note": bad[1]}
     if covered(answer):
-        return {"covered": True, "text": answer["answer"], "citations": answer["citations"],
-                "period_note": answer.get("period_note")}
+        text = ground_numbers(answer["answer"], [c["quote"] for c in answer["citations"]])
+        if text:
+            return {"covered": True, "text": text, "citations": answer["citations"],
+                    "period_note": answer.get("period_note")}
     return {"covered": False, "text": NOT_COVERED, "citations": [], "period_note": None}
 
 

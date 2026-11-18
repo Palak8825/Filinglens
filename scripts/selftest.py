@@ -276,6 +276,9 @@ def main() -> int:
           "citations": [{"document_id": 1, "page": 3, "quote": "forward-looking statements"}]}, False),
         ("answer with a verified citation", {"answer": "Revenue grew 12%.", "abstained": False,
                                              "citations": [{"document_id": 1, "page": 2, "quote": "Revenue grew 12%"}]}, True),
+        ("every figure is outside the quotes (model computed it)",
+         {"answer": "In Q2 FY27 revenue rose 11.7% year on year.", "abstained": False,
+          "citations": [{"document_id": 1, "page": 2, "quote": "TOTAL INCOME 74,525 73,843 66,666"}]}, False),
     ]
     for label, ans, want in brief_cases:
         r = render_section(ans)
@@ -283,6 +286,18 @@ def main() -> int:
         print(f"[{'ok' if ok else 'FAIL'}] brief section, {label}: {'shown with citations' if r['covered'] else r['text']}")
         if not ok:
             fails.append(f"brief section {label}")
+
+    # 10. number grounding: a sentence stating a figure that is in no quote is dropped; dates, periods, digits
+    #     inside words ("O2C") and units stuck to a number ("4,28,832crs") are handled
+    from core.brief import ground_numbers
+
+    g = ground_numbers("On September 30, 2026 (Q2 FY27) total income was ₹74,525 crore. NIM was 8.35%. "
+                       "Deposits were ₹4,28,832 crore in the O2C era.",
+                       ["TOTAL INCOME 74,525 73,843 66,666", "Deposits ₹ 4,28,832crs 10% YoY"])
+    want = "On September 30, 2026 (Q2 FY27) total income was ₹74,525 crore. Deposits were ₹4,28,832 crore in the O2C era."
+    print(f"[{'ok' if g == want else 'FAIL'}] brief keeps only sentences whose figures are quoted")
+    if g != want:
+        fails.append(f"number grounding: {g!r}")
 
     print()
     if fails:

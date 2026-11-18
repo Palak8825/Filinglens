@@ -5,7 +5,8 @@
    "generated_on": "2026-11-18",
    "requested_model": "gemini-3.1-flash-lite",
    "models": [
-    "gemini-3.1-flash-lite"
+    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash-lite"
    ],
    "index_chunks": 2406,
    "llm": {
@@ -13,101 +14,46 @@
      "quarter": {
       "question": "In the latest quarter, what were the net interest margin, the gross NPA ratio, the CASA ratio or deposit growth, and the net profit, with the year-on-year change where stated?",
       "symbol": "YESBANK",
-      "answer": "In Q2FY27, YES Bank reported a Net Interest Margin (NIM) of 2.6%, which represents a year-on-year increase from 2.5% in Q2FY26. The Gross NPA ratio stood at 1.2%, an improvement from 1.6% in the year-ago quarter. The CASA ratio was 30.0%, compared to 33.7% in Q2FY26. Total deposits grew by 19.5% year-on-year. Net profit for the quarter was INR 1,080 crores, reflecting a 65.0% increase year-on-year.",
+      "answer": "In Q2FY27, the bank reported a net interest margin (NIM) of 2.6%, a gross NPA ratio of 1.2%, a CASA ratio of 30.0%, and a net profit of INR 1,080 Crs. The year-on-year changes were as follows: NIM was 2.5% in Q2FY26, the gross NPA ratio was 1.6% in Q2FY26, the CASA ratio was 33.7% in Q2FY26, and net profit grew by 65.0% year-on-year.",
       "confidence": "high",
       "citations": [
        {
-        "ref": "c3",
-        "quote": "NIM% \n2.6%\n2.7% Q1FY27\n2.5% Q2FY26",
+        "ref": "c6",
+        "quote": "NIM 2.6% 2.7% 2.5%",
         "document_id": 21,
         "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
         "doc_type": "results",
-        "page": 9,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c3",
-        "quote": "CASA Ratio\n30.0%\n32.7% Q1FY27\n33.7% Q2FY26",
-        "document_id": 21,
-        "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
-        "doc_type": "results",
-        "page": 9,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c3",
-        "quote": "Deposits\n354,004\n12.2% : Q-o-Q\n19.5% : Y-o-Y",
-        "document_id": 21,
-        "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
-        "doc_type": "results",
-        "page": 9,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c3",
-        "quote": "Profit After Tax\n1,080\n0.8%: Q-o-Q\n65.0% : Y-o-Y",
-        "document_id": 21,
-        "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
-        "doc_type": "results",
-        "page": 9,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       }
-      ],
-      "dropped_citations": 1,
-      "abstained": false,
-      "model": "gemini-3.1-flash-lite",
-      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for YESBANK.",
-      "prompt": "v2",
-      "abstain_source": null,
-      "escalated": false
-     },
-     "management": {
-      "question": "What guidance or outlook did management give on the latest quarter earnings call?",
-      "symbol": "YESBANK",
-      "answer": "Management provided guidance on RIDF reduction, ROA targets, and capital management. For the second half of FY27, the bank expects an RIDF reduction of INR 8,000 crores, split into INR 4,500 crores in Q3 and INR 3,500 crores in Q4. Regarding ROA, management reiterated the target of 1% for the full fiscal year 2027 and expressed confidence in delivering 1% ROA in FY28 with minimal reliance on non-core elements. Additionally, management stated they will continue to evaluate capital actions to ensure the bank remains well-capitalized to support growth objectives.",
-      "confidence": "high",
-      "citations": [
-       {
-        "ref": "c4",
-        "quote": "So on the RIDF, H2 reduction is expected to be about INR 8,000 crores, H2 and that split Q3 as about INR 4,500 crores and Q4 of about, let's say, INR 3,500 crores.",
-        "document_id": 20,
-        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
-        "doc_type": "concall",
-        "page": 13,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c8",
-        "quote": "So, Jayant, what we had said is that fiscal '27 ROA should be a 1% for full year. We are clocking at a 90 basis points for H1.",
-        "document_id": 20,
-        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
-        "doc_type": "concall",
-        "page": 14,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c8",
-        "quote": "So as we go into FY28, I would say our confidence on delivering 1% ROA with lesser and minimal reliance on non-core, I think is something that we can directionally certainly call out.",
-        "document_id": 20,
-        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
-        "doc_type": "concall",
-        "page": 14,
+        "page": 5,
         "verified": true,
         "fiscal_period": "Q2FY27"
        },
        {
         "ref": "c6",
-        "quote": "We do believe that we will continue to evaluate areas of capital actions to make sure that the bank remains well-capitalized in order to fulfill its growth objectives.",
-        "document_id": 20,
-        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
-        "doc_type": "concall",
-        "page": 7,
+        "quote": "Gross NPA (%) 1.2% 1.3% 1.6%",
+        "document_id": 21,
+        "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
+        "doc_type": "results",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "CASA Ratio 30.0% 32.7% 33.7%",
+        "document_id": 21,
+        "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
+        "doc_type": "results",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "Net Profit / (Loss) 1,080 1,071 0.8% 654 65.0%",
+        "document_id": 21,
+        "title": "Press Release and Investor Presentation on the Financial Results for the Quarter (Q2) ended on September 30, 2026",
+        "doc_type": "results",
+        "page": 5,
         "verified": true,
         "fiscal_period": "Q2FY27"
        }
@@ -116,7 +62,72 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for YESBANK.",
-      "prompt": "v2",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "YESBANK",
+      "answer": "Management's priorities remain focused on building sustainable and profitable growth, strengthening customer relationships, maintaining cost discipline, monitoring asset quality, and generating durable returns for shareholders [c3]. Key operational priorities include the 'One Bank' concept to leverage synergies across verticals, driving growth and scale, and capitalizing on cross-referrals from the SMBC relationship [c7]. Regarding risks and outlook, management is focused on capital planning to support growth and address the implications of the Supreme Court judgment concerning Additional Tier 1 bonds [c8]. The bank aims to grow its deposit franchise and advances in a risk-calibrated manner while managing margins and operating efficiency [c8].",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c3",
+        "quote": "directionally, our priorities remain unchanged: building sustainable and Profitable growth, strengthening customer relationships, maintaining cost discipline, monitoring the quality of our assets, and generating durable returns for our shareholders.",
+        "document_id": 20,
+        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 4,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "One of the main initiatives that we are now driving and focusing upon is the One Bank concept where the synergies between all the verticals start working, and we look at how do we meet the end-to-end customer needs of any customer, be it corporate or otherwise. Growth and scale is something which we are looking at very strongly",
+        "document_id": 20,
+        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 7,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "Another significant positive for us would be the cross-referrals that come out of the SMBC relationship, and in this also, we have already started seeing some good traction in the cross-referrals that are happening.",
+        "document_id": 20,
+        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 7,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "Our priorities, to conclude, I must reassure all of you that our priorities remain centered on the fundamentals, that's improving the core Profitability, growing Deposits franchise and Advances in a risk-calibrated manner, managing margins and operating efficiency, and also maintaining Asset Quality.",
+        "document_id": 20,
+        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 19,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "Capital planning will remain an important area of focus as we reassess the implications of the judgment and also support the bank's future growth requirements.",
+        "document_id": 20,
+        "title": "Transcript of Earnings Call for the un-audited Financial Results for the Quarter (Q2) and Half Year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 19,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for YESBANK.",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -125,32 +136,42 @@
      "data\\raw\\YESBANK\\announcement\\2023-09-29_disclosure-under-regulation-30-of-the-sebi-listing-obligatio_ef00f51d.pdf": {
       "question": "What does the filing of 2023-09-29 say about: Resignation of Mr. Harsh Gupta, Country Head Stressed Asset Management (Senior ....?",
       "symbol": "YESBANK",
-      "answer": "Mr. Harsh Gupta, who served as the Country Head of Stressed Asset Management (Senior Management Personnel), resigned from YES Bank for personal and professional reasons. He tendered his resignation on June 16, 2023, and was relieved of his duties at the close of business hours on September 29, 2023.",
+      "answer": "According to the filing dated September 29, 2023, Mr. Harsh Gupta, Country Head Stressed Asset Management (Senior Management Personnel) of the Bank, tendered his resignation via a letter dated June 16, 2023, due to personal and professional reasons. The bank relieved him from his duties with effect from the close of business hours on September 29, 2023.",
       "confidence": "high",
       "citations": [
        {
         "ref": "c1",
-        "quote": "Mr. Harsh Gupta- Country Head Stressed Asset Management (Senior Management Personnel) of the Bank had vide his letter dated June 16, 2023 tendered his resignation on account of personal and professional reasons. The Company has relieved him from the duties w.e.f. close of business hours of September 29, 2023.",
+        "quote": "Mr. Harsh Gupta- \nCountry Head Stressed Asset Management (Senior Management Personnel) of the Bank had \nvide his letter dated June 16, 2023 tendered his resignation on account of personal and \nprofessional reasons. The Company has relieved him from the duties w.e.f. close of business \nhours of September 29, 2023.",
         "document_id": 377,
         "title": "Disclosure under Regulation 30 of the SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015 - Resignation of Mr. Harsh Gupta, Country Head Stressed Asset Management (Senior ....",
         "doc_type": "announcement",
         "page": 1,
         "verified": true,
         "fiscal_period": null
+       },
+       {
+        "ref": "c2",
+        "quote": "Closure of Business hours w.e.f September 29, 2023",
+        "document_id": 377,
+        "title": "Disclosure under Regulation 30 of the SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015 - Resignation of Mr. Harsh Gupta, Country Head Stressed Asset Management (Senior ....",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
        }
       ],
       "dropped_citations": 0,
       "abstained": false,
-      "model": "gemini-3.1-flash-lite",
+      "model": "gemini-3.5-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "data\\raw\\YESBANK\\announcement\\2024-10-11_resignation-of-non-executive-director-nominee-of-ca-basque-i_b50a0f52.pdf": {
       "question": "What does the filing of 2024-10-11 say about: Resignation of Non-Executive Director (Nominee of CA Basque Investments)?",
       "symbol": "YESBANK",
-      "answer": "Mr. Sunil Kaul, a Non-Executive Director and nominee of CA Basque Investments, resigned from the Board of YES Bank Limited and its relevant sub-committees with immediate effect from October 11, 2024. The reason for his resignation was his increasing professional responsibilities and work commitments in India and overseas, which prevented him from dedicating the necessary time and attention to his duties as a Board member.",
+      "answer": "On October 11, 2024, Mr. Sunil Kaul, a Non-Executive Director and nominee of CA Basque Investments, resigned from the Board of YES Bank Limited and its relevant sub-committees. His resignation was effective immediately on October 11, 2024, due to increasing professional responsibilities and work commitments in India and overseas, which limited his ability to dedicate the necessary time and attention to his duties as a Board member.",
       "confidence": "high",
       "citations": [
        {
@@ -172,13 +193,23 @@
         "page": 2,
         "verified": true,
         "fiscal_period": null
+       },
+       {
+        "ref": "c1",
+        "quote": "With immediate effect from Friday, October 11, 2024",
+        "document_id": 390,
+        "title": "Resignation of Non-Executive Director (Nominee of CA Basque Investments)",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
        }
       ],
       "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -196,16 +227,26 @@
    "llm": {
     "sections": {
      "quarter": {
-      "question": "What were the headline results for the latest quarter, as stated in the results press release or highlights: revenue, EBITDA and net profit, with their year-on-year change?",
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
       "symbol": "IDEA",
-      "answer": "For the quarter ended September 30, 2026 (Q2FY27), the company reported revenue of Rs. 11,884 Cr, representing a 6.2% year-on-year growth. EBITDA for the quarter was Rs. 4,981 Cr, a 6.3% year-on-year growth. The reported net loss after tax for the quarter was Rs. 5,975 Cr, which was higher than the Rs. 5,584 Cr loss reported in the corresponding quarter of the previous year (Q2FY26).",
+      "answer": "For the quarter ended September 30, 2026 (Q2FY27), the company reported revenue from operations of Rs. 11,884 Cr, representing a 6.2% year-on-year growth. The EBITDA for the quarter was Rs. 4,981 Cr, a 6.3% year-on-year growth. The reported net loss for the quarter was Rs. 5,975 Cr.",
       "confidence": "high",
       "citations": [
        {
         "ref": "c1",
-        "quote": "Revenue for the quarter was Rs. 11,884 Cr, a YoY growth of 6.2% and 1.7% on a QoQ basis. ... EBITDA for the quarter was Rs. 4,981 Cr, a YoY growth of 6.3%.",
-        "document_id": 580,
-        "title": "Board of Directors at their meeting held on 12 November 2026, interalia, approved the Unaudited Financial Results (Standalone and Consolidated) for the Second Quarter ended 30 September 2026.",
+        "quote": "Revenue for the quarter was Rs. 11,884 Cr, a YoY growth of 6.2% and 1.7% on a QoQ basis.",
+        "document_id": 579,
+        "title": "Board of Directors at their meeting held on 12 November 2026, interalia, approved the Unaudited Financial Results (Standalone and Consolidated) for the second quarter ended 30 September 2026",
+        "doc_type": "results",
+        "page": 16,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c1",
+        "quote": "EBITDA for the quarter was Rs. 4,981 Cr, a YoY growth of 6.3%.",
+        "document_id": 579,
+        "title": "Board of Directors at their meeting held on 12 November 2026, interalia, approved the Unaudited Financial Results (Standalone and Consolidated) for the second quarter ended 30 September 2026",
         "doc_type": "results",
         "page": 16,
         "verified": true,
@@ -214,45 +255,34 @@
        {
         "ref": "c1",
         "quote": "Reported loss for the quarter was higher at Rs. 5,975 Cr due to adverse impact of mark-to-market of treasury assets.",
-        "document_id": 580,
-        "title": "Board of Directors at their meeting held on 12 November 2026, interalia, approved the Unaudited Financial Results (Standalone and Consolidated) for the Second Quarter ended 30 September 2026.",
+        "document_id": 579,
+        "title": "Board of Directors at their meeting held on 12 November 2026, interalia, approved the Unaudited Financial Results (Standalone and Consolidated) for the second quarter ended 30 September 2026",
         "doc_type": "results",
         "page": 16,
         "verified": true,
         "fiscal_period": "Q2FY27"
        }
       ],
-      "dropped_citations": 1,
+      "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for IDEA.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "management": {
-      "question": "What guidance or outlook did management give on the latest quarter earnings call?",
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
       "symbol": "IDEA",
-      "answer": "The provided filings do not contain specific guidance or outlook provided by management during the latest quarter earnings call (Q4 FY '25). The transcripts only state that the discussion may include forward-looking statements to be viewed in conjunction with the risks the company faces, and that management intended to provide key highlights for the quarter and insights on strategic initiatives.",
+      "answer": "Not found in the filings available. The provided transcripts contain the introductory remarks for various earnings calls, which state that discussions may include forward-looking statements to be viewed in conjunction with the risks the company faces, but the specific content regarding management's outlook, priorities, or guidance for the latest quarter is not included in the provided excerpts.",
       "confidence": "high",
-      "citations": [
-       {
-        "ref": "c2",
-        "quote": "I must remind you that the discussion on today's call may include certain forward-looking statements and must be viewed, therefore, in conjunction with the risk that the company faces.",
-        "document_id": 574,
-        "title": "Transcript of the Analyst/Investor Call held on 2 June 2025 relating to Company''s Performance for the fourth quarter and financial year ended 31 March 2025",
-        "doc_type": "concall",
-        "page": 3,
-        "verified": true,
-        "fiscal_period": "Q4FY25"
-       }
-      ],
-      "dropped_citations": 1,
-      "abstained": false,
+      "citations": [],
+      "dropped_citations": 0,
+      "abstained": true,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for IDEA.",
-      "prompt": "v2",
-      "abstain_source": null,
+      "prompt": "v3",
+      "abstain_source": "model",
       "escalated": false
      }
     },
@@ -260,7 +290,7 @@
      "data\\raw\\IDEA\\announcement\\2023-04-20_the-company-has-intimated-the-exchange-regarding-the-resigna_6117c053.pdf": {
       "question": "What does the filing of 2023-04-20 say about: Resignation of Mr. K. K. Maheshwari as non-executive Director of the Company.?",
       "symbol": "IDEA",
-      "answer": "Mr. Krishna Kishore Maheshwari resigned as a Non-Executive Director from the Board of the Company, effective from the close of business hours on 19 April 2023, citing personal reasons.",
+      "answer": "On April 20, 2023, Vodafone Idea Limited announced that Mr. Krishna Kishore Maheshwari resigned as a Non-Executive Director from the Company's Board, effective from the close of business hours on April 19, 2023, citing personal reasons.",
       "confidence": "high",
       "citations": [
        {
@@ -278,7 +308,7 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
@@ -303,7 +333,7 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -321,30 +351,81 @@
    "llm": {
     "sections": {
      "quarter": {
-      "question": "What were the headline results for the latest quarter, as stated in the results press release or highlights: revenue, EBITDA and net profit, with their year-on-year change?",
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
       "symbol": "VEDL",
-      "answer": "The provided filings do not contain a consolidated results press release or highlights summary for the quarter ended September 30, 2026. While segment-level financial data is available in the notes, the documents do not explicitly state the consolidated revenue, EBITDA, or net profit figures, nor their year-on-year changes.",
+      "answer": "The provided filings do not contain a consolidated headline summary for the latest quarter (Q2FY27) including total revenue, EBITDA, and net profit with year-on-year changes. The filings provide segmented financial data for various undertakings (e.g., Aluminium, Oil and Gas, Iron Ore & Steel, and Power) for the quarter ended 30.09.2026 compared to 30.09.2025.",
       "confidence": "high",
-      "citations": [],
+      "citations": [
+       {
+        "ref": "c2",
+        "quote": "Particulars 30.09.2026 30.06.2026 30.09.2025",
+        "document_id": 706,
+        "title": "Please refer the enclosed file.",
+        "doc_type": "results",
+        "page": 16,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c2",
+        "quote": "Total Income - 6,438 16,045 6,438",
+        "document_id": 706,
+        "title": "Please refer the enclosed file.",
+        "doc_type": "results",
+        "page": 16,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "Total Income . 920 2,516 920",
+        "document_id": 706,
+        "title": "Please refer the enclosed file.",
+        "doc_type": "results",
+        "page": 16,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "Total Income . 1,307 2,887 1,307",
+        "document_id": 706,
+        "title": "Please refer the enclosed file.",
+        "doc_type": "results",
+        "page": 17,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "Total income . 108 287 108",
+        "document_id": 706,
+        "title": "Please refer the enclosed file.",
+        "doc_type": "results",
+        "page": 30,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
       "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for VEDL.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "management": {
-      "question": "What guidance or outlook did management give on the latest quarter earnings call?",
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
       "symbol": "VEDL",
-      "answer": "Not found in the filings available. The provided documents contain the transcript filing notification for the second quarter ended September 30, 2026, but do not include the actual content of the earnings call or any management guidance provided therein.",
+      "answer": "Not found in the filings available.",
       "confidence": "high",
       "citations": [],
       "dropped_citations": 0,
       "abstained": true,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for VEDL.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": "model",
       "escalated": false
      }
@@ -353,7 +434,7 @@
      "data\\raw\\VEDL\\announcement\\2023-10-24_outcome-of-board-held-on-october-24-2023-resignation-of-cfo_f1210f48.pdf": {
       "question": "What does the filing of 2023-10-24 say about: Resignation of CFO and KMP?",
       "symbol": "VEDL",
-      "answer": "On October 24, 2023, the Board of Directors of Vedanta Limited took note of the resignation of Ms. Sonal Shrivastava from her position as Chief Financial Officer (CFO) and Key Managerial Personnel (KMP), effective from the close of business hours on October 24, 2023, due to personal reasons.",
+      "answer": "On October 24, 2023, the Board of Directors of Vedanta Limited took note of the resignation of Ms. Sonal Shrivastava from her position as Chief Financial Officer (CFO) and Key Managerial Personnel (KMP), effective from the close of business hours on that same day, due to personal reasons.",
       "confidence": "high",
       "citations": [
        {
@@ -365,22 +446,42 @@
         "page": 1,
         "verified": true,
         "fiscal_period": null
+       },
+       {
+        "ref": "c2",
+        "quote": "I am writing to formally resign from my position as Group CFO at Vedanta Limited effective October 24, 2023, in accordance with the notice period outined in my contract and prior discussions. My decision to resign is due to personal reasons.",
+        "document_id": 665,
+        "title": "Outcome of Board held on October 24, 2023 - Resignation of CFO and KMP",
+        "doc_type": "announcement",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": null
        }
       ],
       "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "data\\raw\\VEDL\\announcement\\2023-08-04_we-wish-to-inform-about-appointment-of-mr-john-slaven-as-ceo_d7807dd7.pdf": {
       "question": "What does the filing of 2023-08-04 say about: Appointment of Mr. John Slaven as CEO - Aluminium Business and designating him as Senior Management Personnel (SMP) at Vedanta Limited effective October 03, 2023; ....?",
       "symbol": "VEDL",
-      "answer": "Vedanta Limited appointed Mr. John Slaven as the CEO of its Aluminium Business, designating him as a Senior Management Personnel (SMP) effective October 03, 2023, for a term of 3.5 years. Mr. Slaven, a global leader with experience at BHP Billiton and BCG, holds a bachelor's degree in Mechanical Engineering and a master’s degree in Business Administration. In this role, he is responsible for leading the Aluminium business's growth strategy, including the development of strategic alliances.",
+      "answer": "Vedanta Limited appointed Mr. John Slaven as the CEO of its Aluminium Business, designating him as a Senior Management Personnel (SMP) effective October 03, 2023, for a term of 3.5 years. In this role, he is responsible for leading the growth and strategy of the Aluminium business, including developing strategic alliances with global partners.",
       "confidence": "high",
       "citations": [
+       {
+        "ref": "c1",
+        "quote": "Appointment of Mr. John Slaven as CEO – Aluminium Business and designating him as Senior Management Personnel (SMP) at Vedanta Limited effective October 03, 2023",
+        "document_id": 666,
+        "title": "We wish to inform about appointment of Mr. John Slaven as CEO - Aluminium Business and designating him as Senior Management Personnel (SMP) at Vedanta Limited effective October 03, 2023; ....",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
        {
         "ref": "c1",
         "quote": "Vedanta Limited has appointed Mr. John Slaven as the Chief Executive Officer for its Aluminium Business and designated him as a Senior Management Personnel (SMP) effective October 03, 2023 for a term of 3.5 years.",
@@ -393,17 +494,7 @@
        },
        {
         "ref": "c1",
-        "quote": "John is a reputed global leader who has also worked in key executive roles in the Australian mining and metals major BHP Billiton and in BCG. He holds a bachelor's degree in Mechanical Engineering from the University of Cape Town and a master’s degree in Business Administration from Harvard Business School.",
-        "document_id": 666,
-        "title": "We wish to inform about appointment of Mr. John Slaven as CEO - Aluminium Business and designating him as Senior Management Personnel (SMP) at Vedanta Limited effective October 03, 2023; ....",
-        "doc_type": "announcement",
-        "page": 1,
-        "verified": true,
-        "fiscal_period": null
-       },
-       {
-        "ref": "c1",
-        "quote": "At Vedanta, John will be leading all aspects of the strategy of Aluminium business’ growth and strategy, including development of strategic alliances with global partners to fast-track business delivery.",
+        "quote": "At Vedanta, John will be leading all aspects of the strategy of Aluminium business’ growth and strategy, including development of strategic alliances with global partners to fast- track business delivery.",
         "document_id": 666,
         "title": "We wish to inform about appointment of Mr. John Slaven as CEO - Aluminium Business and designating him as Senior Management Personnel (SMP) at Vedanta Limited effective October 03, 2023; ....",
         "doc_type": "announcement",
@@ -416,7 +507,7 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -434,34 +525,14 @@
    "llm": {
     "sections": {
      "quarter": {
-      "question": "What were the headline results for the latest quarter, as stated in the results press release or highlights: revenue, EBITDA and net profit, with their year-on-year change?",
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
       "symbol": "RELIANCE",
-      "answer": "For Q2 FY27, Reliance Industries reported a consolidated net profit (Profit After Tax and Share of Profit/Loss of Associates and Joint Ventures) of ₹29,550 crore, representing a 33.8% year-on-year increase. The company achieved its highest-ever quarterly EBITDA of ₹62,409 crore, which reflects a 23.9% year-on-year growth. The filings do not explicitly state a single consolidated revenue figure with a year-on-year percentage change in the highlights, though they report consolidated Revenue from Operations of ₹332,861 crore for the quarter ended September 30, 2026.",
+      "answer": "For the quarter ended September 30, 2026, Reliance Industries Limited reported consolidated Total Income of ₹338,654 crore. The company's consolidated Profit After Tax and Share of Profit/(Loss) of Associates and Joint Ventures was ₹29,550 crore. The provided filings do not explicitly state the consolidated EBITDA or the year-on-year percentage changes for these consolidated headline figures.",
       "confidence": "high",
       "citations": [
        {
-        "ref": "c3",
-        "quote": "Highest-ever EBITDA: ₹62,409 crore (+23.9% YoY)",
-        "document_id": 94,
-        "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
-        "doc_type": "results",
-        "page": 6,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c3",
-        "quote": "Record quarterly PAT: ₹29,550 crore (+33.8% YoY)",
-        "document_id": 94,
-        "title": "Please find attached presentation on the Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026.",
-        "doc_type": "results",
-        "page": 6,
-        "verified": true,
-        "fiscal_period": "Q2FY27"
-       },
-       {
-        "ref": "c4",
-        "quote": "Revenue from Operations 332,861",
+        "ref": "c2",
+        "quote": "Total Income 338,654 318,400",
         "document_id": 96,
         "title": "Please find attached Unaudited Financial Results (Consolidated and Standalone) for the quarter and half year ended September 30, 2026",
         "doc_type": "results",
@@ -470,23 +541,63 @@
         "fiscal_period": "Q2FY27"
        }
       ],
-      "dropped_citations": 0,
+      "dropped_citations": 1,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for RELIANCE.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "management": {
-      "question": "What guidance or outlook did management give on the latest quarter earnings call?",
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
       "symbol": "RELIANCE",
-      "answer": "Management provided the following outlook and guidance: 1) For the retail business, management confirmed they are not changing their directional guidance of doubling EBITDA in two years, noting that investments in infrastructure and customer acquisition are ongoing this year [c8]. 2) For the digital entertainment business, management expressed they are \"very bullish about the rest of the financial year\" [c7]. 3) In the Exploration & Production segment, management expects an uptrend in CBM production to continue and aims to manage the decline in KG-D6 to sustain production [c4]. 4) Regarding the O2C business, management noted that while overcapacity in China is likely to emerge in the next two years, they believe local market dynamics and supply chain constraints will mitigate these challenges [c6].",
+      "answer": "Management expressed a constructive outlook, noting that first-half FY2027 performance tracks toward an annualized EBITDA exceeding ₹80,000 crores [c8]. For the O2C business, management remains opportunistic, planning to swing sourcing between East and West of Suez to optimize crude selection [c3]. Key risks include high uncertainty in global supply chains due to ongoing conflicts in the Middle East and Russia, which have caused significant volatility in material availability and refinery operations [c2, c7]. Regarding retail, management maintains its directional guidance to double EBITDA in two years, focusing on disciplined growth, unit economics, and infrastructure expansion rather than vanity metrics [c5, c6]. New energy earnings are expected to begin contributing in FY2028 [c8].",
       "confidence": "high",
       "citations": [
        {
         "ref": "c8",
-        "quote": "We are not changing ours that is the target that we are going for. There is no reason, at least as of now, for us to change that target. That is what we have given directional guidance, what we are targeting to achieve.",
+        "quote": "we are very, very constructive. So, when you look at the first half of FY 2027 performance, it is in our minds tracking annualized EBITDA well over Rs.80,000 Crores",
+        "document_id": 93,
+        "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "we will be looking at all opportunities kind of swing between what gives us the most opportunistic crude so that we are doing even for the next quarter.",
+        "document_id": 93,
+        "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
+        "doc_type": "concall",
+        "page": 22,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c2",
+        "quote": "the uncertainty is very high and we expect with such uncertainty, low inventories and this is what almost all leaders are saying that we do not see an immediate change in the situation it is going to continue.",
+        "document_id": 93,
+        "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
+        "doc_type": "concall",
+        "page": 22,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "Lot of capacity global capacity was impacted because of the war, two wars actually: Middle East war and the Russia Ukraine.",
+        "document_id": 93,
+        "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
+        "doc_type": "concall",
+        "page": 19,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "We are not changing ours that is the target that we are going for. There is no reason, at least as of now, for us to change that target. That is what we have given directional guidance",
         "document_id": 93,
         "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
         "doc_type": "concall",
@@ -495,31 +606,31 @@
         "fiscal_period": "Q2FY27"
        },
        {
-        "ref": "c7",
-        "quote": "And so, we are very bullish about the rest of the financial year as well.",
+        "ref": "c5",
+        "quote": "The focus will be on unit economics and not just the number of orders, vanity, or the reach vanity metrics. The growth will be disciplined with the economics making sense.",
         "document_id": 93,
         "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
         "doc_type": "concall",
-        "page": 15,
+        "page": 8,
         "verified": true,
         "fiscal_period": "Q2FY27"
        },
        {
-        "ref": "c6",
-        "quote": "Overcapacity in China is likely to emerge as more and more ethylene capacities get started in about next two years, quite a lot of plants are scheduled to start. However, the markets today, these markets have become very local compared to global which they used to be earlier because of supply chain constraints and therefore, we believe that a lot of these new capacity challenges will get mitigated",
+        "ref": "c8",
+        "quote": "And on new energy, I just wanted to say that it is accelerating and we see the benefit, earnings contribution definitely starting in FY 2028.",
         "document_id": 93,
         "title": "Transcript of the discussion on the Unaudited Financial Results (Consolidated and Standalone) of the Company for the quarter and half year ended September 30, 2026, is attached and also ....",
         "doc_type": "concall",
-        "page": 20,
+        "page": 3,
         "verified": true,
         "fiscal_period": "Q2FY27"
        }
       ],
-      "dropped_citations": 1,
+      "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for RELIANCE.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -528,7 +639,7 @@
      "data\\raw\\RELIANCE\\announcement\\2023-08-28_the-board-of-directors-accepted-the-resignation-of-nita-m-am_3e84c13c.pdf": {
       "question": "What does the filing of 2023-08-28 say about: The Board of Directors accepted the resignation of Nita M. Ambani from the Board respecting her decision to devote more of her time to the Reliance Foundation of which she is the Founder ....?",
       "symbol": "RELIANCE",
-      "answer": "The Board of Directors accepted Nita M. Ambani's resignation from the Board, respecting her decision to dedicate more of her time and energy to guiding the Reliance Foundation, where she serves as Founder Chairperson, to achieve greater societal impact for India. Her resignation took effect at the end of business hours on August 28, 2023.",
+      "answer": "The Board of Directors accepted Nita M. Ambani's resignation, respecting her decision to dedicate her time and energy to guiding the Reliance Foundation, where she serves as Founder Chairperson, to achieve greater societal impact. Her resignation took effect at the end of business hours on August 28, 2023. Additionally, she will continue to attend RIL Board meetings as a permanent invitee to ensure the company continues to benefit from her advice.",
       "confidence": "high",
       "citations": [
        {
@@ -550,13 +661,23 @@
         "page": 5,
         "verified": true,
         "fiscal_period": null
+       },
+       {
+        "ref": "c7",
+        "quote": "As the Chairperson of Reliance Foundation, Nita Ambani will attend all the RIL Board meetings as a permanent invitee to the Board so that the Company can continue to benefit from her advice.",
+        "document_id": 42,
+        "title": "The Board of Directors accepted the resignation of Nita M. Ambani from the Board respecting her decision to devote more of her time to the Reliance Foundation of which she is the Founder ....",
+        "doc_type": "announcement",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": null
        }
       ],
       "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -574,14 +695,24 @@
    "llm": {
     "sections": {
      "quarter": {
-      "question": "What were the headline results for the latest quarter, as stated in the results press release or highlights: revenue, EBITDA and net profit, with their year-on-year change?",
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
       "symbol": "PAYTM",
-      "answer": "For the quarter ended September 30, 2026, One 97 Communications Limited reported standalone revenue from operations of INR 1,199 crores, compared to INR 1,681 crores in the quarter ended September 30, 2025, representing a year-on-year decrease of approximately 28.7%. The standalone profit before exceptional items and tax was INR 191 crores, compared to INR 131 crores in the same quarter of the previous year. The provided filings do not explicitly state a consolidated EBITDA figure or a year-on-year change for net profit.",
-      "confidence": "medium",
+      "answer": "For the quarter ended September 30, 2026, the company reported standalone total income of ₹1,332 crores, compared to ₹1,863 crores for the quarter ended September 30, 2025. The standalone profit for the period was ₹169 crores for the quarter ended September 30, 2026, compared to a loss of ₹(264) crores for the quarter ended September 30, 2025. The provided filings do not explicitly state an EBITDA figure.",
+      "confidence": "high",
       "citations": [
        {
-        "ref": "c7",
-        "quote": "Profit/(Loss) before exceptional items and tax 191 131",
+        "ref": "c4",
+        "quote": "Total income 1332 1203 1863",
+        "document_id": 462,
+        "title": "Unaudited Standalone and Consolidated Financial Results for the quarter and half year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 15,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "Profit/(Loss) for the period/ year 169 185 (264)",
         "document_id": 462,
         "title": "Unaudited Standalone and Consolidated Financial Results for the quarter and half year ended September 30, 2026",
         "doc_type": "results",
@@ -594,42 +725,72 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for PAYTM.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "management": {
-      "question": "What guidance or outlook did management give on the latest quarter earnings call?",
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
       "symbol": "PAYTM",
-      "answer": "During the Q2 FY 2027 earnings call, management provided the following outlook and guidance: 1) Regarding free cash flow and capex, management stated they will provide more guidance in the next quarter [c7]. 2) Regarding user growth, CEO Vijay Shekhar Sharma expressed a desire for the current monthly transacting user growth rate to sustain for several quarters and stated a target to achieve one-third market share in the business [c8]. 3) Regarding a specific regulatory framework, management noted they were reacting to the framework as it currently exists, stating their \"best guess\" is that it will not change, though they acknowledged they do not control it [c6].",
+      "answer": "Management highlighted strong growth momentum, noting two consecutive quarters of 28% revenue growth (or in the 30s excluding PIDF). Key priorities include increasing monthly transacting users, with a target of achieving one-third market share in the business. Regarding outlook, management expressed optimism for the lending business as it emerges from the credit cycle. Risks discussed include regulatory frameworks, specifically regarding upcoming implementation changes, and the inherent uncertainties associated with forward-looking statements.",
       "confidence": "high",
       "citations": [
        {
-        "ref": "c7",
-        "quote": "Free cash flow also, where there is this component of capex, which we'll give more guidance \non next quarter.",
+        "ref": "c8",
+        "quote": "we have now seen two consistent quarters of 28% growth. And while we stick by the reported numbers, if you exclude PIDF from the previous year's same quarters, this number is in the 30s.",
         "document_id": 461,
         "title": "Transcript of the earnings conference call conducted on October 27, 2026.",
         "doc_type": "concall",
-        "page": 22,
+        "page": 7,
         "verified": true,
         "fiscal_period": "Q2FY27"
        },
        {
         "ref": "c6",
-        "quote": "My best \nguess is that the framework will not change right now, but I could be wrong, obviously I don't control it, but we \nare reacting to the framework as it exists and is, quote, final.",
+        "quote": "our target is to take one-third market share in this business. There is nothing less than that we must settle for.",
+        "document_id": 461,
+        "title": "Transcript of the earnings conference call conducted on October 27, 2026.",
+        "doc_type": "concall",
+        "page": 18,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "we are seeing very healthy tailwinds in lending business. Personal loans, as we come out of the credit cycle, which was our expectation four or five quarters ago",
+        "document_id": 461,
+        "title": "Transcript of the earnings conference call conducted on October 27, 2026.",
+        "doc_type": "concall",
+        "page": 7,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "My best guess is that the framework will not change right now, but I could be wrong, obviously I don't control it, but we are reacting to the framework as it exists and is, quote, final.",
         "document_id": 461,
         "title": "Transcript of the earnings conference call conducted on October 27, 2026.",
         "doc_type": "concall",
         "page": 19,
         "verified": true,
         "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c1",
+        "quote": "Forward-looking statements and financial projections are based on the opinions and estimates of management at the date the statements are made and are subject to a variety of risks and uncertainties",
+        "document_id": 461,
+        "title": "Transcript of the earnings conference call conducted on October 27, 2026.",
+        "doc_type": "concall",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
        }
       ],
-      "dropped_citations": 1,
+      "dropped_citations": 0,
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for PAYTM.",
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }
@@ -638,7 +799,7 @@
      "data\\raw\\PAYTM\\announcement\\2025-01-27_intimation-of-resignation-of-mr-nakul-jain-managing-director_df9ea512.pdf": {
       "question": "What does the filing of 2025-01-27 say about: Intimation of resignation of Mr. Nakul Jain, Managing Director and CEO of Paytm Payments Services Limited, our wholly owned material subsidiary company?",
       "symbol": "PAYTM",
-      "answer": "Mr. Nakul Jain, the Managing Director and CEO of Paytm Payments Services Limited (PPSL), a wholly owned material subsidiary of the company, resigned from his position to pursue an entrepreneurial journey. His resignation is effective from the close of business hours on March 31, 2025, or an earlier mutually agreed date. PPSL is currently identifying a replacement and will announce the appointment in due course.",
+      "answer": "On January 27, 2025, Paytm announced that Mr. Nakul Jain, the Managing Director and CEO of its wholly owned material subsidiary, Paytm Payments Services Limited (PPSL), resigned to pursue an entrepreneurial journey. His resignation is effective from the close of business hours on March 31, 2025, or an earlier mutually agreed date. PPSL is currently identifying a replacement.",
       "confidence": "high",
       "citations": [
        {
@@ -666,19 +827,29 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      },
      "data\\raw\\PAYTM\\announcement\\2023-08-07_change-in-statutory-auditors-in-material-subsidiary-of-the-c_81e0dc41.pdf": {
       "question": "What does the filing of 2023-08-07 say about: Change in Statutory Auditors in Material Subsidiary of the Company i.e., Paytm Payments Services Limited?",
       "symbol": "PAYTM",
-      "answer": "On August 07, 2023, M/s. Price Waterhouse Chartered Accountants LLP resigned as the Statutory Auditor of the material subsidiary, Paytm Payments Services Limited (PPSL), effective from that same date. The auditors did not raise any concerns or issues. Subsequently, M/s. S.R. Batliboi & Associates LLP was appointed as the new Statutory Auditor of PPSL, also effective from August 07, 2023.",
+      "answer": "On August 07, 2023, the company announced that M/s. Price Waterhouse Chartered Accountants LLP resigned as the Statutory Auditor of its material subsidiary, Paytm Payments Services Limited (PPSL), effective August 07, 2023. The auditors did not raise any concerns or issues. Subsequently, M/s. S.R. Batliboi & Associates LLP was appointed as the new Statutory Auditor of PPSL, also effective August 07, 2023.",
       "confidence": "high",
       "citations": [
        {
         "ref": "c1",
-        "quote": "M/s. Price Waterhouse Chartered Accountants LLP (Firm Registration No. 012754N/N500016) Statutory Auditors of material subsidiary i.e. Paytm Payments Services Limited (“PPSL”) have resigned with effect from August 07, 2023. The Statutory Auditors have not raised any concern or issue.",
+        "quote": "M/s. Price Waterhouse Chartered Accountants LLP (Firm Registration No. 012754N/N500016) Statutory Auditors of material subsidiary i.e. Paytm Payments Services Limited (“PPSL”) have resigned with effect from August 07, 2023.",
+        "document_id": 412,
+        "title": "Change in Statutory Auditors in Material Subsidiary of the Company i.e., Paytm Payments Services Limited",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c1",
+        "quote": "The Statutory Auditors have not raised any concern or issue.",
         "document_id": 412,
         "title": "Change in Statutory Auditors in Material Subsidiary of the Company i.e., Paytm Payments Services Limited",
         "doc_type": "announcement",
@@ -701,7 +872,1677 @@
       "abstained": false,
       "model": "gemini-3.1-flash-lite",
       "period_note": null,
-      "prompt": "v2",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "ADANIENT": {
+   "symbol": "ADANIENT",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 2690,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
+      "symbol": "ADANIENT",
+      "answer": "For the quarter ended September 30, 2026 (Q2 FY27), Adani Enterprises reported total income of Rs. 38,023 crore (up 74% YoY), EBITDA of Rs. 6,316 crore (up 62% YoY), and a profit after tax (attributable to owners) of Rs. 1,492 crore (down 55% YoY).",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c5",
+        "quote": "Total Income 21,844 38,023 74% 44,281 71,569 62%",
+        "document_id": 634,
+        "title": "Submission of Revised Media Release for unaudited financial results for the quarter and half year ended on September 30, 2026",
+        "doc_type": "results",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "EBITDA 3,902 6,316 62% 7,688 11,958 56%",
+        "document_id": 634,
+        "title": "Submission of Revised Media Release for unaudited financial results for the quarter and half year ended on September 30, 2026",
+        "doc_type": "results",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "Profit After Tax1 3,304 1,492 (55%) 4,189 332 (92%)",
+        "document_id": 634,
+        "title": "Submission of Revised Media Release for unaudited financial results for the quarter and half year ended on September 30, 2026",
+        "doc_type": "results",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for ADANIENT.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "ADANIENT",
+      "answer": "Management stated that the company is transitioning from a build-out phase to a value realization phase. Regarding capital expenditure, the company expects a run rate of approximately INR35,000 crores to INR40,000 crores over the next couple of years, with heavy investment in airports, data centers, and PVC. For data centers, the company expects an operational capacity of 120 to 150 MW by the end of FY27, ramping up to approximately 500 MW over the next 12 to 18 months. Management refrained from providing specific financial guidance for FY27 and FY28. Key risks mentioned include potential variability in revenue numbers due to Ind AS accounting for service concessions and the impact of commodity price inflation on data center capex.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "AEL's current fiscal results will reflect value unlock from investments made over the last few years and moving progressively from build-out phase to value realization phase.",
+        "document_id": 930,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; linked from BSE filing of 3 Nov 2026)",
+        "doc_type": "concall",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "We expect to do capex at a run rate of around INR40,000 crores. So, we may be somewhere in the range of INR35,000 crores to INR40,000 crores, which is the rate we expect to continue over the next couple of years, and the heavy lifting will be done by airports, data center and PVC.",
+        "document_id": 930,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; linked from BSE filing of 3 Nov 2026)",
+        "doc_type": "concall",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c2",
+        "quote": "We are expecting operational capacity in the range of 120 to 150 MW when we exit FY27, the current fiscal. And over the next 12 to 18 months, we will significantly ramp up all the remaining projects, and we should be expecting close to 500 MW of operational capacity",
+        "document_id": 930,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; linked from BSE filing of 3 Nov 2026)",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "Biplab, we refrain from giving any specific financial guidance. So, my apologies for not being able to answer this.",
+        "document_id": 930,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; linked from BSE filing of 3 Nov 2026)",
+        "doc_type": "concall",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "But when you compare year-on-year, because of how the Ind AS accounting works for the service concession accounting, you will see some kind of variability in the revenue numbers.",
+        "document_id": 930,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; linked from BSE filing of 3 Nov 2026)",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "So, there might be a risk that capex per megawatt would be going above what we earlier thought maybe 6 to 7 months back.",
+        "document_id": 930,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; linked from BSE filing of 3 Nov 2026)",
+        "doc_type": "concall",
+        "page": 12,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for ADANIENT.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {}
+   }
+  },
+  "GENSOL": {
+   "symbol": "GENSOL",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 508,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
+      "symbol": "GENSOL",
+      "answer": "For the quarter ended December 31, 2024 (Q3 FY25), the consolidated financial results were as follows: Total Revenue was ₹345 crores (up 30% YoY), EBITDA was ₹63 crores (up 18% YoY), and Net Profit (PAT) was ₹18 crores (up 6% YoY).",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c2",
+        "quote": "Particulars (₹ crores) Q3FY25 Q3FY24 YoY (%)",
+        "document_id": 790,
+        "title": "Presentation on the unaudited standalone and consolidated financial results for the quarter and nine months ended on December 31, 2024, ahead of the Q3/FY25 earnings call to be held on ....",
+        "doc_type": "results",
+        "page": 28,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       },
+       {
+        "ref": "c2",
+        "quote": "Total Revenue* 345 266 30%",
+        "document_id": 790,
+        "title": "Presentation on the unaudited standalone and consolidated financial results for the quarter and nine months ended on December 31, 2024, ahead of the Q3/FY25 earnings call to be held on ....",
+        "doc_type": "results",
+        "page": 28,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       },
+       {
+        "ref": "c2",
+        "quote": "EBITDA* 63 53 18%",
+        "document_id": 790,
+        "title": "Presentation on the unaudited standalone and consolidated financial results for the quarter and nine months ended on December 31, 2024, ahead of the Q3/FY25 earnings call to be held on ....",
+        "doc_type": "results",
+        "page": 28,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       },
+       {
+        "ref": "c2",
+        "quote": "PAT 18 17 6%",
+        "document_id": 790,
+        "title": "Presentation on the unaudited standalone and consolidated financial results for the quarter and nine months ended on December 31, 2024, ahead of the Q3/FY25 earnings call to be held on ....",
+        "doc_type": "results",
+        "page": 28,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q3 FY25, the latest filed for GENSOL.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "GENSOL",
+      "answer": "Management acknowledged that the company is behind its initial annual revenue guidance of ₹2,000 crores due to execution delays caused by extended rainfall in October and the failure of customers to provide land for projects in time. While management refrained from providing specific numerical guidance for Q4, they noted that Q4 is typically the heaviest quarter for the renewable energy industry and expects it to be a good quarter. Regarding priorities, the company is focused on delivering its ₹7,000 crore order book, of which 80% is on a turnkey basis, which management expects will drive better margins in future quarters as turnkey projects play a larger role in execution. Management also highlighted a 42% year-on-year growth for the first 9 months of FY25 and expressed a commitment to maintaining growth higher than the industry average.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c4",
+        "quote": "the reason that we would have had extended rainfall in certain parts of the countries where we were having our projects, so we were not able to execute on ground. And secondly, in some of the large projects that we are executing, the land from the customers have not been able to transfer to us in this quarter.",
+        "document_id": 789,
+        "title": "Please find attachment",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       },
+       {
+        "ref": "c2",
+        "quote": "it is typical of the entire renewable energy industry that the quarter 4 is the heaviest quarter, which is there, and it will be a good quarter for us, too. But I'm kind of refraining myself from sharing exact numbers what we would or sharing tentative numbers of what we will be able to do in this quarter.",
+        "document_id": 789,
+        "title": "Please find attachment",
+        "doc_type": "concall",
+        "page": 9,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       },
+       {
+        "ref": "c8",
+        "quote": "80% of our INR 7,000 crores order book comes from turnkey and only 20% comes from balance of system. So, we have very strong turnkey order book, which will mean that we will be able to do good margins.",
+        "document_id": 789,
+        "title": "Please find attachment",
+        "doc_type": "concall",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       },
+       {
+        "ref": "c4",
+        "quote": "I'm very proud that Gensol is achieving a 42% 9-month growth, and we will continue to be in that range.",
+        "document_id": 789,
+        "title": "Please find attachment",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q3FY25"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q3 FY25, the latest filed for GENSOL.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\GENSOL\\announcement\\2025-04-30_please-find-attached_71f01e8c.pdf": {
+      "question": "What does the filing of 2025-04-30 say about: Mr. Rajesh Parmar has tendered his resignation vide his resignation letter dated 29.04.2025 from the post of Company Secretary and Compliance Officer of the Company due to recent developments…?",
+      "symbol": "GENSOL",
+      "answer": "The filing dated April 30, 2025, confirms that Mr. Rajesh Parmar resigned from his position as Company Secretary and Compliance Officer of the Company, effective April 29, 2025. The reason provided for his resignation is recent developments, specifically including the Interim Order issued by SEBI on April 15, 2025.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c6",
+        "quote": "Mr. Rajesh Parmar (Membership No. A39557) has tendered his resignation vide his resignation letter dated 29.04.2025 from the post of Company Secretary and Compliance Officer of the Company due to recent developments including the Interim Order issued by SEBI dated April 15, 2025.",
+        "document_id": 803,
+        "title": "Please find attached",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c1",
+        "quote": "Date of Cessation\nApril 29, 2025",
+        "document_id": 803,
+        "title": "Please find attached",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\GENSOL\\announcement\\2025-07-23_mr-keshav-khaneja-was-appointed-as-irp-by-hon-ble-nclt-divsi_e0104ac0.pdf": {
+      "question": "What does the filing of 2025-07-23 say about: Mr. Keshav Khaneja was Appointed as IRP by Hon'ble NCLT Divsion bench Ahmedabad vide order dated 13.06.2025 in Indian Renewable Energy Development Agency Limited( IREDA )versus Gensol ....?",
+      "symbol": "GENSOL",
+      "answer": "The Hon'ble NCLT Ahmedabad Division Bench, in its order dated 13.06.2025 regarding the petition filed by Indian Renewable Energy Development Agency Limited (IREDA) against Gensol Engineering Limited, appointed Mr. Keshav Khaneja as the Interim Resolution Professional (IRP). This appointment was made under section 13(1)(c) of the Insolvency and Bankruptcy Code, 2016, following the identification of a conflict of interest concerning the previously proposed IRP, Mr. Pulkit Gupta.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c3",
+        "quote": "IN THE NATIONAL COMPANY LAW TRIBUNAL AHMEDABAD DIVISION BENCH COURT -1 ITEM No.301 C.P.(IB)/195(AHM)2025 Order under Section 7 IBC IN THE MATTER OF: Indian Renewable Energy Development Agency Limited ... Applicant Vis Gensol Engineering Limited ... Respondent Order delivered on: 13/06/2025",
+        "document_id": 800,
+        "title": "Mr. Keshav Khaneja was Appointed as IRP by Hon''ble NCLT Divsion bench Ahmedabad vide order dated 13.06.2025 in Indian Renewable Energy Development Agency Limited( IREDA )versus Gensol ....",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c6",
+        "quote": "We appoint Mr. Keshav Khaneja having Registration No. IBBI/IPA-002/IP-N01131/2021-2022/13759 (e- mail: khanejakes@gmail.com), Mobile No.72487- 77752) under section 13 (1)(c) of the Code to act as Interim Resolution Professional (IRP) from the IBBI Panel List",
+        "document_id": 800,
+        "title": "Mr. Keshav Khaneja was Appointed as IRP by Hon''ble NCLT Divsion bench Ahmedabad vide order dated 13.06.2025 in Indian Renewable Energy Development Agency Limited( IREDA )versus Gensol ....",
+        "doc_type": "announcement",
+        "page": 26,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c2",
+        "quote": "However, the conflict of interest concerning Mr. Pulkit Gupta necessitates the appointment of an alternative IRP.",
+        "document_id": 800,
+        "title": "Mr. Keshav Khaneja was Appointed as IRP by Hon''ble NCLT Divsion bench Ahmedabad vide order dated 13.06.2025 in Indian Renewable Energy Development Agency Limited( IREDA )versus Gensol ....",
+        "doc_type": "announcement",
+        "page": 23,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "HDFCBANK": {
+   "symbol": "HDFCBANK",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash-lite"
+   ],
+   "index_chunks": 1601,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "In the latest quarter, what were the net interest margin, the gross NPA ratio, the CASA ratio or deposit growth, and the net profit, with the year-on-year change where stated?",
+      "symbol": "HDFCBANK",
+      "answer": "In the latest quarter ended September 30, 2026, the net interest margin was at 3.16% on total assets, and 3.32% based on interest earning assets. The gross NPA ratio (% of Gross NPAs to Gross Advances) was 1.11%. The CASA deposits grew by 10.8% and comprised 31.6% of total deposits, while average deposits grew by 16.8% over the September 2025 quarter. Profit after tax (PAT) for the quarter was at ₹ 195.1 billion, a growth of 4.7% over the quarter ended September 30, 2025.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c4",
+        "quote": "Net interest margin was at 3.16% on total assets, and 3.32% based on interest earning assets.",
+        "document_id": 231,
+        "title": "Approval of unaudited standalone and consolidated financial results of the Bank for the quarter and half-year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 19,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "(c) % of Gross NPAs to Gross Advances \n1.11%",
+        "document_id": 231,
+        "title": "Approval of unaudited standalone and consolidated financial results of the Bank for the quarter and half-year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c1",
+        "quote": "CASA deposits grew by 10.8% with savings account \ndeposits at ₹ 7,163 billion and current account deposits at ₹ 3,356 billion. Time deposits \nwere at ₹ 22,755 billion as of September 30, 2026, an increase of 22.8% over the \ncorresponding quarter of the previous year, resulting in CASA deposits comprising 31.6% \nof total deposits as of September 30, 2026.",
+        "document_id": 231,
+        "title": "Approval of unaudited standalone and consolidated financial results of the Bank for the quarter and half-year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 20,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c1",
+        "quote": "The Bank's average deposits were ₹ 31,664 billion for the September 2026 quarter, a \ngrowth of 16.8% over ₹ 27,105 billion for the September 2025 quarter",
+        "document_id": 231,
+        "title": "Approval of unaudited standalone and consolidated financial results of the Bank for the quarter and half-year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 20,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c1",
+        "quote": "Profit after tax (PAT) for the quarter was at ₹ 195.1 billion, a growth of 4.7% over the \nquarter ended September 30, 2025.",
+        "document_id": 231,
+        "title": "Approval of unaudited standalone and consolidated financial results of the Bank for the quarter and half-year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 20,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.5-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for HDFCBANK.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "HDFCBANK",
+      "answer": "Management's outlook and priorities focus on enhancing retail deposit growth, leveraging an expanded distribution network, and integrating AI into operations. Key priorities include engaging with stakeholders to refine organizational strategy and maintaining a focus on retail and MSME assets. Regarding risks, management noted that while monsoon shortfalls occurred, the agri-book remains stable with no signs of deterioration. Additionally, management cautioned against judging liability metrics based on single-quarter phenomena, citing one-off outflows as a factor impacting LCR ratios.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c6",
+        "quote": "the kind of rigor that the institution is undertaking in terms of building better customer interactions and engagement and trying to step up new account acquisitions. The fact of the matter is a lot of our distribution, which has doubled over the last 5 years, will start to mature as we move to the next 5 years.",
+        "document_id": 230,
+        "title": "Transcript of Earnings Call in relation to the unaudited standalone and consolidated financial results of the HDFC Bank Limited for the quarter and half-year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "On technology, I would like to spend some time. HDFC Bank has always incorporated cutting-edge technologies into its operations, and we are now bringing AI into the heart of how the bank operates.",
+        "document_id": 230,
+        "title": "Transcript of Earnings Call in relation to the unaudited standalone and consolidated financial results of the HDFC Bank Limited for the quarter and half-year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 4,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "in the near term, I'll engage with the regulators, customers, shareholders, and all other stakeholders to gather insights. And that will be the key input into our organizational priorities.",
+        "document_id": 230,
+        "title": "Transcript of Earnings Call in relation to the unaudited standalone and consolidated financial results of the HDFC Bank Limited for the quarter and half-year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 7,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "As of September, compared to June, our gross NPA on agri has remained largely constant. We've not seen any signs of concern or deterioration. It has held steady.",
+        "document_id": 230,
+        "title": "Transcript of Earnings Call in relation to the unaudited standalone and consolidated financial results of the HDFC Bank Limited for the quarter and half-year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 7,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "don't go by a quarter phenomenon, Nitin. The fact of the matter is, I alluded to it as well, whilst the underlying momentum is very encouraging, unfortunately, you had some large, one-off outflows, which is not within our control",
+        "document_id": 230,
+        "title": "Transcript of Earnings Call in relation to the unaudited standalone and consolidated financial results of the HDFC Bank Limited for the quarter and half-year ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 15,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for HDFCBANK.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\HDFCBANK\\announcement\\2026-03-19_continuation-to-the-intimation-made-in-relation-to-resignati_5d4e23d8.pdf": {
+      "question": "What does the filing of 2026-03-19 say about: Continuation to the intimation made in relation to resignation of Mr. Atanu Chakraborty as a Part-time Chairman and Independent Director of HDFC Bank Limited?",
+      "symbol": "HDFCBANK",
+      "answer": "In the filing dated March 19, 2026, HDFC Bank clarified that while Mr. Atanu Chakraborty's resignation letter was dated March 17, 2026, it was received by the Bank on March 18, 2026, at 15:17 hours (IST).",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "we wish to confirm that whilst the resignation letter of Mr. Atanu Chakraborty (annexed to the said intimation) was dated March 17, 2026, the same was received by the Bank on March 18, 2026 at 15.17 hours (IST).",
+        "document_id": 249,
+        "title": "Continuation to the intimation made in relation to resignation of Mr. Atanu Chakraborty as a Part-time Chairman and Independent Director of HDFC Bank Limited",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\HDFCBANK\\announcement\\2024-06-27_disclosure-under-regulation-30-of-sebi-listing-regulations_eb3982fc.pdf": {
+      "question": "What does the filing of 2024-06-27 say about: We wish to inform you that today, Mr. Santosh Haldankar, Company Secretary (Key Managerial Personnel), of HDFC Bank Limited (“Bank”), has tendered his resignation to pursue career opportunities…?",
+      "symbol": "HDFCBANK",
+      "answer": "On June 27, 2024, HDFC Bank announced that Mr. Santosh Haldankar, the Company Secretary and Key Managerial Personnel, had tendered his resignation to pursue career opportunities outside the Bank. The Bank accepted his resignation, which became effective at the close of business hours on July 20, 2024.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c5",
+        "quote": "We wish to inform you that today, Mr. Santosh Haldankar, Company Secretary (Key Managerial Personnel), of HDFC Bank Limited (“Bank”), has tendered his resignation to pursue career opportunities outside the Bank, and the same has been accepted by the Bank. The effective date of his resignation shall be July 20, 2024 (close of business hours).",
+        "document_id": 204,
+        "title": "Disclosure under Regulation 30 of SEBI Listing Regulations",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "IIFL": {
+   "symbol": "IIFL",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 2902,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "In the latest quarter, what were the net interest margin, the gross NPA ratio, the CASA ratio or deposit growth, and the net profit, with the year-on-year change where stated?",
+      "symbol": "IIFL",
+      "answer": "For the quarter ended September 30, 2026 (Q2FY27), IIFL Finance reported a net profit (PAT pre-NCI) of ₹805.0 crore, representing a 93% year-on-year growth. The gross NPA ratio was 1.5% (a 66 bps year-on-year improvement). The filings do not provide a net interest margin or CASA ratio/deposit growth. Note that while some documents report GNPA as 1.48% and NNPA as 0.87%, the company's official press release states GNPA at 1.5% and NNPA at 0.9%.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c5",
+        "quote": "Profit after tax (pre-NCI2) 805.0 417.9 93%",
+        "document_id": 879,
+        "title": "IIFL Finance Limited has informed the Exchanges regarding Press Release for Q2FY27 Financial Results.",
+        "doc_type": "results",
+        "page": 4,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "GNPA 1.5% 2.1% (66 bps)",
+        "document_id": 879,
+        "title": "IIFL Finance Limited has informed the Exchanges regarding Press Release for Q2FY27 Financial Results.",
+        "doc_type": "results",
+        "page": 4,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "Gross NPA at 1.5% (down 7 bps QoQ)",
+        "document_id": 879,
+        "title": "IIFL Finance Limited has informed the Exchanges regarding Press Release for Q2FY27 Financial Results.",
+        "doc_type": "results",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "Net NPA at 0.9% (up 5 bps QoQ)",
+        "document_id": 879,
+        "title": "IIFL Finance Limited has informed the Exchanges regarding Press Release for Q2FY27 Financial Results.",
+        "doc_type": "results",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "a) GNPA °/c, 1.48%",
+        "document_id": 880,
+        "title": "IIFL Finance LImited has informed the Exchanges regarding Unaudited Financial Results for the quarter and half year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "b) NNPA % 0.87%",
+        "document_id": 880,
+        "title": "IIFL Finance LImited has informed the Exchanges regarding Unaudited Financial Results for the quarter and half year ended September 30, 2026",
+        "doc_type": "results",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for IIFL.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "IIFL",
+      "answer": "Management views the macroeconomic environment as supportive of retail credit in India, though it notes uncertainties such as global volatility, oil/commodity price fluctuations, and tight funding conditions. Consequently, the company's strategy prioritizes disciplined growth, maintaining adequate liquidity, and strict asset quality control. Regarding guidance, management expects to meet its annual growth targets for the home finance business, anticipating accelerated growth in the core home loan segment during the second half of the year. The target for home finance ROE is 16% to 18% for the next year, with expectations of continuous quarter-over-quarter improvement.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c5",
+        "quote": "Macro backdrop remains very supportive of retail credit in India, but it is not without uncertainty. While domestic demand is steady, formal credit penetration in small towns and areas where we operate in is still very low. At the same time, global uncertainty, volatile oil prices or commodity prices and tight funding conditions means that balance sheet strength, asset quality, diversified funding and liquidity matter most than ever before.",
+        "document_id": 878,
+        "title": "IIFL Finance Limited informed the exchange regarding Transcript of Earning Conference call for Q2 FY27.",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "And in this environment, we have chosen to grow with discipline, keeping adequate liquidity and strict control on asset quality.",
+        "document_id": 878,
+        "title": "IIFL Finance Limited informed the exchange regarding Transcript of Earning Conference call for Q2 FY27.",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "So I think as you are right, then the second half, we should see accelerated growth in the core home loan segment as well. But I think on the year basis, we should be able to meet our guidance. And ROE is 16% to 18% for home finance target is for next year. But it will be a continuous improvement quarter after quarter.",
+        "document_id": 878,
+        "title": "IIFL Finance Limited informed the exchange regarding Transcript of Earning Conference call for Q2 FY27.",
+        "doc_type": "concall",
+        "page": 11,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for IIFL.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\IIFL\\announcement\\2024-09-14_appointment-of-credit-rating-agency_ad360f27.pdf": {
+      "question": "What does the filing of 2024-09-14 say about: Appointment of Credit Rating Agency?",
+      "symbol": "IIFL",
+      "answer": "On September 14, 2024, IIFL Finance Limited announced the appointment of CRISIL Ratings Limited as the Credit Rating Agency to assign a credit rating for its Unsecured Listed Redeemable Subordinated Non-Convertible Debentures – Series U03 (ISIN-INE866I08246). The rating assigned by CRISIL for this instrument is 'CRISIL AA/Watch Developing'.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "we hereby inform you that the CRISIL Ratings Limited (“CRISIL”), the Credit Rating Agency, has been appointed to assign credit rating for the Unsecured Listed Redeemable Subordinated Non-Convertible Debentures – Series U03 (ISIN-INE866I08246).",
+        "document_id": 844,
+        "title": "Appointment of Credit Rating Agency",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c1",
+        "quote": "Unsecured Listed Redeemable Subordinated NCDs – Series U03 8.70% 100 CRISIL AA/Watch Developing",
+        "document_id": 844,
+        "title": "Appointment of Credit Rating Agency",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\IIFL\\announcement\\2025-08-14_iifl-finance-limited-hereby-intimate-the-exchange-regarding_d0b6ff1d.pdf": {
+      "question": "What does the filing of 2025-08-14 say about: IIFL Finance Limited hereby intimate the exchange regarding Resignation of Mr. Monu Ratra, Executive Director and Chief Executive Officer of IIFL Home Finance Limited, Material Subsidiary ....?",
+      "symbol": "IIFL",
+      "answer": "IIFL Finance Limited informed the exchange regarding the resignation of Mr. Monu Ratra from his position as Executive Director and Chief Executive Officer of IIFL Home Finance Limited. The resignation is effective from October 6, 2025, and the reason provided is to pursue other career opportunities.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c5",
+        "quote": "Resignation of Mr. Monu Ratra as Executive Director and Chief Executive Officer (CEO) of IIFL Home Finance Limited",
+        "document_id": 864,
+        "title": "IIFL Finance Limited hereby intimate the exchange regarding Resignation of Mr. Monu Ratra, Executive Director and Chief Executive Officer of IIFL Home Finance Limited, Material Subsidiary ....",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c5",
+        "quote": "Reason for change viz. appointment, re-appointment, resignation, removal, death or otherwise\nTo pursue other career opportunities",
+        "document_id": 864,
+        "title": "IIFL Finance Limited hereby intimate the exchange regarding Resignation of Mr. Monu Ratra, Executive Director and Chief Executive Officer of IIFL Home Finance Limited, Material Subsidiary ....",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c5",
+        "quote": "Date of appointment/ re-appointment/ cessation (as applicable) & term of appointment/ re-appointment\nEffective from October 6, 2025",
+        "document_id": 864,
+        "title": "IIFL Finance Limited hereby intimate the exchange regarding Resignation of Mr. Monu Ratra, Executive Director and Chief Executive Officer of IIFL Home Finance Limited, Material Subsidiary ....",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "INDUSINDBK": {
+   "symbol": "INDUSINDBK",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 1437,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "In the latest quarter, what were the net interest margin, the gross NPA ratio, the CASA ratio or deposit growth, and the net profit, with the year-on-year change where stated?",
+      "symbol": "INDUSINDBK",
+      "answer": "For the quarter ended Q2 FY27, the net interest margin was 3.23%, the gross NPA ratio was 2.73%, and the net profit was ₹1,242 crores. The filings report total deposits of ₹4,28,832 crores, representing 10% YoY growth. The year-on-year change for net profit is stated as NM (not meaningful).",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c7",
+        "quote": "Deposits ₹ 4,28,832crs 10% YoY 3% QoQ",
+        "document_id": 772,
+        "title": "Please find attached Investor Presentation on Unaudited Consolidated and Standalone Financial Results of the Bank for the quarter and half year ended September 30, 2026.",
+        "doc_type": "results",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "Net Profit ₹ 1,242crs NM YoY 20% QoQ",
+        "document_id": 772,
+        "title": "Please find attached Investor Presentation on Unaudited Consolidated and Standalone Financial Results of the Bank for the quarter and half year ended September 30, 2026.",
+        "doc_type": "results",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 2,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for INDUSINDBK.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "INDUSINDBK",
+      "answer": "Management's outlook emphasizes a resilient growth momentum in India, supported by strong economic activity. Key priorities include maintaining a prudent approach to risk and liquidity, scaling secured retail and MSME franchises, and prioritizing portfolio quality over volume in unsecured lending. Regarding risks, the bank is monitoring potential impacts from drought conditions, fuel and inflation trends, and upcoming state elections. While the bank aims for a medium-term ROA of 175-180 basis points, management did not provide specific guidance for FY28.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "India's growth momentum, by contrast, stayed resilient, backed by strong economic activity and sound macroeconomic fundamentals.",
+        "document_id": 931,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; referenced in BSE filing of 27 Oct 2026)",
+        "doc_type": "concall",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "Growth momentum picked up, and we kept a prudent approach to risk and liquidity. We also made further progress on our strategic priorities, with better asset quality, a stronger balance-sheet mix and higher profitability.",
+        "document_id": 931,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; referenced in BSE filing of 27 Oct 2026)",
+        "doc_type": "concall",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "At the same time, we continue to monitor potential risks from drought conditions in a few states, fuel and inflation trends along with next state elections, and we will calibrate our growth strategy accordingly.",
+        "document_id": 931,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; referenced in BSE filing of 27 Oct 2026)",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "We continued to scale our secured retail and MSME franchises while maintaining a selective approach towards unsecured lending.",
+        "document_id": 931,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; referenced in BSE filing of 27 Oct 2026)",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "See, this bank has historically delivered ROAs in the vicinity of between 175 to 180 basis points. So our medium-term ambition is to get there.",
+        "document_id": 931,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; referenced in BSE filing of 27 Oct 2026)",
+        "doc_type": "concall",
+        "page": 14,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "But I don't have any comment on next year.",
+        "document_id": 931,
+        "title": "Q2 FY27 Earnings Call Transcript (company website; referenced in BSE filing of 27 Oct 2026)",
+        "doc_type": "concall",
+        "page": 14,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for INDUSINDBK.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\INDUSINDBK\\announcement\\2023-05-05_we-wish-to-inform-you-that-mr-ramaswamy-meyyappan-the-chief_e12feac3.pdf": {
+      "question": "What does the filing of 2023-05-05 say about: We wish to inform you that Mr Ramaswamy Meyyappan, the Chief Risk Officer of the Bank, has tendered his resignation. The Bank has identified a new Chief Risk Officer and is in the process ....?",
+      "symbol": "INDUSINDBK",
+      "answer": "On May 5, 2023, the Bank announced that Mr. Ramaswamy Meyyappan, the Chief Risk Officer, had resigned. The Bank stated it had identified a successor and was in the process of completing the necessary formalities. Subsequently, on June 28, 2023, the Bank announced the appointment of Mr. Vivek Bajpeyi as the new Chief Risk Officer, effective from that date.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "We wish to inform you that Mr Ramaswamy Meyyappan, the Chief Risk Officer of the Bank, has tendered his resignation. The Bank has identified a new Chief Risk Officer and is in the process of completing the necessary formalities.",
+        "document_id": 741,
+        "title": "We wish to inform you that Mr Ramaswamy Meyyappan, the Chief Risk Officer of the Bank, has tendered his resignation.  The Bank has identified a new Chief Risk Officer and is in the process ....",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\INDUSINDBK\\announcement\\2023-06-28_appointment-of-mr-arun-khurana-additional-director-in-the-ca_74b98d76.pdf": {
+      "question": "What does the filing of 2023-06-28 say about: Appointment of Mr. Arun Khurana, Additional Director in the category of Executive Director i.e. Whole-time Director of IndusInd Bank Limited for a period of three years, with effect from ....?",
+      "symbol": "INDUSINDBK",
+      "answer": "The Board of Directors approved the appointment of Mr. Arun Khurana as an Additional Director in the category of Executive Director (Whole-time Director) on June 28, 2023, for a period of three years. This appointment was subject to approval by the Reserve Bank of India (RBI) and the shareholders of the Bank. The RBI subsequently approved his appointment for a three-year term effective from November 16, 2023, through November 15, 2026.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "the Board of Directors of the Bank at its meeting held on June 28, 2023 has considered and approved the appointment of Mr. Arun Khurana (DlN: 00075189), Deputy CEO, as Additional Director in the category of Executive Director i.e., Whole-time Director of Indusind Bank Limited ('the Bank') for a period of three years",
+        "document_id": 740,
+        "title": "Appointment of Mr. Arun Khurana, Additional Director in the category of Executive Director i.e. Whole-time Director of IndusInd Bank Limited for a period of three years, with effect from ....",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "INFY": {
+   "symbol": "INFY",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 14497,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
+      "symbol": "INFY",
+      "answer": "For the quarter ended September 30, 2026, the company reported revenues of $5,145 million, an operating profit of $1,079 million, and a net profit (after non-controlling interests) of $817 million. Compared to the quarter ended September 30, 2025, where revenues were $5,076 million, operating profit was $1,065 million, and net profit (after non-controlling interests) was $839 million, the filings do not provide the calculated year-on-year percentage changes.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c8",
+        "quote": "Revenues 5,145 5,076",
+        "document_id": 148,
+        "title": "Results for the quarter and half year ended September 30, 2026 and declaration of interim dividend",
+        "doc_type": "results",
+        "page": 39,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "Operating profit 1,079 1,065",
+        "document_id": 148,
+        "title": "Results for the quarter and half year ended September 30, 2026 and declaration of interim dividend",
+        "doc_type": "results",
+        "page": 39,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "Net profit (after non-controlling interests) 817 839",
+        "document_id": 148,
+        "title": "Results for the quarter and half year ended September 30, 2026 and declaration of interim dividend",
+        "doc_type": "results",
+        "page": 39,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for INFY.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "INFY",
+      "answer": "Infosys has revised its revenue growth guidance for the year to 1% to 2% YoY in constant currency terms, while maintaining its operating margin guidance at 20% to 22%. Management attributes the guidance revision to softer-than-expected volume growth, increased competitive intensity leading to pricing pressure, and slower discretionary spending in sectors like Retail and Hi-Tech. Key priorities include accelerating AI activity through their 'Hexagon' strategy and focusing on large and mega business transformation deals underpinned by AI. Risks identified include geopolitical tensions, inflationary pressures, shifting technology priorities, and the seasonally weaker second half of the year, which will be impacted by furloughs and fewer working days.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c2",
+        "quote": "Based on our Q2 performance and revised outlook for the rest of the year, our revenue growth guidance is 1% to 2% YoY in constant currency terms. Our operating margin guidance remains the same at 20% to 22%.",
+        "document_id": 147,
+        "title": "Enclosed",
+        "doc_type": "concall",
+        "page": 26,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c2",
+        "quote": "Client spending remains cautious, reflecting geopolitical tensions, inflationary pressures and shifting technology priorities. Selective discretionary spend also tempered the usual Q2 seasonal growth.",
+        "document_id": 147,
+        "title": "Enclosed",
+        "doc_type": "concall",
+        "page": 26,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "we are entering the seasonally weaker part of the year. There will be furloughs that will impact the H2, there will be lower working days and all of those implications and all of those impacts.",
+        "document_id": 147,
+        "title": "Enclosed",
+        "doc_type": "concall",
+        "page": 34,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "Our attention really is to build out at a faster and faster pace the AI activity, which is going very well with regard to the Hexagon strategy that we have developed in each of the six areas and making sure that we are participating in the large and mega deals, which are business transformation deals underpinned with AI.",
+        "document_id": 147,
+        "title": "Enclosed",
+        "doc_type": "concall",
+        "page": 9,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 1,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for INFY.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\INFY\\announcement\\2023-12-11_resignation-of-nilanjan-roy-as-a-cfo_6ad7da66.pdf": {
+      "question": "What does the filing of 2023-12-11 say about: Resignation of Nilanjan Roy as a CFO?",
+      "symbol": "INFY",
+      "answer": "Nilanjan Roy resigned from his position as Chief Financial Officer and Key Managerial Personnel of Infosys due to personal reasons to explore external growth opportunities. His resignation is effective March 31, 2024.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "Due to personal reasons for exploring external growth opportunities, I would like to tender my resignation from the services of the company.",
+        "document_id": 307,
+        "title": "Resignation of Nilanjan Roy as a CFO",
+        "doc_type": "announcement",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c2",
+        "quote": "Resignation of Nilanjan Roy as the Chief Financial Officer and Key Managerial Personnel of the Company effective March 31, 2024.",
+        "document_id": 307,
+        "title": "Resignation of Nilanjan Roy as a CFO",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\INFY\\announcement\\2023-04-19_please-find-enclosed-a-letter-from-independent-auditors-delo_60ebb450.pdf": {
+      "question": "What does the filing of 2023-04-19 say about: A letter from independent auditors - Deloitte Haskins & Sells LLP dated April 19, 2023, together with updated Independent Auditor's Report on the Consolidated Financial ....?",
+      "symbol": "INFY",
+      "answer": "The filing dated April 19, 2023, contains a letter from Deloitte Haskins & Sells LLP explaining that they inadvertently omitted \"Key Audit Matters\" and incorrectly referred to the \"Business Responsibility and Sustainability Report\" as the \"Business Responsibility Report\" in their previously filed Independent Auditor’s Report on the Consolidated Financial Statements for the year ended March 31, 2023. The firm provided the corrected report and stated there were no other changes.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c2",
+        "quote": "It has been brought to our attention that inadvertently “Key Audit Matters” were not inserted and “Business Responsibility and Sustainability Report” was referred to as “Business Responsibility Report” in the Independent Auditor’s Report (the “Report”) bearing UDIN 23039826BGXRYQ2725, on the Consolidated Financial Statements as at and for the year ended March 31, 2023",
+        "document_id": 120,
+        "title": "Please find enclosed a letter from independent auditors - Deloitte Haskins & Sells LLP dated April 19, 2023, together with updated Independent Auditor's Report on the Consolidated Financial ....",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c2",
+        "quote": "The correct Independent Auditor’s Report on the Consolidated Financial Statements is attached. We would request you to kindly intimate this to the authorities, as considered necessary. There are no other changes to the Report on the Consolidated Financial Statements.",
+        "document_id": 120,
+        "title": "Please find enclosed a letter from independent auditors - Deloitte Haskins & Sells LLP dated April 19, 2023, together with updated Independent Auditor's Report on the Consolidated Financial ....",
+        "doc_type": "announcement",
+        "page": 2,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "SUZLON": {
+   "symbol": "SUZLON",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 1926,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
+      "symbol": "SUZLON",
+      "answer": "For the quarter ended September 30, 2026 (Q2 FY27), Suzlon reported consolidated revenue from operations of ₹4,869.05 crores, total income of ₹4,908.04 crores, EBITDA of ₹720 crores, and a net profit after tax of ₹394.15 crores. The company reported 26% year-on-year revenue growth. Regarding net profit, the company noted that Q2 FY26 included a deferred tax asset creation of ₹891 crores; excluding this impact, the comparable net profit increased by 1.3% year-on-year.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c4",
+        "quote": "Revenue from operations 4,869.05",
+        "document_id": 524,
+        "title": "Outcome of the Board Meeting dated 29th October 2026",
+        "doc_type": "results",
+        "page": 9,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "Tot~I income 4,908.04",
+        "document_id": 524,
+        "title": "Outcome of the Board Meeting dated 29th October 2026",
+        "doc_type": "results",
+        "page": 9,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "Suzlon delivered 26% YoY revenue growth to ₹4,869 crore s in Q2 FY27, with EBITDA of ₹720 crore s",
+        "document_id": 524,
+        "title": "Outcome of the Board Meeting dated 29th October 2026",
+        "doc_type": "results",
+        "page": 24,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "Net profit after tax ( 5 - 6) 394.15",
+        "document_id": 524,
+        "title": "Outcome of the Board Meeting dated 29th October 2026",
+        "doc_type": "results",
+        "page": 9,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "Q2 FY26 included a deferred tax asset creation of ₹891 crore s; excluding this impact, the underlying year-on-year improvement in profitability is stronger.",
+        "document_id": 524,
+        "title": "Outcome of the Board Meeting dated 29th October 2026",
+        "doc_type": "results",
+        "page": 24,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "Accordingly, the comparable PAT has actually increased 1.3 % vis -à-vis calculated drop of 69.7% reflected on the basis of reported numbers",
+        "document_id": 524,
+        "title": "Outcome of the Board Meeting dated 29th October 2026",
+        "doc_type": "results",
+        "page": 24,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for SUZLON.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "SUZLON",
+      "answer": "Management views the current year as a significant inflection point for India's wind energy sector, positioning it as a strategic pillar for energy security and decarbonization [c1]. Regarding guidance, management expects Wind Turbine Generator (WTG) contribution margins to remain in the 22% to 23% range for FY27, subject to the normalization of external factors like FX and commodity volatility caused by the West Asia crisis [c5]. Management also clarified their EBITDA margin guidance as 15.1% plus 1% [c6]. Key priorities include managing working capital to support growth and optimizing COGS through various initiatives [c5, c6]. Key risks identified include uncertainties associated with external factors like the West Asia crisis, which impacts FX and commodity prices, and the inherent risks detailed in the company's Annual Report [c1, c5].",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "This year marks a significant inflection point for India's wind energy sector. The industry has moved beyond proving its relevance and is now increasingly being recognized as a strategic pillar of India's energy security, manufacturing growth, and decarbonization agenda.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "WTG contribution margins are expected to remain in that 22%, 23% range for FY27, is the belief and it should get normalized subject to some of these externalities getting normalized.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "Ajay Kapur: Yes, and also, just to clarify, my guidance was 15.1% plus 1%, not minus. This is basically the leverage panning out.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "we are working on several initiatives to normalize the impact and optimize COGS, which should address part of this issue.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "we are working on various levers to manage our working capital better as well.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c1",
+        "quote": "These statements are based on management's current expectations and are associated with uncertainties and risks as detailed in the Annual Report.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c5",
+        "quote": "The contribution margin -- the part of the margin impact is attributable to high volatility in FX and commodity, which is largely, I would say, due to the West Asia crisis.",
+        "document_id": 523,
+        "title": "Q2 FY27 Earning Conference Call",
+        "doc_type": "concall",
+        "page": 6,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for SUZLON.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\SUZLON\\announcement\\2023-04-04_change-in-chief-executive-officer_79627eb6.pdf": {
+      "question": "What does the filing of 2023-04-04 say about: Change in Chief Executive Officer?",
+      "symbol": "SUZLON",
+      "answer": "The filing dated 4th April 2023 announces that Mr. Ashwani Kumar resigned as Chief Executive Officer of the company effective 5th April 2023 due to personal reasons. Concurrently, the Board of Directors approved the appointment of Mr. J.P. Chalasani as the Group Chief Executive Officer and a key managerial personnel, effective 5th April 2023.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "Mr. Ashwani Kumar has resigned as the Chief Executive Officer of the Company with effect from 5th April 2023 on account of personal reasons.",
+        "document_id": 490,
+        "title": "Change in Chief Executive Officer",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c1",
+        "quote": "the Board of Directors, at its meeting held on 4th April 2023 (which commenced at 6.30 p.m. IST and concluded at 7.00 p.m. IST), has, inter alia, approved appointment of Mr. J.P. Chalasani as the Chief Executive Officer and one of the key managerial personnel of the Company, to act as the Group Chief Executive Officer, with immediate effect, i.e. from 5th April 2023.",
+        "document_id": 490,
+        "title": "Change in Chief Executive Officer",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\SUZLON\\announcement\\2023-09-22_withdrawal-of-nominee-director-by-rec-limited_9ac00b7d.pdf": {
+      "question": "What does the filing of 2023-09-22 say about: Withdrawal of Nominee Director by REC Limited?",
+      "symbol": "SUZLON",
+      "answer": "REC Limited withdrew its nominee, Mr. Ajay Mathur, from the Board of Suzlon Energy Limited because the financial assistance provided by the REC-led consortium under the Rupee Term Loan Agreement dated 28th April 2022 had been fully repaid. Consequently, Mr. Mathur ceased to be a Nominee Director effective 21st September 2023.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "REC Limited vide its letter dated 21st September 2023 received by us on 22nd September 2023 (hereinafter referred to as the “REC Letter”) has withdrawn its nominee, Mr. Ajay Mathur (DIN: 08805424), from the Board of Suzlon Energy Limited since the financial assistance granted by the REC led consortium in terms of the Rupee Term Loan Agreement dated 28th April 2022 has been paid in full.",
+        "document_id": 483,
+        "title": "Withdrawal of Nominee Director by REC Limited",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       },
+       {
+        "ref": "c1",
+        "quote": "Accordingly, Mr. Ajay Mathur has ceased to be the Nominee Director of the Company with effect from 21st September 2023.",
+        "document_id": 483,
+        "title": "Withdrawal of Nominee Director by REC Limited",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "TCS": {
+   "symbol": "TCS",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 2024,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
+      "symbol": "TCS",
+      "answer": "For the quarter ended September 30, 2026, TCS reported a total income of ₹74,525 crore (compared to ₹66,666 crore in the quarter ended September 30, 2025) and a net profit (profit for the period) of ₹13,934 crore (compared to ₹12,131 crore in the quarter ended September 30, 2025). The operating income for the quarter ended September 30, 2026, was ₹17,301 crore, compared to ₹15,201 crore for the quarter ended September 30, 2025.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c3",
+        "quote": "TOTAL INCOME 74,525 73,843 66,666",
+        "document_id": 296,
+        "title": "Financial Results for the quarter and six-month period ended September 30, 2026 and declaration of second interim dividend",
+        "doc_type": "results",
+        "page": 8,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "PROFIT FOR THE PERIOD 13,934 13,420 12,131",
+        "document_id": 296,
+        "title": "Financial Results for the quarter and six-month period ended September 30, 2026 and declaration of second interim dividend",
+        "doc_type": "results",
+        "page": 8,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "Operating income 17,301 16,376 15,201",
+        "document_id": 296,
+        "title": "Financial Results for the quarter and six-month period ended September 30, 2026 and declaration of second interim dividend",
+        "doc_type": "results",
+        "page": 9,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for TCS.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "TCS",
+      "answer": "TCS management does not provide specific revenue or earnings guidance [c1]. Regarding the outlook, management expressed confidence that growth momentum will continue on a medium-term basis, supported by their TCV, pipeline, and client conversations [c6]. Key priorities include executing with discipline, investing in differentiated capabilities, and leveraging AI to help clients achieve measurable outcomes in growth, productivity, and resilience [c6]. Regarding margins, management aims to inch margins higher while balancing investment priorities with disciplined execution [c3], [c8]. They identified several headwinds for the second half of the year, including acquisition-related dilution from MHP (estimated at 50 basis points), normal furlough seasonality, and continued ecosystem investments [c8].",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "As you are aware, we don't provide any speciﬁc revenue or earnings guidance",
+        "document_id": 295,
+        "title": "Transcript of earnings conference call for quarter and six-month period ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "on a medium-term basis, looking at the TCV, looking at the pipeline and the client conversations that we are having, we're conﬁdent that growth momentum will continue.",
+        "document_id": 295,
+        "title": "Transcript of earnings conference call for quarter and six-month period ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 12,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c6",
+        "quote": "We will continue to execute with discipline, invest in diƯerentiated capabilities, and help our clients achieve measurable outcomes in growth, productivity, and resilience.",
+        "document_id": 295,
+        "title": "Transcript of earnings conference call for quarter and six-month period ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 12,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "on an overall basis, we will balance our investment priorities and our disciplined execution, and we will work towards inching margins higher from here.",
+        "document_id": 295,
+        "title": "Transcript of earnings conference call for quarter and six-month period ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 21,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "The acquisition-related dilution, particularly in MHP, is likely to impact by about 50 basis points depending on the timing of closure and when the integration starts. The normal furlough seasonality and our continued ecosystem investments would be our headwinds.",
+        "document_id": 295,
+        "title": "Transcript of earnings conference call for quarter and six-month period ended September 30, 2026",
+        "doc_type": "concall",
+        "page": 16,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for TCS.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\TCS\\announcement\\2026-02-28_tata-consultancy-services-limited-has-informed-the-exchange_2834e8c6.pdf": {
+      "question": "What does the filing of 2026-02-28 say about: Tata Consultancy Services Limited has informed the Exchange about the appointment of Statutory Auditors.?",
+      "symbol": "TCS",
+      "answer": "On February 28, 2026, Tata Consultancy Services Limited informed the stock exchanges that its Board of Directors, based on the Audit Committee's recommendation, recommended the appointment of Walker Chandiok & Co LLP as the company's Statutory Auditors. This appointment is for a five-year term, starting from the conclusion of the 32nd Annual General Meeting (AGM) in 2027 until the conclusion of the 37th AGM in 2032, subject to shareholder approval.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c6",
+        "quote": "the Board of Directors at its meeting held today, recommended the appointment of Walker Chandiok & Co LLP, Chartered Accountants (ICAI Firm Registration No. 001076N/N500013) as the Statutory Auditors of the Company to hold the office for a term of 5 (five) consecutive years from the conclusion of the 32nd Annual General Meeting (AGM) of the Company to be held in the year 2027 till the conclusion of the 37th AGM to be held in the year 2032, subject to approval of the Members of the Company.",
+        "document_id": 276,
+        "title": "Tata Consultancy Services Limited has informed the Exchange about the appointment of Statutory Auditors.",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    }
+   }
+  },
+  "ZEEL": {
+   "symbol": "ZEEL",
+   "generated_on": "2026-11-18",
+   "requested_model": "gemini-3.1-flash-lite",
+   "models": [
+    "gemini-3.1-flash-lite"
+   ],
+   "index_chunks": 1684,
+   "llm": {
+    "sections": {
+     "quarter": {
+      "question": "What were the headline results for the latest quarter: revenue or total income, EBITDA and net profit, with their year-on-year change? Use the results press release or highlights where available.",
+      "symbol": "ZEEL",
+      "answer": "For the quarter ended 30 September 2026, the consolidated total income was 2,472 Million, compared to 19,956 Million in the quarter ended 30 September 2025. The profit for the period attributable to shareholders of the Company was 478 Million for the quarter ended 30 September 2026, compared to 765 Million for the quarter ended 30 September 2025. The provided filings do not explicitly state an EBITDA figure.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c2",
+        "quote": "Total income [1(a) to 1(c) +2] 2,472 19,385 19956",
+        "document_id": 358,
+        "title": "Unaudited Standalone and Consolidated Financials Results for the quarter and half year ended 30th September, 2026",
+        "doc_type": "results",
+        "page": 20,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c2",
+        "quote": "Particulars 30-Sep26 30-Jun-26 30-Sep25",
+        "document_id": 358,
+        "title": "Unaudited Standalone and Consolidated Financials Results for the quarter and half year ended 30th September, 2026",
+        "doc_type": "results",
+        "page": 20,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c8",
+        "quote": "13 Profit/(loss) for the period/year attributable to : Shareholders of the Company 478 763 765",
+        "document_id": 358,
+        "title": "Unaudited Standalone and Consolidated Financials Results for the quarter and half year ended 30th September, 2026",
+        "doc_type": "results",
+        "page": 20,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for ZEEL.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "management": {
+      "question": "On the latest quarter earnings call, what did management say about the outlook, their priorities or the key risks, including any guidance given?",
+      "symbol": "ZEEL",
+      "answer": "Management remains cautiously optimistic for the remainder of FY27, expecting that strategic initiatives in content and the festive season will support revenue growth and profitability [c8]. Key priorities include maintaining a balance between sharpening existing businesses and investing in new growth areas like sports, kids' content, live experiences, animated content, and micro-dramas [c3]. Management expects an accelerated trajectory in subscription revenue growth from H2 onwards, supported by healthy customer retention and a strong content lineup on ZEE5 for Q3 and Q4 [c7]. Risks include a volatile geopolitical environment and macroeconomic headwinds that have created subdued sentiment [c4].",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c8",
+        "quote": "Moving through the rest of the financial year '27, we continue to remain cautiously optimistic. As we move ahead, we believe that the multiple strategic initiatives implemented by the company in the recent quarters across content, along with the onset of festive season, augurs well for the company, both from a revenue growth and profitability standpoint.",
+        "document_id": 356,
+        "title": "Transcript",
+        "doc_type": "concall",
+        "page": 7,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c3",
+        "quote": "As we take growth-oriented step forward, we are maintaining a fine balance between sharpening the existing business and building new. Our strategic initiatives implemented in the realm of kids, live experiences, animated content, micro dramas and of course, sports will surely serve as strong growth levers for the future.",
+        "document_id": 356,
+        "title": "Transcript",
+        "doc_type": "concall",
+        "page": 5,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c7",
+        "quote": "But from a normalized level, you will certainly see an accelerated trajectory on the subscription revenue growth from H2 onwards. Mukund Galgali: And I would like to add, Sameer, that in Q3 and Q4, our line-up of content in general on ZEE5 is also quite exciting. So we are confident of seeing this further growth.",
+        "document_id": 356,
+        "title": "Transcript",
+        "doc_type": "concall",
+        "page": 10,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       },
+       {
+        "ref": "c4",
+        "quote": "Despite the volatile geopolitical environment and macroeconomic headwinds that led to a subdued sentiment, your company's entrepreneurial spirit, pioneering vision and prudent approach enabled it to stay ahead of the curve.",
+        "document_id": 356,
+        "title": "Transcript",
+        "doc_type": "concall",
+        "page": 3,
+        "verified": true,
+        "fiscal_period": "Q2FY27"
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": "Interpreted the relative quarter as Q2 FY27, the latest filed for ZEEL.",
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     }
+    },
+    "notable_sentences": {
+     "data\\raw\\ZEEL\\announcement\\2026-08-24_submission-of-certificate-obtained-from-statutory-auditors-i_3226a94e.pdf": {
+      "question": "What does the filing of 2026-08-24 say about: Submission of Certificate obtained from Statutory Auditors in terms of Regulation 169(5) of SEBI (ICDR) Regulation, 2018?",
+      "symbol": "ZEEL",
+      "answer": "On August 24, 2026, Zee Entertainment Enterprises Limited submitted a certificate obtained from its Statutory Auditors, M/s. Walker Chandiok & Co LLP, in accordance with Regulation 169(5) of the SEBI (ICDR) Regulations, 2018. This certificate confirms that the Company is in compliance with Regulation 169(4) of the ICDR Regulations.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c1",
+        "quote": "Pursuant to Regulation 169(5) of the ICDR Regulations, please find enclosed a certificate obtained from M/s. Walker Chandiok & Co LLP, Chartered Accountants (Firm Registration No: 001076N/N500013), Statutory Auditors of the Company, certifying that the Company is in compliance with Regulation 169(4) of ICDR Regulations.",
+        "document_id": 362,
+        "title": "Submission of Certificate obtained from Statutory Auditors in terms of  Regulation 169(5) of SEBI (ICDR) Regulation, 2018",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
+      "abstain_source": null,
+      "escalated": false
+     },
+     "data\\raw\\ZEEL\\announcement\\2024-03-10_disclosure-under-reg-30-of-sebi-lodr-regulations-2015-resign_b990a815.pdf": {
+      "question": "What does the filing of 2024-03-10 say about: Disclosure under Reg. 30 of SEBI (LODR) Regulations, 2015 - Resignation of Senior Management Personnel?",
+      "symbol": "ZEEL",
+      "answer": "On March 10, 2024, ZEEL disclosed that Mr. Rahul Johri, President Business- South Asia and a designated Senior Management Personnel, decided to step down from his office to pursue interests outside the organization.",
+      "confidence": "high",
+      "citations": [
+       {
+        "ref": "c3",
+        "quote": "Mr. Rahul Johri, President Business- South Asia, designated as Senior Management Personnel of the Company has decided to step down from his Office and has expressed his desire to pursue interests outside the organization.",
+        "document_id": 315,
+        "title": "Disclosure under Reg. 30 of SEBI (LODR) Regulations, 2015 - Resignation of Senior Management Personnel",
+        "doc_type": "announcement",
+        "page": 1,
+        "verified": true,
+        "fiscal_period": null
+       }
+      ],
+      "dropped_citations": 0,
+      "abstained": false,
+      "model": "gemini-3.1-flash-lite",
+      "period_note": null,
+      "prompt": "v3",
       "abstain_source": null,
       "escalated": false
      }

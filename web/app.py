@@ -446,6 +446,7 @@ def home() -> None:
                 st.markdown(f'<div class="fl-a">{a["answer"]}</div>', unsafe_allow_html=True)
                 st.markdown(f'<div class="fl-quote" style="margin-top:1rem">“{" ".join(c["quote"].split())}”</div>',
                             unsafe_allow_html=True)
+                table_note(c["quote"])
                 st.caption(f"{DOC_TYPES.get(c['doc_type'], c['doc_type'])} · {c.get('fiscal_period') or ''} · Page {c['page']} "
                            "· The highlighted line on the right is the source.")
                 verify_box(c["document_id"], c["page"], stacked=True)
@@ -518,6 +519,24 @@ def strip_refs(text: str) -> str:
     return " ".join(re.sub(r"\s*\[c\d+\](?:\s*,\s*\[c\d+\])*", "", text or "").split())
 
 
+_NUM_TOK = re.compile(r"^[(\-–₹$]*\d[\d,.]*%?\)?\*?[,;]?$")
+
+
+def is_table_quote(quote: str) -> bool:
+    """A quote that is mostly figures (e.g. "EBITDA 3,902 6,316 62%") was read from a table row. The verifier
+    proves the row is on the page, not which column (period) each number sits under, so the reader should check."""
+    toks = quote.split()
+    nums = sum(bool(_NUM_TOK.match(t)) for t in toks)
+    words = sum(bool(re.search(r"[A-Za-z]{2,}", t)) for t in toks)
+    return nums >= 2 and nums >= words
+
+
+def table_note(quote: str) -> None:
+    if is_table_quote(quote):
+        st.caption("📊 Read from a table. Check the column on the page: the quote can't show which period "
+                   "each number belongs to.")
+
+
 def brief_citations(cits: list[dict], key: str) -> None:
     tabs = st.tabs([f"[{i}] {DOC_TYPES.get(c['doc_type'], c['doc_type'])} · {c.get('fiscal_period') or '—'} · Page {c['page']}"
                     for i, c in enumerate(cits, 1)])
@@ -527,6 +546,7 @@ def brief_citations(cits: list[dict], key: str) -> None:
             with left:
                 st.markdown(f'<div class="fl-quote">“{html.escape(" ".join(c["quote"].split()))}”</div>',
                             unsafe_allow_html=True)
+                table_note(c["quote"])
                 st.caption(f"{c['title'][:140]} · Page {c['page']}")
                 verify_box(c["document_id"], c["page"], c["quote"], stacked=True)
             with right:
@@ -546,6 +566,7 @@ def notable_card(it: dict, key: str) -> None:
                 st.markdown(html.escape(strip_refs(s["text"])))
                 st.markdown(f'<div class="fl-quote">“{html.escape(" ".join(c["quote"].split()))}”</div>',
                             unsafe_allow_html=True)
+                table_note(c["quote"])
                 with st.expander(f"See it highlighted on page {c['page']}"):
                     show_page(page_url(c["document_id"], c["page"], hl=c["quote"]))
         with b:
@@ -557,7 +578,7 @@ def notable_card(it: dict, key: str) -> None:
 
 
 def brief_view(symbol: str, key: str) -> None:
-    """The Brief: four short sections where every line is a verified citation or says the filings don't cover it."""
+    """The Brief: four short sections where every line is a verified citation or says no quotable answer was found."""
     live_key = f"brief-live-{symbol}"
     try:
         b = st.session_state.get(live_key) or get_json(f"/brief/{symbol}")
@@ -574,10 +595,24 @@ def brief_view(symbol: str, key: str) -> None:
         badges.append('<span class="fl-badge ex">⚡ Prepared brief</span>')
     if badges:
         st.markdown("".join(badges), unsafe_allow_html=True)
-    st.markdown(f'<p class="fl-muted" style="margin-top:.4rem">Every line is a quote checked against {symbol}\'s filings, '
-                'or says plainly that the filings don\'t cover it.</p>', unsafe_allow_html=True)
+    indexed = symbol in INDEXED
+    if indexed:
+        st.markdown(f'<p class="fl-muted" style="margin-top:.4rem">Every line is a quote checked against {symbol}\'s '
+                    'filings, or says plainly that we couldn\'t find one.</p>', unsafe_allow_html=True)
+    else:
+        # Screened-only stock: its PDFs aren't indexed, so the two cited sections can't exist. Say what this page is
+        # instead of showing empty cards, and point to the companies with a full Brief.
+        st.info(f"**{symbol} is screened for red flags only.** FilingLens has indexed the full filings of "
+                f"{len(INDEXED)} companies; for those, the Brief also shows the latest quarter and what management "
+                "said, each with checked quotes.", icon="ℹ️")
+        pick = st.pills("Open a full Brief", sorted(INDEXED), selection_mode="single", key=f"full-{key}-{symbol}")
+        if pick:
+            st.session_state["brief_symbol"] = pick
+            st.rerun()
 
     for sec in b["sections"]:
+        if "question" in sec and not indexed:
+            continue
         with st.container(border=True):
             st.markdown(f'<div class="fl-brief-h">{sec["title"]}</div>', unsafe_allow_html=True)
             if "question" in sec:
@@ -594,14 +629,18 @@ def brief_view(symbol: str, key: str) -> None:
                                     st.session_state[live_key] = r.json()
                                     st.rerun()
                                 st.error(f"Something went wrong ({r.status_code}). Please try again.")
-                        elif symbol not in INDEXED:
-                            st.caption("This stock's filings aren't in the search index yet, so only the rule-based "
-                                       "sections are available.")
                         else:
                             st.caption("Add `LLM_API_KEY` to `.env` to prepare these sections.")
                     continue
                 if not sec["covered"]:
-                    st.markdown('<div class="fl-nc">The filings don\'t cover this.</div>', unsafe_allow_html=True)
+                    where = "earnings-call transcripts" if sec["key"] == "management" else "results filings"
+                    st.markdown('<div class="fl-nc">No quotable answer found.</div>', unsafe_allow_html=True)
+                    if sec.get("note"):  # a specific, known reason (e.g. a damaged PDF text layer)
+                        st.caption(sec["note"])
+                    else:
+                        st.caption(f"We searched {symbol}'s {where} but found no sentence that states this, so we "
+                                   "show nothing rather than guess. The figures may still be in a table in the "
+                                   "filing: try Ask, or open the latest filing.")
                     st.caption(f"Asked: {sec['question']}")
                     continue
                 st.markdown(f'<div class="fl-answer">{html.escape(strip_refs(sec["text"]))}</div>', unsafe_allow_html=True)
@@ -617,8 +656,8 @@ def brief_view(symbol: str, key: str) -> None:
             else:
                 nb = sec["notable"]
                 if not (nb["items"] or nb["activity"]):
-                    st.markdown('<div class="fl-nc">The filings don\'t cover this: nothing unusual stands out in '
-                                f'{symbol}\'s filings.</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div class="fl-nc">Nothing unusual in {symbol}\'s recent filings.</div>',
+                                unsafe_allow_html=True)
                 for it in nb["items"]:
                     notable_card(it, key)
                 act = nb.get("activity")
@@ -926,6 +965,7 @@ def ask_tab(symbol: str, f: dict) -> None:
             for tab, c in zip(tabs, r["citations"]):
                 with tab:
                     st.markdown(f'<div class="fl-quote">“{" ".join(c["quote"].split())}”</div>', unsafe_allow_html=True)
+                    table_note(c["quote"])
                     st.caption(f"{c['title'][:140]} · Page {c['page']}")
                     verify_box(c["document_id"], c["page"], c["quote"])
                     show_page(page_url(c["document_id"], c["page"], hl=c["quote"]))
