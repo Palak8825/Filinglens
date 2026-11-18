@@ -18,6 +18,9 @@ import numpy as np
 from core.config import settings
 
 BACKEND = os.environ.get("EMBED_BACKEND", "st").lower()
+# Opt-in BGE-style query instruction, prepended to queries only (passages stay un-prefixed), e.g.
+# "Represent this sentence for searching relevant passages: ". Empty (default) = raw query.
+QUERY_INSTRUCTION = os.environ.get("EMBED_QUERY_INSTRUCTION", "")
 
 
 @lru_cache(maxsize=1)
@@ -55,4 +58,4 @@ def embed_texts(texts: list[str], batch_size: int = 32) -> np.ndarray:
 def embed_query(q: str) -> list[float]:
     if BACKEND == "hash":
         return _hash_vec(q).tolist()
-    return _st_model().encode([q], normalize_embeddings=True)[0].astype(np.float32).tolist()
+    return _st_model().encode([QUERY_INSTRUCTION + q], normalize_embeddings=True)[0].astype(np.float32).tolist()
