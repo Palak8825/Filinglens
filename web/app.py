@@ -24,6 +24,13 @@ import streamlit as st
 # 127.0.0.1, not "localhost": on Windows "localhost" tries IPv6 (::1) first and every request then waits ~2 s
 # before falling back to IPv4, where uvicorn listens. A Brief makes ~20 calls, so that was ~40 s per page.
 API = os.environ.get("FILINGLENS_API", "http://127.0.0.1:8000").replace("://localhost", "://127.0.0.1")
+# Links the reader's browser opens (the PDF at the cited page) need an address the browser can reach. Locally
+# that is the engine itself; in a GitHub Codespace it is the engine's forwarded port.
+if os.environ.get("CODESPACE_NAME") and os.environ.get("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"):
+    PUBLIC_API = (f"https://{os.environ['CODESPACE_NAME']}-8000."
+                  f"{os.environ['GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN']}")
+else:
+    PUBLIC_API = os.environ.get("FILINGLENS_PUBLIC_API", API)
 
 st.set_page_config(page_title="FilingLens", page_icon="🔎", layout="wide", initial_sidebar_state="expanded")
 
@@ -205,9 +212,9 @@ def verify_box(document_id: int | None, page: int | None, quote_text: str | None
     src = source_url or (info or {}).get("source_url")
     src = src.replace("/AttachLive/", "/AttachHis/") if src else src  # BSE retires AttachLive links
     if document_id and (info or {}).get("has_pdf"):
-        local = f"{API}/doc/{document_id}/pdf#page={page or 1}"
+        local = f"{PUBLIC_API}/doc/{document_id}/pdf#page={page or 1}"
     elif path:
-        local = f"{API}/evidence/pdf?path={quote(path)}#page={page or 1}"
+        local = f"{PUBLIC_API}/evidence/pdf?path={quote(path)}#page={page or 1}"
     else:
         local = None
     if not (local or src or quote_text):

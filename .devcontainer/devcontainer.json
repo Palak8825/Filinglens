@@ -1,0 +1,25 @@
+{
+  // Run FilingLens in the browser with GitHub Codespaces: the real app, on the demo data from the release.
+  // onCreate (also run by prebuilds): install, download the demo data, cache the search models.
+  // postStart (every start): launch the engine and the app; the app opens in a browser tab.
+  "name": "FilingLens",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "onCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start.sh",
+  "forwardPorts": [8501, 8000],
+  "portsAttributes": {
+    "8501": { "label": "FilingLens app", "onAutoForward": "openBrowser" },
+    "8000": { "label": "FilingLens engine (PDF links)", "onAutoForward": "silent" }
+  },
+  "secrets": {
+    "LLM_API_KEY": {
+      "description": "Optional. A free Gemini API key, to ask your own questions. Without one, the prepared Briefs, example answers, dashboard and red flags all work.",
+      "documentationUrl": "https://aistudio.google.com/apikey"
+    }
+  },
+  "customizations": {
+    "codespaces": { "openFiles": ["README.md"] },
+    "vscode": { "extensions": ["ms-python.python"] }
+  }
+}
