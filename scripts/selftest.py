@@ -137,6 +137,10 @@ def main() -> int:
         ("EBITDA margin declined to 14.2% from 14.2%", False, "figure reused twice"),
         ("UNAUDITED FINANCIAL RESULTS FOR THE QUARTER ENDED 30 SEPTEMBER 2024", False, "year changed"),
         ("EBlTDA margin decIined to 14.2% from 17.8%, primarily on account", True, "OCR noise in words, figures right"),
+        # A dropped leading/trailing digit passed when digits were compared as a substring (external review).
+        ("Revenue from operations for the quarter stood at Rs. 234.5 crore", False, "leading digits dropped (1,234.5 -> 234.5)"),
+        ("234.5 crore as against Rs. 1,102.0 crore", False, "quote starts inside a number"),
+        ("Profit after tax was Rs. 88", False, "short quote ends inside a number (88.1 -> 88)"),
         ("revenue", False, "too short"),
         ("14.2%", False, "bare figure"),
     ]

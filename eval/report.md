@@ -35,4 +35,4 @@ Answering model: `gemini-3.1-flash-lite` · judge: `gemini-3-flash-preview` · e
 |---|---|---|---|---|---|---|---|---|
 | hybrid+rerank | v1 | gemini-3.1-flash-lite | 100% (20/20) | 4/4 | 100% (30/30) | 0% (0/30) | 100% (10/10) | 0% (0/20) |
 | hybrid+rerank@3.5lite | v1 | gemini-3.5-flash-lite | 80% (16/20) | 3/4 | 100% (23/23) | 0% (0/23) | 100% (10/10) | 10% (2/20) |
-| hybrid@3.5lite | v1 | gemini-3.5-flash-lite | 80% (16/20) | 2/4 | 100% (26/26) | 0% (0/26) | 100% (10/10) | 10% (2/20) |
+| hybrid@3.5lite | v1 | gemini-3.5-flash-lite | 80% (16/20) | 2/4 | 100% (25/25) | 4% (1/26) | 100% (10/10) | 10% (2/20) |

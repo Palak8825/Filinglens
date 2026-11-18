@@ -355,8 +355,8 @@
         "v": 0.95
       },
       "citation_precision": {
-        "k": 26,
-        "n": 26,
+        "k": 25,
+        "n": 25,
         "v": 1.0
       },
       "citation_precision_no_verifier": {
@@ -365,9 +365,9 @@
         "v": 1.0
       },
       "verifier_rejection": {
-        "k": 0,
+        "k": 1,
         "n": 26,
-        "v": 0.0
+        "v": 0.038461538461538464
       },
       "n_raw_citations": 26,
       "abstention": {

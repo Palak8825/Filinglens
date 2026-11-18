@@ -30,33 +30,45 @@ MIN_FUZZY_LEN = 20  # fuzzy matching only for quotes long enough not to match by
 MIN_EXACT_LEN = 12  # short quotes (table rows like "NIM 2.6% 2.7% 2.5%") must match exactly...
 
 
-def _figures_match(q: str, c: str) -> bool:
-    """The quote's digits must be exactly the digits of the passage it fuzzily matched.
+def _figures_match(q: str, c: str, s: int, e: int) -> bool:
+    """The quote's digits must be exactly the digits of the passage it matched, c[s:e].
 
-    Checked against the aligned span, not the whole chunk: a figure that exists elsewhere on the page
+    Checked against that passage, not the whole chunk: a figure that exists elsewhere on the page
     (last year's column, another line item) must not stand in for the one the quote points at.
+    The passage is first widened to whole tokens, so a quote that starts or ends inside a number
+    ("6,395" taken from "16,395", "1,410" from "14,100") brings the missing digits in and fails.
     Compared as one digit sequence, so separators and a PDF's stray spaces ("₹72 0 crore") don't
-    matter, while any changed, swapped, dropped or repeated figure does.
+    matter, while any changed, swapped, dropped, truncated or repeated figure does.
     """
-    al = fuzz.partial_ratio_alignment(q, c)
-    if al is None or al.score < FUZZ_THRESHOLD:
-        return False
-    s, e = al.dest_start, al.dest_end
-    while s > 0 and not c[s - 1].isspace():  # widen to whole tokens so a figure isn't cut in half
+    while s > 0 and not c[s - 1].isspace():
         s -= 1
     while e < len(c) and not c[e].isspace():
         e += 1
-    return _digits(q) in _digits(c[s:e])
+    return _digits(q) == _digits(c[s:e])
+
+
+def _span(q: str, c: str) -> tuple[int, int] | None:
+    """Where the quote sits in the chunk: exactly if it's a substring, else the best fuzzy alignment."""
+    i = c.find(q)
+    if i >= 0:
+        return i, i + len(q)
+    al = fuzz.partial_ratio_alignment(q, c)
+    if al is None or al.score < FUZZ_THRESHOLD:
+        return None
+    return al.dest_start, al.dest_end
 
 
 def quote_in_chunk(quote: str, chunk_text: str) -> bool:
     q, c = _norm(quote), _norm(chunk_text)
     if len(q) >= MIN_FUZZY_LEN:
-        return q in c or _figures_match(q, c)
+        span = _span(q, c)
     # ...and carry both a label and a figure, so "revenue" or a bare "2.6%" still fails.
-    if len(q) >= MIN_EXACT_LEN and re.search(r"[a-z]{2,}", q) and re.search(r"\d", q):
-        return q in c
-    return False
+    elif len(q) >= MIN_EXACT_LEN and re.search(r"[a-z]{2,}", q) and re.search(r"\d", q):
+        i = c.find(q)
+        span = (i, i + len(q)) if i >= 0 else None
+    else:
+        return False
+    return span is not None and _figures_match(q, c, *span)
 
 
 def verify_citations(raw_citations: list[dict], ref_map: dict[str, Hit]):
