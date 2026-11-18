@@ -262,7 +262,7 @@ Other honest caveats:
 <summary><b>Key safeguards</b></summary>
 
 - Temperature 0, and answers only from the retrieved passages.
-- Quotes are checked in code; failed citations are dropped and counted.
+- Quotes are checked in code; failed citations are dropped and counted. Words may differ slightly (scanner noise), but every figure must match the page exactly, in the very passage the quote matched.
 - Questions about quarters outside the collection get the boundary, not a guess.
 - Red flags and notable filings use no AI.
 - Brief sections without a verified quote say "No quotable answer found", never an uncited answer.
@@ -316,6 +316,7 @@ filinglens/
 None of these raised an error; each would have quietly made results worse.
 
 - **Earnings-call text was being dropped.** Text at the top of a page, before the first speaker label, was thrown away: about 12% of transcript text. Fixed, with a test; transcripts re-processed (8,294 → 9,498 passages).
+- **The checker could be fooled by a changed number.** It matched quotes fuzzily, to forgive scanner noise, and fuzzy matching barely notices digits: a long quote with 1.2% turned into 1.3%, or with last year's revenue in place of this year's, still scored ~99% and was accepted. Spotted by an outside reviewer and confirmed on this code. Figures are now matched exactly against the passage the quote matched; 6 new tests cover it. Re-checking all 330 stored citations (example answers, Briefs and every evaluation run) found none that changes, so the published results stand. `python -m scripts.recheck_cached_citations` repeats that check.
 - **A real quote with the wrong period passed the checker.** See Limitations; fixed with the out-of-range quarter rule.
 - **Cross-quarter success was impossible to score.** Duplicate filings meant "every gold file found" could never be true; it's now judged per quarter.
 - **Judge outages threw away answers.** Grading is now deferred and resumed.

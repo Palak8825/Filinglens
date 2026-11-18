@@ -128,6 +128,15 @@ def main() -> int:
         ("EBITDA  margin   declined to 14.2% from 17.8%", True, "verbatim, whitespace noise"),
         ("margins fell because inputs got more expensive this quarter", False, "paraphrase"),
         ("a one-time provision of Rs. 420.0 crore on a disputed receivable", False, "wrong number"),
+        # Fuzzy matching alone accepted these (partial_ratio ~99): figures must match exactly.
+        ("Revenue from operations for the quarter stood at Rs. 1,284.5 crore", False, "long quote, one digit changed"),
+        ("Revenue from operations for the quarter stood at Rs. 1,102.0 crore as against", False,
+         "last year's figure swapped in (it is elsewhere on the page)"),
+        ("higher raw material costs and a one-time provision of Rs. 88.1 crore relating to a disputed receivable",
+         False, "another line's figure swapped in"),
+        ("EBITDA margin declined to 14.2% from 14.2%", False, "figure reused twice"),
+        ("UNAUDITED FINANCIAL RESULTS FOR THE QUARTER ENDED 30 SEPTEMBER 2024", False, "year changed"),
+        ("EBlTDA margin decIined to 14.2% from 17.8%, primarily on account", True, "OCR noise in words, figures right"),
         ("revenue", False, "too short"),
         ("14.2%", False, "bare figure"),
     ]
