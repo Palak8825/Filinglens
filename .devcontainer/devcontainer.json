@@ -4,6 +4,7 @@
   // postStart (every start): launch the engine and the app; the app opens in a browser tab.
   "name": "FilingLens",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": { "ghcr.io/devcontainers/features/sshd:1": {} },
   "hostRequirements": { "cpus": 2, "memory": "8gb" },
   "onCreateCommand": "bash .devcontainer/setup.sh",
   "postStartCommand": "bash .devcontainer/start.sh",
