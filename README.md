@@ -114,7 +114,7 @@ There's no vector database and no LangChain: just SQLite, a numpy file and a few
 
 **Easiest: in your browser.** Click **Open in GitHub Codespaces** at the top (free with a GitHub account). Everything is pre-installed (Python packages, demo data, search models), so the app opens in about a minute; if no pre-built machine is available in your region, the first start sets itself up in about 6 minutes. To ask your own questions, paste a Gemini key on the setup page, or later run `echo LLM_API_KEY=your-key > .env && bash .devcontainer/start.sh` in its terminal. The setup lives in [`.devcontainer/`](.devcontainer).
 
-**On your own machine:** you'll need **Python 3.12** (3.10+ should work), Git, and **about 5 GB of free disk space**: ~1 GB for the demo data and the rest for Python packages (PyTorch is the big one). **No API key is needed** to try it.
+**On your own machine:** you'll need **Python 3.12** (3.10+ should work), Git, and **about 4 GB of free disk space**: about 2 GB of Python packages, plus 1.8 GB for the demo data while it unpacks (delete the zip afterwards to get 870 MB back). Installing takes about 10–15 minutes, mostly downloading packages. **No API key is needed** to try it.
 
 **1. Get the code**
 
@@ -123,8 +123,11 @@ git clone https://github.com/Palak8825/Filinglens.git
 cd Filinglens
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install torch --index-url https://download.pytorch.org/whl/cpu   # CPU-only PyTorch (see below)
 pip install -r requirements.txt
 ```
+
+PyTorch only runs the two small search models, on the CPU. Without the first `pip` line, Linux installs the GPU build, which adds about 4 GB of NVIDIA libraries the app never uses (about 8 GB in total). On Windows and macOS the default build is already CPU-only, so that line is optional there.
 
 **2. Download the data** from the [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data) into any folder, then unpack it. The script checks every file's checksum first.
 
@@ -147,7 +150,7 @@ If the engine runs on another port, set `FILINGLENS_API=http://localhost:<port>`
 - **Without a key:** the Briefs for all 14 indexed companies, the example answers, the dashboard, the red flags and every cited page all work.
 - **With a key** (copy `.env.example` to `.env` and set `LLM_API_KEY`; the free [Google AI Studio](https://aistudio.google.com) tier works), you can ask anything about the indexed companies.
 
-**4. Check everything works** (optional): `python -m scripts.selftest` runs offline in under a minute, with no key and no internet, and tests chunking, retrieval, the verifier and the red flags.
+**4. Check everything works** (optional): `python -m scripts.selftest` tests chunking, retrieval, the verifier and the red flags in under a minute, with no API key. The first run downloads the search model (about 130 MB) and works offline after that. For a run with no internet at all, use `EMBED_BACKEND=hash python -m scripts.selftest` (Windows PowerShell: `$env:EMBED_BACKEND="hash"; python -m scripts.selftest`). It swaps the search model for a simple built-in one, and every check still passes.
 
 <details>
 <summary><b>⚡ Why some answers are marked "Example answer"</b></summary>
