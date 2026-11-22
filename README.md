@@ -8,7 +8,7 @@ Built solo for **Arthaton 2026** (AI for personal and business finance).
 🎬 **Demo video:** [Watch on YouTube](https://www.youtube.com/watch?v=D-I-EmtUlkQ) · 📦 **Data download:** [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Palak8825/Filinglens?quickstart=1)
-**▶ Run the real app in your browser, no install.** The app opens in a new tab in **about a minute** (measured). The first start can take up to 6 minutes if GitHub hasn't pre-built a machine in your region. You can paste a free [Gemini key](https://aistudio.google.com/apikey) on the setup page to ask your own questions; without one, the prepared Briefs, examples, dashboard and red flags all work.
+**▶ Run the real app in your browser, no install.** The app opens in a new tab in **about a minute** (measured). **No new tab?** Your browser may have blocked the pop-up: allow it, or open the **Ports** tab (next to Terminal) and click the globe icon beside **FilingLens app (8501)**. The first start can take up to 6 minutes if GitHub hasn't pre-built a machine in your region. You can paste a free [Gemini key](https://aistudio.google.com/apikey) on the setup page to ask your own questions; without one, the prepared Briefs, examples, dashboard and red flags all work.
 
 ![FilingLens home page: a verified answer next to the highlighted source page](docs/images/home.png)
 
