@@ -59,36 +59,7 @@ The answer shows how it was checked (8 passages read, 1 quote given, 1 confirmed
 
 The whole idea fits in one picture: **find the right pages → let the AI answer only from them → check every quote in code.**
 
-```mermaid
-flowchart TD
-  subgraph Offline["🗂️ Built once, offline"]
-    A["📄 2,924 filings from BSE and NSE"] --> B["✂️ Chunking: passages that never cross a page"]
-    B --> C["🔤 Keyword index (BM25)"]
-    B --> D["🧠 Meaning index (embeddings)"]
-  end
-  Q["❓ Your question"] --> P["🗓️ Work out the quarter: 'latest' → Q2 FY27"]
-  P --> R["🔎 Hybrid retrieval: 40 best passages"]
-  C --> R
-  D --> R
-  R --> K["🏅 Reranker keeps the best 8"]
-  K --> L["🤖 LLM answers, quoting its sources"]
-  L --> V{"🔍 Verifier: is each quote<br/>really on that page?"}
-  V -- yes --> OK["✅ Answer + highlighted page"]
-  V -- no --> X["❌ Citation dropped and counted"]
-
-  style Offline fill:#f8fafc,stroke:#cbd5e1,color:#334155
-
-  classDef data fill:#eef4ff,stroke:#3b6fd8,color:#0b2a66
-  classDef step fill:#ffffff,stroke:#3b6fd8,color:#0b2a66
-  classDef ai fill:#f3ecff,stroke:#7c4dff,color:#2d1065
-  classDef good fill:#e8f7ee,stroke:#1f9d55,color:#0d4d2a
-  classDef bad fill:#fdecec,stroke:#d64545,color:#6b1111
-  class A,B,C,D data
-  class Q,P,R,K step
-  class L ai
-  class V,OK good
-  class X bad
-```
+<p align="center"><img src="docs/images/how-it-works.png" width="760" alt="How FilingLens works. Offline: 2,924 filings are split into passages that never cross a page, then indexed by keyword (BM25) and by meaning (embeddings). For each question: work out the quarter, hybrid retrieval of the 40 best passages, the reranker keeps the best 8, the LLM answers quoting its sources, and the verifier checks each quote is really on that page. If yes, the answer is shown with the highlighted page; if no, the citation is dropped and counted."></p>
 
 Here's what each step does, using the YES Bank question above:
 
