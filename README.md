@@ -5,7 +5,7 @@
 **Answers from Indian company filings, proven on the page.** Ask a question about a listed company and get a plain answer, plus the exact page of the company's own filing it came from, with the sentence highlighted. Or screen 44 companies for warning signs in their filings.
 
 Built solo for **Arthaton 2026** (AI for personal and business finance).
-🎬 **Demo video:** _<YouTube link>_ · 📦 **Data download:** [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
+🎬 **Demo video:** [Watch on YouTube](https://www.youtube.com/watch?v=D-I-EmtUlkQ) · 📦 **Data download:** [v1.0-data release](https://github.com/Palak8825/Filinglens/releases/tag/v1.0-data)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Palak8825/Filinglens?quickstart=1)
 **▶ Run the real app in your browser, no install.** The app opens in a new tab in **about a minute** (measured). The first start can take up to 6 minutes if GitHub hasn't pre-built a machine in your region. You can paste a free [Gemini key](https://aistudio.google.com/apikey) on the setup page to ask your own questions; without one, the prepared Briefs, examples, dashboard and red flags all work.
